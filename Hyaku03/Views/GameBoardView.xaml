@@ -1,0 +1,50 @@
+﻿<UserControl x:Class="Hyaku.Views.GameBoardView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    d:DesignHeight="600" d:DesignWidth="480">
+    <StackPanel x:Name="LayoutRoot" Background="{StaticResource PhoneChromeBrush}">
+        <Grid x:Name="NumberQueueDisplay" Height="120" Width="480">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Grid.Row="0" Height="38" HorizontalAlignment="Right" Name="NextNumberTextLabel" Text="Next Number" VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeLarge}" />
+            <TextBlock Grid.Column="1" Grid.Row="0" Height="38" HorizontalAlignment="Center" Name="NextNumberTextBlock" Text="45" VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeLarge}" />
+            <TextBlock Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Height="38" HorizontalAlignment="Center" Name="ScoreTextBlock" Text="{Binding Score}" VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeLarge}" /> 
+        </Grid>
+        <Grid x:Name="GameGrid" Background="{StaticResource PhoneChromeBrush}" Height="480" Width="480">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+        </Grid>
+    </StackPanel>
+</UserControl>
