@@ -30,3 +30,19 @@ C:\Code\MeAndCraig\Hyaku03\Hyaku03\obj\Debug\Hyaku.g.resources
 C:\Code\MeAndCraig\Hyaku03\Hyaku03\obj\Debug\Hyaku.dll
 C:\Code\MeAndCraig\Hyaku03\Hyaku03\obj\Debug\Hyaku.pdb
 C:\Code\MeAndCraig\Hyaku03\Hyaku03\obj\Debug\XapCacheFile.xml
+C:\Users\moss\Documents\Visual Studio 2010\hyaku\Hyaku03\Bin\Debug\ApplicationIcon.png
+C:\Users\moss\Documents\Visual Studio 2010\hyaku\Hyaku03\Bin\Debug\Background.png
+C:\Users\moss\Documents\Visual Studio 2010\hyaku\Hyaku03\Bin\Debug\Hyaku.dll
+C:\Users\moss\Documents\Visual Studio 2010\hyaku\Hyaku03\Bin\Debug\Hyaku.pdb
+C:\Users\moss\Documents\Visual Studio 2010\hyaku\Hyaku03\Bin\Debug\AppManifest.xaml
+C:\Users\moss\Documents\Visual Studio 2010\hyaku\Hyaku03\Bin\Debug\Hyaku.xap
+C:\Users\moss\Documents\Visual Studio 2010\hyaku\Hyaku03\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\moss\Documents\Visual Studio 2010\hyaku\Hyaku03\obj\Debug\App.g.i.cs
+C:\Users\moss\Documents\Visual Studio 2010\hyaku\Hyaku03\obj\Debug\MainPage.g.i.cs
+C:\Users\moss\Documents\Visual Studio 2010\hyaku\Hyaku03\obj\Debug\Views\GameBoardView.g.i.cs
+C:\Users\moss\Documents\Visual Studio 2010\hyaku\Hyaku03\obj\Debug\Views\InputView.g.i.cs
+C:\Users\moss\Documents\Visual Studio 2010\hyaku\Hyaku03\obj\Debug\Views\SquareView.g.i.cs
+C:\Users\moss\Documents\Visual Studio 2010\hyaku\Hyaku03\obj\Debug\Hyaku.g.resources
+C:\Users\moss\Documents\Visual Studio 2010\hyaku\Hyaku03\obj\Debug\Hyaku.dll
+C:\Users\moss\Documents\Visual Studio 2010\hyaku\Hyaku03\obj\Debug\Hyaku.pdb
+C:\Users\moss\Documents\Visual Studio 2010\hyaku\Hyaku03\obj\Debug\XapCacheFile.xml

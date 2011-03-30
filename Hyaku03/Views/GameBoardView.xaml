@@ -9,7 +9,7 @@
     Foreground="{StaticResource PhoneForegroundBrush}"
     d:DesignHeight="600" d:DesignWidth="480">
     <StackPanel x:Name="LayoutRoot" Background="{StaticResource PhoneChromeBrush}">
-        <Grid x:Name="NumberQueueDisplay" Height="120" Width="480">
+        <Grid x:Name="NumberQueueDisplay" Height="120" Width="480" Background="#FFB63D3D">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
@@ -22,7 +22,10 @@
             <TextBlock Grid.Column="1" Grid.Row="0" Height="38" HorizontalAlignment="Center" Name="NextNumberTextBlock" Text="45" VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeLarge}" />
             <TextBlock Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Height="38" HorizontalAlignment="Center" Name="ScoreTextBlock" Text="{Binding Score}" VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeLarge}" /> 
         </Grid>
-        <Grid x:Name="GameGrid" Background="{StaticResource PhoneChromeBrush}" Height="480" Width="480">
+        <Grid x:Name="GameGrid" Height="480" Width="480">
+        	<Grid.Background>
+        		<SolidColorBrush Color="#FF1F1F1F"/>
+        	</Grid.Background>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
