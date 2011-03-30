@@ -1,8 +1,8 @@
-﻿<xapCache source="C:\Code\MeAndCraig\Hyaku03\Hyaku03\Bin\Debug\Hyaku.xap" wasSigned="False" certificateThumbprint="" TimeStampUrl="" lastWriteTime="2011-03-26 13:09:21">
-  <file source="C:\Code\MeAndCraig\Hyaku03\Hyaku03\Properties\WMAppManifest.xml" archivePath="WMAppManifest.xml" lastWriteTime="2011-03-16 22:00:35" />
-  <file source="C:\Code\MeAndCraig\Hyaku03\Hyaku03\obj\Debug\Hyaku.dll" archivePath="Hyaku.dll" lastWriteTime="2011-03-26 13:09:20" />
-  <file source="C:\Code\MeAndCraig\Hyaku03\Hyaku03\ApplicationIcon.png" archivePath="ApplicationIcon.png" lastWriteTime="2011-03-16 19:31:03" />
-  <file source="C:\Code\MeAndCraig\Hyaku03\Hyaku03\Background.png" archivePath="Background.png" lastWriteTime="2011-03-16 19:31:03" />
-  <file source="C:\Code\MeAndCraig\Hyaku03\Hyaku03\SplashScreenImage.jpg" archivePath="SplashScreenImage.jpg" lastWriteTime="2011-03-16 19:31:03" />
-  <file source="C:\Code\MeAndCraig\Hyaku03\Hyaku03\Bin\Debug\AppManifest.xaml" archivePath="AppManifest.xaml" lastWriteTime="2011-03-22 21:32:16" />
+﻿<xapCache source="C:\Users\moss\Documents\Visual Studio 2010\hyaku\Hyaku03\Bin\Debug\Hyaku.xap" wasSigned="False" certificateThumbprint="" TimeStampUrl="" lastWriteTime="3/29/2011 8:38:24 PM">
+  <file source="C:\Users\moss\Documents\Visual Studio 2010\hyaku\Hyaku03\Properties\WMAppManifest.xml" archivePath="WMAppManifest.xml" lastWriteTime="3/29/2011 8:37:44 PM" />
+  <file source="C:\Users\moss\Documents\Visual Studio 2010\hyaku\Hyaku03\obj\Debug\Hyaku.dll" archivePath="Hyaku.dll" lastWriteTime="3/29/2011 8:38:23 PM" />
+  <file source="C:\Users\moss\Documents\Visual Studio 2010\hyaku\Hyaku03\ApplicationIcon.png" archivePath="ApplicationIcon.png" lastWriteTime="3/29/2011 8:37:44 PM" />
+  <file source="C:\Users\moss\Documents\Visual Studio 2010\hyaku\Hyaku03\Background.png" archivePath="Background.png" lastWriteTime="3/29/2011 8:37:44 PM" />
+  <file source="C:\Users\moss\Documents\Visual Studio 2010\hyaku\Hyaku03\SplashScreenImage.jpg" archivePath="SplashScreenImage.jpg" lastWriteTime="3/29/2011 8:37:44 PM" />
+  <file source="C:\Users\moss\Documents\Visual Studio 2010\hyaku\Hyaku03\Bin\Debug\AppManifest.xaml" archivePath="AppManifest.xaml" lastWriteTime="3/29/2011 8:38:24 PM" />
 </xapCache>
