@@ -1,5 +1,0 @@
-﻿<Deployment xmlns="http://schemas.microsoft.com/client/2007/deployment" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" EntryPointAssembly="Hyaku" EntryPointType="Hyaku.App" RuntimeVersion="3.0.40624.0">
-  <Deployment.Parts>
-    <AssemblyPart x:Name="Hyaku" Source="Hyaku.dll" />
-  </Deployment.Parts>
-</Deployment>
