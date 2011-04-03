@@ -52,7 +52,8 @@ namespace Hyaku.ViewModels
                     easy = new int[] { 5, 10, 15, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95 };
                 }
                 int nextNumberIndex = _random.Next(1, easy.Length);
-                return easy[nextNumberIndex];
+                int nextNumber = easy[nextNumberIndex];
+                return nextNumber;
             }
         }
 
@@ -83,14 +84,19 @@ namespace Hyaku.ViewModels
                 hyaku = CheckSurroundingSquares(CurrentSquare);
                 if (hyaku != null)
                 {
-                    foreach (SquareViewModel sq in hyaku)
-                    {
-                        sq.IsHyakuBlock = true;
-                    }
+                    MarkHyakuBlocks(hyaku);
                 }
                 CurrentSquare.IsCurrent = false;
                 CurrentSquare.IsLocked = true;
                 CurrentSquare = null;
+            }
+        }
+
+        private static void MarkHyakuBlocks(List<SquareViewModel> hyaku)
+        {
+            foreach (SquareViewModel sq in hyaku)
+            {
+                sq.IsHyakuBlock = true;
             }
         }
 
@@ -148,6 +154,7 @@ namespace Hyaku.ViewModels
         {
             SquareViewModel target = null;
             SquareViewModel source = null;
+            List<SquareViewModel> newHyakus = new List<SquareViewModel>();
             foreach (List<SquareViewModel> column in GameGrid)
             {
                 target = FirstHyaku(column);
@@ -165,6 +172,11 @@ namespace Hyaku.ViewModels
                         {
                             target.Value = source.Value;
                             target.CurrentState = source.CurrentState;
+                            List<SquareViewModel> comboHyakus = CheckSurroundingSquares(target);
+                            if (comboHyakus != null)
+                            {
+                                newHyakus.AddRange(comboHyakus);
+                            }
                             source.Reset();
                         }
                         else
@@ -178,6 +190,7 @@ namespace Hyaku.ViewModels
                 target = null;
                 source = null;
             }
+            MarkHyakuBlocks(newHyakus);
         }
 
         private SquareViewModel FirstHyaku(List<SquareViewModel> column)

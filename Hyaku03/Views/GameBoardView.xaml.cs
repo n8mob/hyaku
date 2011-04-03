@@ -33,6 +33,9 @@ namespace Hyaku.Views
             InitializeComponent();
             timer = new DispatcherTimer();
             timer.Interval = new TimeSpan(0, 0, 20);
+#if DEBUG
+            timer.Interval = new TimeSpan(0, 1, 0);
+#endif
         }
 
         private void ChildSquareClicked(object sender, EventArgs e)
