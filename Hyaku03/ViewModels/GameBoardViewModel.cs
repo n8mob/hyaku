@@ -79,22 +79,14 @@ namespace Hyaku.ViewModels
             if (CurrentSquare != null)
             {
                 CurrentSquare.Value = theNumber;
-                List<SquareViewModel> hyaku = null;
-                hyaku = CheckSurroundingSquares(CurrentSquare);
-                if (hyaku != null)
-                {
-                    foreach (SquareViewModel sq in hyaku)
-                    {
-                        sq.IsHyakuBlock = true;
-                    }
-                }
+                CheckSurroundingSquares(CurrentSquare);
                 CurrentSquare.IsCurrent = false;
                 CurrentSquare.IsLocked = true;
                 CurrentSquare = null;
             }
         }
 
-        public List<SquareViewModel> CheckSurroundingSquares(SquareViewModel sq1)
+        public void CheckSurroundingSquares(SquareViewModel sq1)
         {
             List<SquareViewModel> hyaku = null;
             for (int columnOffset = -1; columnOffset <= 1; columnOffset++)
@@ -113,14 +105,17 @@ namespace Hyaku.ViewModels
                                 hyaku = CheckTwoSquares(sq1, sq2);
                                 if (hyaku != null)
                                 {
-                                    return hyaku;
+                                    foreach (SquareViewModel sq in hyaku)
+                                    {
+                                        sq.IsHyakuBlock = true;
+                                    }
+                                    return;
                                 }
                             }
                         }
                     }
                 }
             }
-            return hyaku;
         }
 
         public List<SquareViewModel> CheckTwoSquares(SquareViewModel sq1, SquareViewModel sq2)
