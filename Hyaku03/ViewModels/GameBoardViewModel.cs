@@ -51,7 +51,7 @@ namespace Hyaku.ViewModels
                 {
                     easy = new int[] { 5, 10, 15, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95 };
                 }
-                int nextNumberIndex = _random.Next(1, easy.Length);
+                int nextNumberIndex = _random.Next(0, easy.Length);
                 return easy[nextNumberIndex];
             }
         }
