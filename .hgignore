@@ -4,5 +4,6 @@ syntax: glob
 bin/*
 obj/*
 Debug/*
+Release/*
 *.bak
 thumbs.db
