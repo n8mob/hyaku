@@ -212,11 +212,6 @@ namespace Hyaku.ViewModels
                         {
                             target.Value = source.Value;
                             target.CurrentState = source.CurrentState;
-                            //newHyakus = CheckSurroundingSquares(target);
-                            //if (newHyakus != null)
-                            //{
-                            //    MarkHyakuBlocks(newHyakus);
-                            //}
                             movedSquares.Add(target);
                             source.Reset();
                         }
