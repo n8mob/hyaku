@@ -16,7 +16,7 @@ namespace Hyaku.Views
 {
     public partial class GameBoardView : UserControl
     {
-        DispatcherTimer timer;
+        internal DispatcherTimer timer;
 
         private GameBoardViewModel _gameBoard;
         public GameBoardViewModel GameBoard
@@ -32,10 +32,7 @@ namespace Hyaku.Views
         {
             InitializeComponent();
             timer = new DispatcherTimer();
-            timer.Interval = new TimeSpan(0, 0, 20);
-#if DEBUG
-            timer.Interval = new TimeSpan(0, 1, 0);
-#endif
+            timer.Interval = new TimeSpan(0, 0, 15);
         }
 
         private void ChildSquareClicked(object sender, EventArgs e)

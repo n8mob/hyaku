@@ -11,16 +11,18 @@ using System.Windows.Shapes;
 using System.Collections.Generic;
 using System.IO.IsolatedStorage;
 using Hyaku.Views;
+using NateGrigg.Mobile.Random;
 
 namespace Hyaku.ViewModels
 {
     public class GameBoardViewModel : ViewModelBase
     {
         const string savedGameFileName = "hyaku.dat";
-        int[] easy = null;
+        List<int> numberSelections;
         private int _gameSize;
+        private int _randomListSize = 100;
+        private RandomListGenerator _randomListGenerator = null;
         private int _score;
-        protected Random _random;
 
         public int GameSize
         {
@@ -29,6 +31,44 @@ namespace Hyaku.ViewModels
                     _gameSize = (int)(IsolatedStorageSettings.ApplicationSettings["gameSize"] ?? 9);
                 }
                 return _gameSize;
+            }
+        }
+
+        internal int RandomListSize
+        {
+            get
+            {
+                return _randomListSize;
+            }
+            set
+            {
+                _randomListSize = value;
+            }
+        }
+
+        public RandomListGenerator RandomListGenerator
+        {
+            get
+            {
+                if (_randomListGenerator == null)
+                {
+                    _randomListGenerator = new RandomListGenerator();
+                }
+                return _randomListGenerator;
+            }
+            set { _randomListGenerator = value; }
+        }
+
+        public int Score
+        {
+            get
+            {
+                return _score;
+            }
+            set
+            {
+                _score = value;
+                NotifyPropertyChanged("Score");
             }
         }
 
@@ -43,30 +83,14 @@ namespace Hyaku.ViewModels
         {
             get
             {
-                if (_random == null)
+                if (numberSelections == null || numberSelections.Count < 1)
                 {
-                    _random = new Random();
+                    numberSelections = RandomListGenerator.SelectRandomItems(RandomListSize, new List<int>(new int[] { 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95 }));
                 }
-                if (easy == null)
-                {
-                    easy = new int[] { 5, 10, 15, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95 };
-                }
-                int nextNumberIndex = _random.Next(0, easy.Length);
-                int nextNumber = easy[nextNumberIndex];
-                return nextNumber;
-            }
-        }
 
-        public int Score
-        {
-            get
-            {
-                return _score;
-            }
-            set
-            {
-                _score = value;
-                NotifyPropertyChanged("Score");
+                int nextNumber = numberSelections[0];
+                numberSelections.RemoveAt(0);
+                return nextNumber;
             }
         }
 
@@ -142,7 +166,22 @@ namespace Hyaku.ViewModels
 
         public void Sweep(object sender, EventArgs e)
         {
+#if DEBUG
+            // turn off the timer so tick events don't pile up
+            GameBoardView gameBoardView = sender as GameBoardView;
+            if (gameBoardView != null)
+            {
+                gameBoardView.timer.Stop();
+            }
+#endif
             DoSweep();
+#if DEBUG
+            // turn on the timer again
+            if (gameBoardView != null)
+            {
+                gameBoardView.timer.Start();
+            }
+#endif
         }
 
         private void DisplayScore()
@@ -154,6 +193,7 @@ namespace Hyaku.ViewModels
         {
             SquareViewModel target = null;
             SquareViewModel source = null;
+            List<SquareViewModel> movedSquares = new List<SquareViewModel>();
             List<SquareViewModel> newHyakus = new List<SquareViewModel>();
             foreach (List<SquareViewModel> column in GameGrid)
             {
@@ -172,11 +212,12 @@ namespace Hyaku.ViewModels
                         {
                             target.Value = source.Value;
                             target.CurrentState = source.CurrentState;
-                            List<SquareViewModel> comboHyakus = CheckSurroundingSquares(target);
-                            if (comboHyakus != null)
-                            {
-                                newHyakus.AddRange(comboHyakus);
-                            }
+                            //newHyakus = CheckSurroundingSquares(target);
+                            //if (newHyakus != null)
+                            //{
+                            //    MarkHyakuBlocks(newHyakus);
+                            //}
+                            movedSquares.Add(target);
                             source.Reset();
                         }
                         else
@@ -189,6 +230,14 @@ namespace Hyaku.ViewModels
                 }
                 target = null;
                 source = null;
+            }
+            foreach (SquareViewModel sq in movedSquares)
+            {
+                List<SquareViewModel> comboHyakus = CheckSurroundingSquares(sq);
+                if (comboHyakus != null)
+                {
+                    newHyakus.AddRange(comboHyakus);
+                }
             }
             MarkHyakuBlocks(newHyakus);
         }

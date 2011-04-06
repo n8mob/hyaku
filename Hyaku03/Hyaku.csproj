@@ -50,6 +50,9 @@
   <ItemGroup>
     <Reference Include="Microsoft.Phone" />
     <Reference Include="Microsoft.Phone.Interop" />
+    <Reference Include="NateGrigg.Mobile.Random">
+      <HintPath>..\..\..\Me\NateGrigg.Mobile.RandomList\NateGrigg.Mobile.RandomList\Bin\Release\NateGrigg.Mobile.Random.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows" />
     <Reference Include="system" />
     <Reference Include="System.Core" />
