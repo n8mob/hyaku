@@ -108,6 +108,12 @@ namespace Hyaku.Views
                 for (int rowIndex = 0; rowIndex < 9; rowIndex++)
                 {
                     SquareViewModel square = GameBoard.GameGrid[columnIndex][rowIndex];
+                    List<SquareViewModel> hyakuBlocks = GameBoard.CheckSurroundingSquares(square);
+                    if (hyakuBlocks == null) {
+                        square.IsHyakuBlock = false;
+                    } else {
+                        GameBoardViewModel.MarkHyakuBlocks(hyakuBlocks);
+                    }
                     SquareView uiSquare = new SquareView(square);
 
                     GameGrid.Children.Add(uiSquare);

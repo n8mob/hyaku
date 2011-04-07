@@ -61,17 +61,17 @@ namespace Hyaku.Views
         {
             switch (_square.CurrentState)
             {
-                case SquareState.Locked:
-                    MainText.Foreground = (SolidColorBrush)Resources["PhoneForegroundBrush"];
+                case SquareState.Hyaku:
+                    MainText.Foreground = (SolidColorBrush)Resources["PhoneAccentBrush"];
                     LayoutRoot.Background = (SolidColorBrush)Resources["PhoneBackgroundBrush"];
                     break;
-                case SquareState.Hyaku:
                 case SquareState.Current:
                     MainText.Foreground = (SolidColorBrush)Resources["PhoneAccentBrush"];
-                    LayoutRoot.Background = (SolidColorBrush)Resources["PhoneBackgroundBrush"];
+                    LayoutRoot.Background = (SolidColorBrush)Resources["PhoneContrastBackgroundBrush"];
                     break;
+                case SquareState.Locked:
                 default:
-                    MainText.Foreground = (SolidColorBrush)Resources["PhoneAccentBrush"];
+                    MainText.Foreground = (SolidColorBrush)Resources["PhoneForegroundBrush"];
                     LayoutRoot.Background = (SolidColorBrush)Resources["PhoneBackgroundBrush"];
                     break;
             }

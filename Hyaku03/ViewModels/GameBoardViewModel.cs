@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Runtime.Serialization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -12,12 +13,13 @@ using System.Collections.Generic;
 using System.IO.IsolatedStorage;
 using Hyaku.Views;
 using NateGrigg.Mobile.Random;
+using System.Text;
+using NateGrigg.Mobile.Utility;
 
 namespace Hyaku.ViewModels
 {
     public class GameBoardViewModel : ViewModelBase
     {
-        const string savedGameFileName = "hyaku.dat";
         List<int> numberSelections;
         private int _gameSize;
         private int _randomListSize = 100;
@@ -116,7 +118,7 @@ namespace Hyaku.ViewModels
             }
         }
 
-        private static void MarkHyakuBlocks(List<SquareViewModel> hyaku)
+        public static void MarkHyakuBlocks(List<SquareViewModel> hyaku)
         {
             foreach (SquareViewModel sq in hyaku)
             {
@@ -292,15 +294,57 @@ namespace Hyaku.ViewModels
             }
         }
 
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (List<SquareViewModel> column in GameGrid) {
+                foreach (SquareViewModel sqView in column) {
+                    sb.Append(sqView.Value);
+                    // add row marker ('.')
+                    if (column.IndexOf(sqView) != column.Count - 1) {
+                        sb.Append('.');
+                    }
+                }
+                // add column marker (';')
+                sb.Append(';');
+            }
+            // save the score at the end
+            sb.Append(Score);
+            return sb.ToString();
+        }
+
+        public static GameBoardViewModel LoadGameFromString(string savedGame)
+        {
+            GameBoardViewModel gameBoard = new GameBoardViewModel();
+            string[] columnArray = savedGame.Split(';');
+            List<string> columns = new List<string> (columnArray);
+            string scoreString = columns[columns.Count - 1];
+            int score = 0;
+            if (int.TryParse(scoreString, out score)) {
+                gameBoard.Score = score;
+            }
+            columns.Remove(scoreString);
+            for (int columnIndex = 0; columnIndex < columns.Count; columnIndex++) {
+                string[] row = columns[columnIndex].Split('.');
+                gameBoard.GameGrid.Insert(columnIndex, new List<SquareViewModel>());
+                for (int rowIndex = 0; rowIndex < row.Length; rowIndex++) {
+                    int parsedValue;
+                    int.TryParse(row[rowIndex], out parsedValue);
+                    SquareViewModel sq = new SquareViewModel(columnIndex, rowIndex);
+                    sq.Value = parsedValue;
+                    gameBoard.GameGrid[columnIndex].Insert(rowIndex, sq);
+                }
+            }
+
+            return gameBoard;
+        }
+
         public static GameBoardViewModel CreateNewGame()
         {
             GameBoardViewModel gameBoard = new GameBoardViewModel();
-
-            for (int columnIndex = 0; columnIndex < 9; columnIndex++)
-            {
+            for (int columnIndex = 0; columnIndex < 9; columnIndex++) {
                 gameBoard.GameGrid.Insert(columnIndex, new List<SquareViewModel>());
-                for (int rowIndex = 0; rowIndex < 9; rowIndex++)
-                {
+                for (int rowIndex = 0; rowIndex < 9; rowIndex++) {
                     gameBoard.GameGrid[columnIndex].Insert(rowIndex, new SquareViewModel(columnIndex, rowIndex));
                 }
             }

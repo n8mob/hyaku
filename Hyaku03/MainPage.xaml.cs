@@ -12,12 +12,15 @@ using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 using Hyaku.ViewModels;
 using System.Windows.Threading;
+using NateGrigg.Mobile.Utility;
+using System.IO;
+using System.IO.IsolatedStorage;
 
 namespace Hyaku
 {
     public partial class MainPage : PhoneApplicationPage
     {
-
+        const string savedGameFileName = "hyaku.dat";
         // Constructor
         public MainPage()
         {
@@ -34,15 +37,39 @@ namespace Hyaku
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
-            // TODO load from saved game
-            GameBoardViewModel board = GameBoardViewModel.CreateNewGame();
+            GameBoardViewModel board = null;
+            MessageBoxResult restoreGameDecision = MessageBoxResult.Cancel;
+            string savedGame;
+            try {
+                savedGame = IsolatedStorageHandler.ReadUtf8String(savedGameFileName);
+                // if there is no file, ReadUtf8String will throw a FileNotFoundException and the message box will not appear.
+                restoreGameDecision = MessageBox.Show(Messages.RestoreGameQuestion, Messages.RestoreGameCaption, MessageBoxButton.OKCancel);
+            } catch (IsolatedStorageException) {
+                savedGame = string.Empty;
+            } catch (FileNotFoundException) {
+                savedGame = string.Empty;
+            }
+            
+            if (restoreGameDecision == MessageBoxResult.OK) {
+                board = GameBoardViewModel.LoadGameFromString(savedGame);
+            } else {
+                board = GameBoardViewModel.CreateNewGame();
+            }
             MainBoard.GameBoard = board;
             base.OnNavigatedTo(e);
         }
 
         protected override void OnNavigatedFrom(System.Windows.Navigation.NavigationEventArgs e)
         {
-            // TODO save game
+            MessageBoxResult saveGameDecision = MessageBox.Show(Messages.SaveGameQuestion, Messages.SaveGameCaption, MessageBoxButton.OKCancel);
+            if (saveGameDecision == MessageBoxResult.OK) {
+                try {
+                    string gameState = MainBoard.GameBoard.ToString();
+                    IsolatedStorageHandler.WriteUtf8String(savedGameFileName, gameState);
+                } catch {
+                    MessageBox.Show(ErrorMessages.SaveFailed);
+                }
+            }
             base.OnNavigatedFrom(e);
         }
     }
