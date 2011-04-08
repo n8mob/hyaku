@@ -25,6 +25,8 @@ namespace Hyaku.ViewModels
         private int _randomListSize = 100;
         private RandomListGenerator _randomListGenerator = null;
         private int _score;
+        private int _counts = 0;
+        
 
         public int GameSize
         {
@@ -71,6 +73,27 @@ namespace Hyaku.ViewModels
             {
                 _score = value;
                 NotifyPropertyChanged("Score");
+            }
+        }
+
+        public int SweepSteps
+        {
+            get
+            {
+                return 15;
+            }
+        }
+
+        public int Counts
+        {
+            get
+            {
+                return _counts;
+            }
+            set
+            {
+                _counts = value;
+                NotifyPropertyChanged("Counts");
             }
         }
 
@@ -166,7 +189,7 @@ namespace Hyaku.ViewModels
             return retval;
         }
 
-        public void Sweep(object sender, EventArgs e)
+        public void Tick(object sender, EventArgs e)
         {
 #if DEBUG
             // turn off the timer so tick events don't pile up
@@ -176,7 +199,11 @@ namespace Hyaku.ViewModels
                 gameBoardView.timer.Stop();
             }
 #endif
-            DoSweep();
+            Counts += 1;
+            if (Counts == SweepSteps) {
+                DoSweep();
+                Counts = 0;
+            }
 #if DEBUG
             // turn on the timer again
             if (gameBoardView != null)

@@ -21,6 +21,7 @@ namespace Hyaku
     public partial class MainPage : PhoneApplicationPage
     {
         const string savedGameFileName = "hyaku.dat";
+        const string settingsPageUri = "/Settings.xaml";
         // Constructor
         public MainPage()
         {
@@ -38,19 +39,17 @@ namespace Hyaku
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
             GameBoardViewModel board = null;
-            MessageBoxResult restoreGameDecision = MessageBoxResult.Cancel;
             string savedGame;
             try {
                 savedGame = IsolatedStorageHandler.ReadUtf8String(savedGameFileName);
                 // if there is no file, ReadUtf8String will throw a FileNotFoundException and the message box will not appear.
-                restoreGameDecision = MessageBox.Show(Messages.RestoreGameQuestion, Messages.RestoreGameCaption, MessageBoxButton.OKCancel);
             } catch (IsolatedStorageException) {
                 savedGame = string.Empty;
             } catch (FileNotFoundException) {
                 savedGame = string.Empty;
             }
             
-            if (restoreGameDecision == MessageBoxResult.OK) {
+            if (!string.IsNullOrEmpty(savedGame)) {
                 board = GameBoardViewModel.LoadGameFromString(savedGame);
             } else {
                 board = GameBoardViewModel.CreateNewGame();
@@ -61,16 +60,19 @@ namespace Hyaku
 
         protected override void OnNavigatedFrom(System.Windows.Navigation.NavigationEventArgs e)
         {
-            MessageBoxResult saveGameDecision = MessageBox.Show(Messages.SaveGameQuestion, Messages.SaveGameCaption, MessageBoxButton.OKCancel);
-            if (saveGameDecision == MessageBoxResult.OK) {
-                try {
-                    string gameState = MainBoard.GameBoard.ToString();
-                    IsolatedStorageHandler.WriteUtf8String(savedGameFileName, gameState);
-                } catch {
-                    MessageBox.Show(ErrorMessages.SaveFailed);
-                }
+            try {
+                string gameState = MainBoard.GameBoard.ToString();
+                IsolatedStorageHandler.WriteUtf8String(savedGameFileName, gameState);
+            } catch {
+                MessageBox.Show(ErrorMessages.SaveFailed);
             }
+
             base.OnNavigatedFrom(e);
+        }
+
+        private void SettingsButton_Click(object sender, EventArgs e)
+        {
+            NavigationService.Navigate(new Uri(settingsPageUri, UriKind.Relative));
         }
     }
 }

@@ -32,7 +32,7 @@ namespace Hyaku.Views
         {
             InitializeComponent();
             timer = new DispatcherTimer();
-            timer.Interval = new TimeSpan(0, 0, 15);
+            timer.Interval = new TimeSpan(0, 0, 1);
         }
 
         private void ChildSquareClicked(object sender, EventArgs e)
@@ -122,7 +122,7 @@ namespace Hyaku.Views
             }
 
             this.DataContext = GameBoard;
-            timer.Tick += new EventHandler(GameBoard.Sweep);
+            timer.Tick += new EventHandler(GameBoard.Tick);
         }
     }
 }
