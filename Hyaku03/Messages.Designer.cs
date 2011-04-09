@@ -61,6 +61,24 @@ namespace Hyaku {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reset Game?.
+        /// </summary>
+        internal static string ResetGameCaption {
+            get {
+                return ResourceManager.GetString("ResetGameCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your progress and score will be lost..
+        /// </summary>
+        internal static string ResetGameQuestion {
+            get {
+                return ResourceManager.GetString("ResetGameQuestion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Restore Game.
         /// </summary>
         internal static string RestoreGameCaption {

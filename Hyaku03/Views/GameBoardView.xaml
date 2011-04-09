@@ -13,7 +13,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="10" />
+                <RowDefinition Height="4" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -22,8 +22,8 @@
             <TextBlock Grid.Column="0" Grid.Row="1" Height="38" HorizontalAlignment="Right" Name="NextNumberTextLabel" Text="Next Number" VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeLarge}" />
             <TextBlock Grid.Column="1" Grid.Row="1" Height="38" HorizontalAlignment="Center" Name="NextNumberTextBlock" Text="45" VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeLarge}" />
             <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Height="38" HorizontalAlignment="Center" Name="ScoreTextBlock" Text="{Binding Score}" VerticalAlignment="Center" FontSize="{StaticResource PhoneFontSizeLarge}" /> 
-            <ProgressBar Grid.ColumnSpan="2" Grid.Row="2" Height="10" HorizontalAlignment="Left"
-                         Name="sweepProgressBar" VerticalAlignment="Bottom" Width="460" Value="{Binding Counts}"
+            <ProgressBar Grid.ColumnSpan="2" Grid.Row="2" Height="4"
+                         Name="sweepProgressBar" VerticalAlignment="Bottom" Value="{Binding Counts}"
                          Background="{StaticResource PhoneBackgroundBrush}" Foreground="{StaticResource PhoneAccentBrush}"
                          IsIndeterminate="False" Minimum="0" Maximum="{Binding SweepSteps}" />
         </Grid>
@@ -31,28 +31,6 @@
         	<Grid.Background>
         		<SolidColorBrush Color="#FF1F1F1F"/>
         	</Grid.Background>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
         </Grid>
     </StackPanel>
 </UserControl>

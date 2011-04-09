@@ -46,12 +46,6 @@ namespace Hyaku
                 //Application.Current.Host.Settings.EnableCacheVisualization = true;
             }
 
-            IsolatedStorageSettings settings = IsolatedStorageSettings.ApplicationSettings;
-            if (!settings.Contains("gameSize"))
-            {
-                settings.Add("gameSize", 9);
-            }
-
             // Standard Silverlight initialization
             InitializeComponent();
 

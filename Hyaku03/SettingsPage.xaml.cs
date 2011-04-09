@@ -19,5 +19,10 @@ namespace Hyaku
         {
             InitializeComponent();
         }
+
+        private void CurrentSweepTimeTextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

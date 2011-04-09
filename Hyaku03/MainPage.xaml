@@ -45,6 +45,9 @@
             <shell:ApplicationBarIconButton
                 x:Name="SettingsButton" IconUri="/Images/appbar.feature.settings.rest.png"
                 Text="Settings" Click="SettingsButton_Click" />
+            <shell:ApplicationBarIconButton
+                x:Name="ResetButton" IconUri="/Images/appbar.close.rest.png"
+                Text="Reset" Click="ResetButton_Click" />
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
 

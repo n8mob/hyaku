@@ -21,7 +21,7 @@ namespace Hyaku
     public partial class MainPage : PhoneApplicationPage
     {
         const string savedGameFileName = "hyaku.dat";
-        const string settingsPageUri = "/Settings.xaml";
+        const string settingsPageUri = "/SettingsPage.xaml";
         // Constructor
         public MainPage()
         {
@@ -73,6 +73,14 @@ namespace Hyaku
         private void SettingsButton_Click(object sender, EventArgs e)
         {
             NavigationService.Navigate(new Uri(settingsPageUri, UriKind.Relative));
+        }
+
+        private void ResetButton_Click(object sender, EventArgs e)
+        {
+            MessageBoxResult resetGame = MessageBox.Show(Messages.ResetGameQuestion, Messages.ResetGameCaption, MessageBoxButton.OKCancel);
+            if (resetGame == MessageBoxResult.OK) {
+                MainBoard.GameBoard = GameBoardViewModel.CreateNewGame();
+            }
         }
     }
 }

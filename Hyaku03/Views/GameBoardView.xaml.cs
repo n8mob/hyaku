@@ -103,10 +103,22 @@ namespace Hyaku.Views
         {
             NextNumberTextBlock.Tag = GameBoard.NextNumber;
             NextNumberTextBlock.Text = NextNumberTextBlock.Tag.ToString();
-            for (int columnIndex = 0; columnIndex < 9; columnIndex++)
+            this.GameGrid.ColumnDefinitions.Clear();
+            this.GameGrid.RowDefinitions.Clear();
+            for (int columnIndex = 0; columnIndex < GameBoard.GameGrid.Count; columnIndex++)
             {
-                for (int rowIndex = 0; rowIndex < 9; rowIndex++)
+                this.GameGrid.ColumnDefinitions.Add(new ColumnDefinition()
                 {
+                    MinWidth = GameGrid.Width / (double)GameBoard.GameGrid.Count
+                });
+                for (int rowIndex = 0; rowIndex < GameBoard.GameGrid[0].Count; rowIndex++)
+                {
+                    if (this.GameGrid.RowDefinitions.Count <= rowIndex) {
+                        this.GameGrid.RowDefinitions.Add(new RowDefinition()
+                        {
+                            MinHeight = this.GameGrid.Height / GameBoard.GameGrid.Count
+                        });
+                    }
                     SquareViewModel square = GameBoard.GameGrid[columnIndex][rowIndex];
                     List<SquareViewModel> hyakuBlocks = GameBoard.CheckSurroundingSquares(square);
                     if (hyakuBlocks == null) {
@@ -120,7 +132,6 @@ namespace Hyaku.Views
                     uiSquare.SquareClicked += new EventHandler(ChildSquareClicked);
                 }
             }
-
             this.DataContext = GameBoard;
             timer.Tick += new EventHandler(GameBoard.Tick);
         }

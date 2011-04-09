@@ -32,8 +32,10 @@ namespace Hyaku
             }
             set
             {
-                AddOrUpdateValue(GameSizeSettingKeyName, value);
-                Save();
+                if (5 <= value && value <= 13) {
+                    AddOrUpdateValue(GameSizeSettingKeyName, value);
+                    Save();
+                }
             }
         }
 
@@ -58,8 +60,10 @@ namespace Hyaku
             }
             set
             {
-                AddOrUpdateValue(SweepTimerPeriodKeyName, value);
-                Save();
+                if (1 <= value && value <= 360) {
+                    AddOrUpdateValue(SweepTimerPeriodKeyName, value);
+                    Save();
+                }
             }
         }
     }

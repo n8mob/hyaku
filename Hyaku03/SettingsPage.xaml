@@ -37,24 +37,30 @@
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <!-- GameSize -->
-            <!-- EnableTrashRows -->
-            <CheckBox Content="Enable Trash Rows" Name="EnableTrashRowsSetting" VerticalAlignment="Top"
+            <StackPanel x:Name="ContentStackPanel">
+                <!-- GameSize -->
+                <Grid x:Name="GameSizeLabelGrid">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="300" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Column="0" Grid.Row="0" Name="GameSizeLabel" Text="Game Size" Margin="20" FontSize="{StaticResource PhoneFontSizeMedium}" />
+                    <TextBox Grid.Column="1" Grid.Row="0" Name="CurrentGameSizeTextBox" HorizontalAlignment="Right" Width="100" Margin="0,0,20,0"
+                             InputScope="TelephoneNumber" Text="{Binding Source={StaticResource hyakuSettings}, Path=GameSizeSetting, Mode=TwoWay}" />
+                    <!-- SweepTimerPeriod -->
+                    <TextBlock Grid.Column="0" Grid.Row="1" Name="SweepTimerLabel" Text="Sweep Time (in seconds)" Margin="20" FontSize="{StaticResource PhoneFontSizeMedium}" />
+                    <TextBox Grid.Column="1" Grid.Row="1" Name="CurrentSweepTimeTextBox" HorizontalAlignment="Right" Width="125" Margin="0,0,20,0"
+                             InputScope="TelephoneNumber" Text="{Binding Source={StaticResource hyakuSettings}, Path=SweepTimerPeriodSetting, Mode=TwoWay}"/>
+                </Grid>
+                <!-- EnableTrashRows -->
+                <CheckBox Grid.Row="1" Content="Enable Trash Rows" Name="EnableTrashRowsSetting" VerticalAlignment="Top"
                       IsChecked="{Binding Source={StaticResource hyakuSettings}, Path=EnableTrashRowsSetting, Mode=TwoWay}" />
-            <!-- SweepTimerPeriod -->
+            </StackPanel>
         </Grid>
     </Grid>
- 
-    <!--Sample code showing usage of ApplicationBar-->
-    <!--<phone:PhoneApplicationPage.ApplicationBar>
-        <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
-            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button1.png" Text="Button 1"/>
-            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button2.png" Text="Button 2"/>
-            <shell:ApplicationBar.MenuItems>
-                <shell:ApplicationBarMenuItem Text="MenuItem 1"/>
-                <shell:ApplicationBarMenuItem Text="MenuItem 2"/>
-            </shell:ApplicationBar.MenuItems>
-        </shell:ApplicationBar>
-    </phone:PhoneApplicationPage.ApplicationBar>-->
 
 </phone:PhoneApplicationPage>

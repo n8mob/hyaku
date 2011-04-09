@@ -21,22 +21,11 @@ namespace Hyaku.ViewModels
     public class GameBoardViewModel : ViewModelBase
     {
         List<int> numberSelections;
-        private int _gameSize;
+        private HyakuSettings settings;
         private int _randomListSize = 100;
         private RandomListGenerator _randomListGenerator = null;
         private int _score;
         private int _counts = 0;
-        
-
-        public int GameSize
-        {
-            get {
-                if (_gameSize < 2) {
-                    _gameSize = (int)(IsolatedStorageSettings.ApplicationSettings["gameSize"] ?? 9);
-                }
-                return _gameSize;
-            }
-        }
 
         internal int RandomListSize
         {
@@ -76,14 +65,6 @@ namespace Hyaku.ViewModels
             }
         }
 
-        public int SweepSteps
-        {
-            get
-            {
-                return 15;
-            }
-        }
-
         public int Counts
         {
             get
@@ -94,6 +75,14 @@ namespace Hyaku.ViewModels
             {
                 _counts = value;
                 NotifyPropertyChanged("Counts");
+            }
+        }
+
+        public int SweepSteps
+        {
+            get
+            {
+                return settings.SweepTimerPeriodSetting;
             }
         }
 
@@ -121,7 +110,8 @@ namespace Hyaku.ViewModels
 
         public GameBoardViewModel()
         {
-            GameGrid = new List<List<SquareViewModel>>(GameSize);
+            settings = new HyakuSettings();
+            GameGrid = new List<List<SquareViewModel>>(settings.GameSizeSetting);
         }
 
         public void SendNumber(int theNumber)
@@ -200,8 +190,9 @@ namespace Hyaku.ViewModels
             }
 #endif
             Counts += 1;
-            if (Counts == SweepSteps) {
+            if (Counts == settings.SweepTimerPeriodSetting) {
                 DoSweep();
+                AddTrashBlocksToAllColumns();
                 Counts = 0;
             }
 #if DEBUG
@@ -211,11 +202,6 @@ namespace Hyaku.ViewModels
                 gameBoardView.timer.Start();
             }
 #endif
-        }
-
-        private void DisplayScore()
-        {
-            throw new NotImplementedException();
         }
 
         private void DoSweep()
@@ -304,21 +290,63 @@ namespace Hyaku.ViewModels
             return null;
         }
 
+        private SquareViewModel FirstEmpty(List<SquareViewModel> column)
+        {
+            for (int i = column.Count - 1; i >= 0; i -= 1) {
+                if (column[i] != null && column[i].Value <= 0) {
+                    return column[i];
+                }
+            }
+            return null;
+        }
+
+        private void AddTrashBlocksToAllColumns()
+        {
+            List<SquareViewModel> movedSquares = new List<SquareViewModel>();
+            foreach (List<SquareViewModel> column in GameGrid) {
+                SquareViewModel newSquare = AddTrashBlockToOneColumn(column);
+                if (newSquare != null) {
+                    movedSquares.Add(newSquare);
+                } else {
+                    // game over
+                }
+            }
+            List<SquareViewModel> hyakus = new List<SquareViewModel>();
+            foreach (SquareViewModel sq in movedSquares) {
+                List<SquareViewModel> newHyakus = CheckSurroundingSquares(sq);
+                if (newHyakus != null) {
+                    hyakus.AddRange(newHyakus);
+                }
+            }
+        }
+
+        private SquareViewModel AddTrashBlockToOneColumn(List<SquareViewModel> column)
+        {
+            SquareViewModel firstEmptyBlock = FirstEmpty(column);
+            if (firstEmptyBlock == null) {
+                return null;
+            } else {
+                return InsertNumber(column, column.Count - 1, firstEmptyBlock, NextNumber);
+            }
+        }
+
+        private SquareViewModel InsertNumber(List<SquareViewModel> column, int insertIndex, SquareViewModel firstEmptyBlock, int valueToInsert)
+        {
+            for (int i = firstEmptyBlock.Row; i < column.Count - 1; i += 1) {
+                SquareViewModel target = column[i];
+                SquareViewModel source = column[i + 1];
+                target.Value = source.Value;
+                target.CurrentState = source.CurrentState;
+                source.Reset();
+            }
+            column[column.Count - 1].Value = valueToInsert;
+            column[column.Count - 1].CurrentState = SquareState.Locked;
+            return column[column.Count - 1];
+        }
+
         private void CountScore(SquareViewModel target)
         {
             Score += 100;
-        }
-
-        public void ClearGrid()
-        {
-            foreach (List<SquareViewModel> column in GameGrid)
-            {
-                foreach (SquareViewModel square in column)
-                {
-                    square.Value = 0;
-                    square.IsHyakuBlock = false;
-                }
-            }
         }
 
         public override string ToString()
@@ -368,10 +396,11 @@ namespace Hyaku.ViewModels
 
         public static GameBoardViewModel CreateNewGame()
         {
+            HyakuSettings settings = new HyakuSettings();
             GameBoardViewModel gameBoard = new GameBoardViewModel();
-            for (int columnIndex = 0; columnIndex < 9; columnIndex++) {
+            for (int columnIndex = 0; columnIndex < settings.GameSizeSetting ; columnIndex++) {
                 gameBoard.GameGrid.Insert(columnIndex, new List<SquareViewModel>());
-                for (int rowIndex = 0; rowIndex < 9; rowIndex++) {
+                for (int rowIndex = 0; rowIndex < settings.GameSizeSetting; rowIndex++) {
                     gameBoard.GameGrid[columnIndex].Insert(rowIndex, new SquareViewModel(columnIndex, rowIndex));
                 }
             }
