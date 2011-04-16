@@ -17,23 +17,21 @@ namespace Hyaku.Views
 {
     public partial class GameBoardView : UserControl
     {
-        internal DispatcherTimer timer;
-
         private GameBoardViewModel _gameBoard;
         public GameBoardViewModel GameBoard
         {
             get { return _gameBoard; }
             set {
                 _gameBoard = value;
-                BindBoard();
+                if (_gameBoard != null) {
+                    BindBoard();
+                }
             }
         }
 
         public GameBoardView()
         {
             InitializeComponent();
-            timer = new DispatcherTimer();
-            timer.Interval = new TimeSpan(0, 0, 1);
         }
 
         private void ChildSquareClicked(object sender, EventArgs e)
@@ -70,6 +68,7 @@ namespace Hyaku.Views
             }
             else
             {
+
             }
 
             if (GameBoard.CurrentSquare != null)
@@ -91,9 +90,9 @@ namespace Hyaku.Views
                 NextNumberTextBlock.Text = NextNumberTextBlock.Tag.ToString();
             }
 
-            if (!timer.IsEnabled)
+            if (!GameBoard.Timer.IsEnabled)
             {
-                timer.Start();
+                GameBoard.Timer.Start();
             }
         }
 
@@ -131,7 +130,6 @@ namespace Hyaku.Views
                 }
             }
             this.DataContext = GameBoard;
-            timer.Tick += new EventHandler(GameBoard.Tick);
         }
     }
 }

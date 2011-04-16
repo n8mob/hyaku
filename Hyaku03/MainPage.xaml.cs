@@ -59,8 +59,9 @@ namespace Hyaku
             base.OnNavigatedTo(e);
         }
 
-        protected override void OnNavigatedFrom(System.Windows.Navigation.NavigationEventArgs e)
+        protected override void OnNavigatingFrom(System.Windows.Navigation.NavigatingCancelEventArgs e)
         {
+            
             string gameState;
             try {
                 if (!e.Uri.ToString().Equals("/GameOver.xaml")) {
@@ -69,12 +70,13 @@ namespace Hyaku
                 } else {
                     gameState = string.Empty;
                     IsolatedStorageHandler.WriteUtf8String(savedGameFileName, string.Empty);
+                    this.MainBoard.GameBoard = null;
                 }
             } catch {
                 MessageBox.Show(ErrorMessages.SaveFailed);
             }
 
-            base.OnNavigatedFrom(e);
+            base.OnNavigatingFrom(e);
         }
 
         public void GameOverHandler(object sender, GameOverEventArgs e)
@@ -85,7 +87,8 @@ namespace Hyaku
             } else if (e.Reason == GameOverReason.PushedPastTop) { 
                 gameOverMessage = Messages.PushedPastTopMessage;
             }
-            MessageBox.Show(gameOverMessage, Messages.GameOverCaption, MessageBoxButton.OK);
+
+            //MainBoard.GameBoard = null;
 
             NavigationService.Navigate(new Uri("/GameOver.xaml", UriKind.Relative));
         }

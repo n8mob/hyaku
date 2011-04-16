@@ -18,11 +18,13 @@ namespace Hyaku
         const string GameSizeSettingKeyName = "GameSizeSetting";
         const string EnableTrashRowsKeyName = "EnableTrashRowsSetting";
         const string SweepTimerPeriodKeyName = "SweepTimerPeriodSetting";
+        const string TimerTickIntervalKeyName = "TimerTickInterval";
 
         // Default settings values
         const int GameSizeSettingDefault = 9;
         const bool EnableTrashRowsDefault = true;
         const int SweepTimerPeriodDefault = 15;
+        const int TimerTickIntervalDefault = 1000; // milliseconds
 
         public int GameSizeSetting
         {
@@ -64,6 +66,21 @@ namespace Hyaku
                     AddOrUpdateValue(SweepTimerPeriodKeyName, value);
                     Save();
                 }
+            }
+        }
+
+        /// <summary>
+        /// Timer tick interval in milliseconds
+        /// </summary>
+        public int TimerTickIntervalSetting
+        {
+            get
+            {
+                return GetValueOrDefault<int>(TimerTickIntervalKeyName, TimerTickIntervalDefault);
+            }
+            set
+            {
+                AddOrUpdateValue(TimerTickIntervalKeyName, value);
             }
         }
     }
