@@ -61,6 +61,33 @@ namespace Hyaku {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to GAME OVER!.
+        /// </summary>
+        internal static string GameOverCaption {
+            get {
+                return ResourceManager.GetString("GameOverCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ohhh! Over the top!.
+        /// </summary>
+        internal static string PushedPastTopMessage {
+            get {
+                return ResourceManager.GetString("PushedPastTopMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ab&apos;dee, ab&apos;dee, That&apos;s all, folks!.
+        /// </summary>
+        internal static string RanOutOfSpaceMessage {
+            get {
+                return ResourceManager.GetString("RanOutOfSpaceMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reset Game?.
         /// </summary>
         internal static string ResetGameCaption {

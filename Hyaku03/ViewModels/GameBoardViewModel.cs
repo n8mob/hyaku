@@ -18,8 +18,11 @@ using NateGrigg.Mobile.Utility;
 
 namespace Hyaku.ViewModels
 {
+    public delegate void GameOverEventHandler(object sender, GameOverEventArgs e);
+
     public class GameBoardViewModel : ViewModelBase
     {
+        public event GameOverEventHandler GameOver;
         List<int> numberSelections;
         private HyakuSettings settings;
         private int _randomListSize = 100;
@@ -191,9 +194,9 @@ namespace Hyaku.ViewModels
 #endif
             Counts += 1;
             if (Counts == settings.SweepTimerPeriodSetting) {
+                Counts = 0;
                 DoSweep();
                 AddTrashBlocksToAllColumns();
-                Counts = 0;
             }
 #if DEBUG
             // turn on the timer again
@@ -309,6 +312,9 @@ namespace Hyaku.ViewModels
                     movedSquares.Add(newSquare);
                 } else {
                     // game over
+                    if (GameOver != null) {
+                        GameOver(this, new GameOverEventArgs(GameOverReason.PushedPastTop));
+                    }
                 }
             }
             List<SquareViewModel> hyakus = new List<SquareViewModel>();

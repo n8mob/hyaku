@@ -117,6 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="GameOverCaption" xml:space="preserve">
+    <value>GAME OVER!</value>
+  </data>
+  <data name="PushedPastTopMessage" xml:space="preserve">
+    <value>Ohhh! Over the top!</value>
+  </data>
+  <data name="RanOutOfSpaceMessage" xml:space="preserve">
+    <value>Ab'dee, ab'dee, That's all, folks!</value>
+  </data>
   <data name="ResetGameCaption" xml:space="preserve">
     <value>Reset Game?</value>
   </data>

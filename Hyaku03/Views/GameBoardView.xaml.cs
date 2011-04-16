@@ -11,6 +11,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Hyaku.ViewModels;
 using System.Windows.Threading;
+using System.Windows.Navigation;
 
 namespace Hyaku.Views
 {
@@ -69,9 +70,6 @@ namespace Hyaku.Views
             }
             else
             {
-                // no squares
-                // TODO handle full column
-                return;
             }
 
             if (GameBoard.CurrentSquare != null)

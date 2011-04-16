@@ -54,20 +54,40 @@ namespace Hyaku
             } else {
                 board = GameBoardViewModel.CreateNewGame();
             }
+            board.GameOver += new GameOverEventHandler(GameOverHandler);
             MainBoard.GameBoard = board;
             base.OnNavigatedTo(e);
         }
 
         protected override void OnNavigatedFrom(System.Windows.Navigation.NavigationEventArgs e)
         {
+            string gameState;
             try {
-                string gameState = MainBoard.GameBoard.ToString();
-                IsolatedStorageHandler.WriteUtf8String(savedGameFileName, gameState);
+                if (!e.Uri.ToString().Equals("/GameOver.xaml")) {
+                    gameState = MainBoard.GameBoard.ToString();
+                    IsolatedStorageHandler.WriteUtf8String(savedGameFileName, gameState);
+                } else {
+                    gameState = string.Empty;
+                    IsolatedStorageHandler.WriteUtf8String(savedGameFileName, string.Empty);
+                }
             } catch {
                 MessageBox.Show(ErrorMessages.SaveFailed);
             }
 
             base.OnNavigatedFrom(e);
+        }
+
+        public void GameOverHandler(object sender, GameOverEventArgs e)
+        {
+            string gameOverMessage = Messages.GameOverCaption;
+            if (e.Reason == GameOverReason.RanOutOfSpace) {
+                gameOverMessage = Messages.RanOutOfSpaceMessage;
+            } else if (e.Reason == GameOverReason.PushedPastTop) { 
+                gameOverMessage = Messages.PushedPastTopMessage;
+            }
+            MessageBox.Show(gameOverMessage, Messages.GameOverCaption, MessageBoxButton.OK);
+
+            NavigationService.Navigate(new Uri("/GameOver.xaml", UriKind.Relative));
         }
 
         private void SettingsButton_Click(object sender, EventArgs e)

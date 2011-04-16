@@ -71,6 +71,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ErrorMessages.resx</DependentUpon>
     </Compile>
+    <Compile Include="GameOver.xaml.cs">
+      <DependentUpon>GameOver.xaml</DependentUpon>
+    </Compile>
     <Compile Include="HyakuSettings.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -85,6 +88,7 @@
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\GameBoardViewModel.cs" />
+    <Compile Include="GameOverEventArgs.cs" />
     <Compile Include="ViewModels\SquareViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\GameBoardView.xaml.cs">
@@ -102,6 +106,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Page Include="GameOver.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
