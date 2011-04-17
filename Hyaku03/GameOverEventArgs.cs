@@ -22,6 +22,7 @@ namespace Hyaku
     public enum GameOverReason
     {
         PushedPastTop,
-        RanOutOfSpace
+        RanOutOfSpace,
+        Error
     }
 }

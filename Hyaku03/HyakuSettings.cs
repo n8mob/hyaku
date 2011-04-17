@@ -18,13 +18,15 @@ namespace Hyaku
         const string GameSizeSettingKeyName = "GameSizeSetting";
         const string EnableTrashRowsKeyName = "EnableTrashRowsSetting";
         const string SweepTimerPeriodKeyName = "SweepTimerPeriodSetting";
-        const string TimerTickIntervalKeyName = "TimerTickInterval";
+        const string TimerTickIntervalKeyName = "TimerTickIntervalSetting";
+        const string GameOverFileNameKeyName = "GameOverFileNameSetting";
 
         // Default settings values
         const int GameSizeSettingDefault = 9;
         const bool EnableTrashRowsDefault = true;
-        const int SweepTimerPeriodDefault = 15;
-        const int TimerTickIntervalDefault = 1000; // milliseconds
+        const int SweepTimerPeriodDefault = 100;
+        const int TimerTickIntervalDefault = 300; // milliseconds
+        const string GameOverFileNameDefault = "GameOver.dat";
 
         public int GameSizeSetting
         {
@@ -81,6 +83,18 @@ namespace Hyaku
             set
             {
                 AddOrUpdateValue(TimerTickIntervalKeyName, value);
+            }
+        }
+
+        public string GameOverFileName
+        {
+            get
+            {
+                return GetValueOrDefault(GameOverFileNameKeyName, GameOverFileNameDefault);
+            }
+            set
+            {
+                AddOrUpdateValue(GameOverFileNameKeyName, value);
             }
         }
     }

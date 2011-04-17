@@ -37,7 +37,10 @@ namespace Hyaku.ViewModels
         private int _randomListSize = 100;
         private RandomListGenerator _randomListGenerator = null;
         private int _score;
-        private int _counts = 0;
+        private int _counts;
+        private int _availableSquares;
+        private int _minAvailibleSquares;
+        private int _maxAvailibleSquares;
 
         #endregion Declarations
 
@@ -114,6 +117,14 @@ namespace Hyaku.ViewModels
             }
         }
 
+        public string GameOverFileName
+        {
+            get
+            {
+                return settings.GameOverFileName;
+            }
+        }
+
         public SquareViewModel CurrentSquare { get; set; }
         /// <summary>
         /// A column-major two-dimensional array of SquareViewModels
@@ -128,11 +139,30 @@ namespace Hyaku.ViewModels
                 if (numberSelections == null || numberSelections.Count < 1)
                 {
                     numberSelections = RandomListGenerator.SelectRandomItems(RandomListSize, new List<int>(new int[] { 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95 }));
+                    //numberSelections = RandomListGenerator.SelectRandomItems(RandomListSize, new List<int>(new int[] { 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50 }));
                 }
 
                 int nextNumber = numberSelections[0];
                 numberSelections.RemoveAt(0);
                 return nextNumber;
+            }
+        }
+
+        public int AvailableSquares
+        {
+            get
+            {
+                return _availableSquares;
+            }
+            set
+            {
+                _availableSquares = value;
+                if (_availableSquares < _minAvailibleSquares) {
+                    // WTF?
+                    OnGameOver(GameOverReason.Error);
+                } else if (_availableSquares > _maxAvailibleSquares) {
+                    OnGameOver(GameOverReason.Error);
+                }
             }
         }
 
@@ -147,6 +177,10 @@ namespace Hyaku.ViewModels
             Timer.Interval = TimeSpan.FromMilliseconds(settings.TimerTickIntervalSetting);
             Timer.Tick += new EventHandler(Tick);
             GameGrid = new List<List<SquareViewModel>>(settings.GameSizeSetting);
+            _minAvailibleSquares = 0;
+            _maxAvailibleSquares = settings.GameSizeSetting * settings.GameSizeSetting;
+            AvailableSquares = _maxAvailibleSquares;
+            Counts = 0;
         }
 
         #endregion Constructors
@@ -159,7 +193,7 @@ namespace Hyaku.ViewModels
             {
                 CurrentSquare.Value = theNumber;
                 List<SquareViewModel> hyaku = null;
-                hyaku = CheckSurroundingSquares(CurrentSquare);
+                hyaku = FindNewHyakus(CurrentSquare);
                 if (hyaku != null)
                 {
                     MarkHyakuBlocks(hyaku);
@@ -167,18 +201,24 @@ namespace Hyaku.ViewModels
                 CurrentSquare.IsCurrent = false;
                 CurrentSquare.IsLocked = true;
                 CurrentSquare = null;
+                AvailableSquares -= 1;
+                if (AvailableSquares <= 0) {
+                    OnGameOver(GameOverReason.RanOutOfSpace);
+                    return;
+                }
             }
         }
 
-        public static void MarkHyakuBlocks(List<SquareViewModel> hyaku)
+        public void MarkHyakuBlocks(List<SquareViewModel> hyaku)
         {
             foreach (SquareViewModel sq in hyaku)
             {
                 sq.IsHyakuBlock = true;
+                AvailableSquares += 1;
             }
         }
 
-        public List<SquareViewModel> CheckSurroundingSquares(SquareViewModel sq1)
+        public List<SquareViewModel> FindNewHyakus(SquareViewModel sq1)
         {
             List<SquareViewModel> hyaku = null;
             for (int columnOffset = -1; columnOffset <= 1; columnOffset++)
@@ -275,7 +315,7 @@ namespace Hyaku.ViewModels
             }
             foreach (SquareViewModel sq in movedSquares)
             {
-                List<SquareViewModel> comboHyakus = CheckSurroundingSquares(sq);
+                List<SquareViewModel> comboHyakus = FindNewHyakus(sq);
                 if (comboHyakus != null)
                 {
                     newHyakus.AddRange(comboHyakus);
@@ -340,22 +380,24 @@ namespace Hyaku.ViewModels
                 if (newSquare != null) {
                     movedSquares.Add(newSquare);
                 } else {
-                    OnGameOver();
+                    OnGameOver(GameOverReason.PushedPastTop);
+                    return;
                 }
             }
             List<SquareViewModel> hyakus = new List<SquareViewModel>();
             foreach (SquareViewModel sq in movedSquares) {
-                List<SquareViewModel> newHyakus = CheckSurroundingSquares(sq);
+                List<SquareViewModel> newHyakus = FindNewHyakus(sq);
                 if (newHyakus != null) {
                     hyakus.AddRange(newHyakus);
                 }
             }
         }
 
-        public virtual void OnGameOver()
+        public virtual void OnGameOver(GameOverReason reason)
         {
             if (GameOver != null) {
-                GameOver(this, new GameOverEventArgs(GameOverReason.PushedPastTop));
+                Timer.Stop();
+                GameOver(this, new GameOverEventArgs(reason));
             }
         }
 
@@ -371,6 +413,9 @@ namespace Hyaku.ViewModels
 
         protected virtual SquareViewModel InsertNumber(List<SquareViewModel> column, int insertIndex, SquareViewModel firstEmptyBlock, int valueToInsert)
         {
+            if (AvailableSquares <= 0) {
+                OnGameOver(GameOverReason.RanOutOfSpace);
+            }
             for (int i = firstEmptyBlock.Row; i < column.Count - 1; i += 1) {
                 SquareViewModel target = column[i];
                 SquareViewModel source = column[i + 1];
@@ -380,6 +425,7 @@ namespace Hyaku.ViewModels
             }
             column[column.Count - 1].Value = valueToInsert;
             column[column.Count - 1].CurrentState = SquareState.Locked;
+            AvailableSquares -= 1;
             return column[column.Count - 1];
         }
 
@@ -428,6 +474,9 @@ namespace Hyaku.ViewModels
                     int.TryParse(row[rowIndex], out parsedValue);
                     SquareViewModel sq = new SquareViewModel(columnIndex, rowIndex);
                     sq.Value = parsedValue;
+                    if (sq.Value > 0) {
+                        gameBoard.AvailableSquares -= 1;
+                    }
                     gameBoard.GameGrid[columnIndex].Insert(rowIndex, sq);
                 }
             }

@@ -89,7 +89,7 @@ namespace Hyaku
             }
 
             //MainBoard.GameBoard = null;
-
+            IsolatedStorageHandler.WriteUtf8String(this.MainBoard.GameBoard.GameOverFileName, gameOverMessage);
             NavigationService.Navigate(new Uri("/GameOver.xaml", UriKind.Relative));
         }
 

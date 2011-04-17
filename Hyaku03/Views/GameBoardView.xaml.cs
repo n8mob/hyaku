@@ -12,11 +12,13 @@ using System.Windows.Shapes;
 using Hyaku.ViewModels;
 using System.Windows.Threading;
 using System.Windows.Navigation;
+using System.Threading;
 
 namespace Hyaku.Views
 {
     public partial class GameBoardView : UserControl
     {
+        private bool _gameOverEventHasFired = false;
         private GameBoardViewModel _gameBoard;
         public GameBoardViewModel GameBoard
         {
@@ -36,6 +38,10 @@ namespace Hyaku.Views
 
         private void ChildSquareClicked(object sender, EventArgs e)
         {
+            if (GameBoard == null) {
+                return;
+            }
+
             SquareView selectedUiSquare = sender as SquareView;
             if (selectedUiSquare == null)
             {
@@ -85,7 +91,10 @@ namespace Hyaku.Views
                 GameBoard.CurrentSquare = selectedSquareModel;
                 GameBoard.CurrentSquare.IsCurrent = true;
                 GameBoard.SendNumber((int)NextNumberTextBlock.Tag);
-                
+
+                if (_gameOverEventHasFired) {
+                    return;
+                }
                 NextNumberTextBlock.Tag = GameBoard.NextNumber;
                 NextNumberTextBlock.Text = NextNumberTextBlock.Tag.ToString();
             }
@@ -117,11 +126,11 @@ namespace Hyaku.Views
                         });
                     }
                     SquareViewModel square = GameBoard.GameGrid[columnIndex][rowIndex];
-                    List<SquareViewModel> hyakuBlocks = GameBoard.CheckSurroundingSquares(square);
+                    List<SquareViewModel> hyakuBlocks = GameBoard.FindNewHyakus(square);
                     if (hyakuBlocks == null) {
                         square.IsHyakuBlock = false;
                     } else {
-                        GameBoardViewModel.MarkHyakuBlocks(hyakuBlocks);
+                        GameBoard.MarkHyakuBlocks(hyakuBlocks);
                     }
                     SquareView uiSquare = new SquareView(square);
 
@@ -130,6 +139,13 @@ namespace Hyaku.Views
                 }
             }
             this.DataContext = GameBoard;
+            _gameOverEventHasFired = false;
+            GameBoard.GameOver += new GameOverEventHandler(GameOverHandler);
+        }
+
+        private void GameOverHandler(object sender, GameOverEventArgs e)
+        {
+            _gameOverEventHasFired = true;
         }
     }
 }

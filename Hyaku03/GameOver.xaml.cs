@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
+using NateGrigg.Mobile.Utility;
 
 namespace Hyaku
 {
@@ -22,7 +23,9 @@ namespace Hyaku
 
         private void PhoneApplicationPage_Loaded(object sender, RoutedEventArgs e)
         {
-
+            HyakuSettings settings = new HyakuSettings();
+            string gameOverMessage = IsolatedStorageHandler.ReadUtf8String(settings.GameOverFileName);
+            GameOverMessageTextBlock.Text = gameOverMessage;
         }
     }
 }
