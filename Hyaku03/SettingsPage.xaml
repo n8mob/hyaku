@@ -32,7 +32,7 @@
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
             <TextBlock x:Name="ApplicationTitle" Text="HYAKU!" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <TextBlock x:Name="PageTitle" Text="settings" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+            <TextBlock x:Name="PageTitle" Text="settings" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}" FontFamily="Segoe WP Light"/>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
@@ -48,16 +48,16 @@
                         <RowDefinition />
                         <RowDefinition />
                     </Grid.RowDefinitions>
-                    <TextBlock Grid.Column="0" Grid.Row="0" Name="GameSizeLabel" Text="Game Size" Margin="20" FontSize="{StaticResource PhoneFontSizeMedium}" />
+                    <TextBlock Grid.Column="0" Grid.Row="0" Name="GameSizeLabel" Text="Game Size" Margin="20" FontSize="{StaticResource PhoneFontSizeMedium}" FontFamily="Segoe WP Light" />
                     <TextBox Grid.Column="1" Grid.Row="0" Name="CurrentGameSizeTextBox" HorizontalAlignment="Right" Width="100" Margin="0,0,20,0"
                              InputScope="TelephoneNumber" Text="{Binding Source={StaticResource hyakuSettings}, Path=GameSizeSetting, Mode=TwoWay}" />
                     <!-- SweepTimerPeriod -->
-                    <TextBlock Grid.Column="0" Grid.Row="1" Name="SweepTimerLabel" Text="Sweep Time (in seconds)" Margin="20" FontSize="{StaticResource PhoneFontSizeMedium}" />
+                    <TextBlock Grid.Column="0" Grid.Row="1" Name="SweepTimerLabel" Text="Sweep Time (in seconds)" Margin="20" FontSize="{StaticResource PhoneFontSizeMedium}" FontFamily="Segoe WP Light" />
                     <TextBox Grid.Column="1" Grid.Row="1" Name="CurrentSweepTimeTextBox" HorizontalAlignment="Right" Width="125" Margin="0,0,20,0"
                              InputScope="TelephoneNumber" Text="{Binding Source={StaticResource hyakuSettings}, Path=SweepTimerPeriodSetting, Mode=TwoWay}"/>
                 </Grid>
                 <!-- EnableTrashRows -->
-                <CheckBox Grid.Row="1" Content="Enable Trash Rows" Name="EnableTrashRowsSetting" VerticalAlignment="Top"
+                <CheckBox Grid.Row="1" Content="Enable Trash Rows" Name="EnableTrashRowsSetting" VerticalAlignment="Top" FontFamily="Segoe WP Light"
                       IsChecked="{Binding Source={StaticResource hyakuSettings}, Path=EnableTrashRowsSetting, Mode=TwoWay}" />
             </StackPanel>
         </Grid>

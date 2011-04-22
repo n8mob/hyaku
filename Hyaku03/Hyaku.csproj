@@ -51,10 +51,10 @@
     <Reference Include="Microsoft.Phone" />
     <Reference Include="Microsoft.Phone.Interop" />
     <Reference Include="NateGrigg.Mobile.Random">
-      <HintPath>..\..\..\Me\NateGrigg.Mobile.RandomList\NateGrigg.Mobile.RandomList\Bin\Release\NateGrigg.Mobile.Random.dll</HintPath>
+      <HintPath>..\lib\NateGrigg.Mobile.Random.dll</HintPath>
     </Reference>
     <Reference Include="NateGrigg.Mobile.Utility">
-      <HintPath>..\..\..\Me\Windows Phone\NateGrigg.Mobile.Utility\NateGrigg.Mobile.Utility\Bin\Release\NateGrigg.Mobile.Utility.dll</HintPath>
+      <HintPath>..\lib\NateGrigg.Mobile.Utility.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows" />
     <Reference Include="system" />
