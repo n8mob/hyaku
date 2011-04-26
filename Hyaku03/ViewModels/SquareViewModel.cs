@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Hyaku.Views;
+using System.Collections.Generic;
 
 namespace Hyaku.ViewModels
 {
@@ -24,6 +25,8 @@ namespace Hyaku.ViewModels
         private bool _isHyaku;
         private SquareView _uiSquare;
         private SquareState _currentState;
+        private Dictionary<int, List<DistanceSum>> _distanceSums;
+
 
         #endregion Declarations
 
@@ -134,6 +137,22 @@ namespace Hyaku.ViewModels
             }
         }
 
+        public Dictionary<int, List<DistanceSum>> DistanceSums
+        {
+            get
+            {
+                if (_distanceSums == null) {
+                    _distanceSums = new Dictionary<int, List<DistanceSum>>();
+                }
+                return _distanceSums;
+            }
+            set
+            {
+                _distanceSums = value;
+                NotifyPropertyChanged("DistanceSums");
+            }
+        }
+
         #endregion Properties
 
         #region Constructors
@@ -174,11 +193,43 @@ namespace Hyaku.ViewModels
             return string.Format("[{0}][{1}]: {2} {3}", Column, Row, StringValue, CurrentState);
         }
 
-        public void Reset()
+        public virtual void Reset()
         {
             this.IsHyakuBlock = false;
             this.IsLocked = false;
             this.Value = 0;
+        }
+
+        public virtual int DistanceTo(SquareViewModel sq)
+        {
+            int rowDistance = Math.Abs(Row - sq.Row);
+            int columnDistance = Math.Abs(Column - sq.Column);
+            return Math.Max(rowDistance, columnDistance);
+        }
+
+        public virtual void UpdateAllSums(SquareViewModel sq)
+        {
+            int distanceToSquare = DistanceTo(sq);
+            foreach (int givenDistance in sq.DistanceSums.Keys) {
+                List<DistanceSum> sqSumsForGivenDistance = sq.DistanceSums[givenDistance];
+                int distanceForSum = givenDistance + distanceToSquare;
+                if (distanceForSum > 2) { // TODO make a setting
+                    continue;
+                }
+                List<DistanceSum> mySumsForGivenDistance = new List<DistanceSum>();
+                foreach (DistanceSum sum in sqSumsForGivenDistance) {
+                    // create my sums
+                    mySumsForGivenDistance.Add(sum.AddSum(distanceForSum, Value, this));
+                    // TODO update his sums
+                }
+                if (mySumsForGivenDistance.Count > 0) {
+                    if (!DistanceSums.ContainsKey(distanceForSum)) {
+                        DistanceSums.Add(distanceForSum, mySumsForGivenDistance);
+                    } else {
+                        DistanceSums[distanceForSum].AddRange(mySumsForGivenDistance);
+                    }
+                }
+            }
         }
 
         #endregion Methods

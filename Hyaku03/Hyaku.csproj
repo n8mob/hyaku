@@ -87,6 +87,7 @@
     <Compile Include="SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\DistanceSum.cs" />
     <Compile Include="ViewModels\GameBoardViewModel.cs" />
     <Compile Include="GameOverEventArgs.cs" />
     <Compile Include="ViewModels\SquareViewModel.cs" />
