@@ -211,22 +211,23 @@ namespace Hyaku.ViewModels
         {
             int distanceToSquare = DistanceTo(sq);
             foreach (int givenDistance in sq.DistanceSums.Keys) {
-                List<DistanceSum> sqSumsForGivenDistance = sq.DistanceSums[givenDistance];
-                int distanceForSum = givenDistance + distanceToSquare;
-                if (distanceForSum > 2) { // TODO make a setting
+                int distanceForNewSum = givenDistance + distanceToSquare;
+                if (distanceForNewSum > 2) { // TODO make a setting
+                    // skip distances athat are too far
                     continue;
                 }
+                List<DistanceSum> sqSumsForGivenDistance = sq.DistanceSums[givenDistance];
                 List<DistanceSum> mySumsForGivenDistance = new List<DistanceSum>();
                 foreach (DistanceSum sum in sqSumsForGivenDistance) {
                     // create my sums
-                    mySumsForGivenDistance.Add(sum.AddSum(distanceForSum, Value, this));
+                    // mySumsForGivenDistance.Add(sum.AddSum(distanceForNewSum, Value, this));
                     // TODO update his sums
                 }
                 if (mySumsForGivenDistance.Count > 0) {
-                    if (!DistanceSums.ContainsKey(distanceForSum)) {
-                        DistanceSums.Add(distanceForSum, mySumsForGivenDistance);
+                    if (!DistanceSums.ContainsKey(distanceForNewSum)) {
+                        DistanceSums.Add(distanceForNewSum, mySumsForGivenDistance);
                     } else {
-                        DistanceSums[distanceForSum].AddRange(mySumsForGivenDistance);
+                        DistanceSums[distanceForNewSum].AddRange(mySumsForGivenDistance);
                     }
                 }
             }

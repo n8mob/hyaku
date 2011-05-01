@@ -24,5 +24,10 @@ namespace Hyaku
         {
 
         }
+
+        private void UseDebugNumbersSetting_Click(object sender, RoutedEventArgs e)
+        {
+            DebugNumbersTextBox.IsEnabled = UseDebugNumbersSetting.IsChecked ?? false;
+        }
     }
 }

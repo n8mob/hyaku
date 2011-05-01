@@ -74,6 +74,7 @@
     <Compile Include="GameOver.xaml.cs">
       <DependentUpon>GameOver.xaml</DependentUpon>
     </Compile>
+    <Compile Include="HyakuFoundEventArgs.cs" />
     <Compile Include="HyakuSettings.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -88,6 +89,7 @@
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\DistanceSum.cs" />
+    <Compile Include="ViewModels\DistanceSumsTable.cs" />
     <Compile Include="ViewModels\GameBoardViewModel.cs" />
     <Compile Include="GameOverEventArgs.cs" />
     <Compile Include="ViewModels\SquareViewModel.cs" />

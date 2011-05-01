@@ -74,7 +74,8 @@ namespace Hyaku.Views
             }
             else
             {
-
+                // no squares in this collumn
+                return;
             }
 
             if (GameBoard.CurrentSquare != null)
@@ -126,12 +127,7 @@ namespace Hyaku.Views
                         });
                     }
                     SquareViewModel square = GameBoard.GameGrid[columnIndex][rowIndex];
-                    List<SquareViewModel> hyakuBlocks = GameBoard.FindNewHyakus(square);
-                    if (hyakuBlocks == null) {
-                        square.IsHyakuBlock = false;
-                    } else {
-                        GameBoard.MarkHyakuBlocks(hyakuBlocks);
-                    }
+                    GameBoard.FindNewHyakus(square);
                     SquareView uiSquare = new SquareView(square);
 
                     GameGrid.Children.Add(uiSquare);

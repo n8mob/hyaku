@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,6 +10,8 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using NateGrigg.Mobile.Utility;
+using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace Hyaku
 {
@@ -20,6 +23,9 @@ namespace Hyaku
         const string SweepTimerPeriodKeyName = "SweepTimerPeriodSetting";
         const string TimerTickIntervalKeyName = "TimerTickIntervalSetting";
         const string GameOverFileNameKeyName = "GameOverFileNameSetting";
+        const string NumberListStringKeyName = "NumberListStringSetting";
+        const string UseDebugNumbersKeyName = "UseDebugNumbers";
+        const string DebugNumbersStringKeyName = "DebugNumbers";
 
         // Default settings values
         const int GameSizeSettingDefault = 9;
@@ -27,6 +33,9 @@ namespace Hyaku
         const int SweepTimerPeriodDefault = 100;
         const int TimerTickIntervalDefault = 300; // milliseconds
         const string GameOverFileNameDefault = "GameOver.dat";
+        const string NumberListStringDefault = "5,10,15,20,25,30,35,40,45";
+        const bool UseDebugNumbersDefault = false;
+        const string DebugNumbersStringDefault = "";
 
         public int GameSizeSetting
         {
@@ -95,6 +104,78 @@ namespace Hyaku
             set
             {
                 AddOrUpdateValue(GameOverFileNameKeyName, value);
+            }
+        }
+
+        public string NumberListStringSetting
+        {
+            get
+            {
+                return GetValueOrDefault<string>(NumberListStringKeyName, NumberListStringDefault);
+            }
+            set
+            {
+                AddOrUpdateValue(NumberListStringKeyName, value);
+            }
+        }
+
+        public List<int> NumberListSetting
+        {
+            get
+            {
+                string[] listString = NumberListStringSetting.Split(',');
+                List<int> listInts = (from s in listString
+                                  select int.Parse(s)).ToList();
+                return listInts;
+            }
+            set
+            {
+                string[] listString = (from i in value
+                                       select i.ToString()).ToArray();
+                string list = string.Join(",", listString);
+                AddOrUpdateValue(NumberListStringKeyName, list);
+            }
+        }
+
+        public bool UseDebugNumbersSetting
+        {
+            get
+            {
+                return GetValueOrDefault<bool>(UseDebugNumbersKeyName, UseDebugNumbersDefault);
+            }
+            set
+            {
+                AddOrUpdateValue(UseDebugNumbersKeyName, value);
+            }
+        }
+
+        public string DebugNumbersStringSetting
+        {
+            get
+            {
+                return GetValueOrDefault<string>(DebugNumbersStringKeyName, DebugNumbersStringDefault);
+            }
+            set
+            {
+                AddOrUpdateValue(DebugNumbersStringKeyName, value);
+            }
+        }
+
+        public List<int> DebugNumbersSetting
+        {
+            get
+            {
+                string[] listString = DebugNumbersStringSetting.Split(',');
+                List<int> listInts = (from s in listString
+                                      select int.Parse(s)).ToList();
+                return listInts;
+            }
+            set
+            {
+                string[] listString = (from i in value
+                                       select i.ToString()).ToArray();
+                string list = string.Join(",", listString);
+                AddOrUpdateValue(DebugNumbersStringKeyName, list);
             }
         }
     }

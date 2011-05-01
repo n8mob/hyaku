@@ -16,7 +16,7 @@ namespace Hyaku.ViewModels
     {
         #region Declarations
 
-        private int _distance;
+        private int _maxDistance;
         private int _sum;
         private List<SquareViewModel> _squaresInSum;
 
@@ -24,63 +24,77 @@ namespace Hyaku.ViewModels
 
         #region Properties
 
-        public int Distance
+        public virtual int MaxDistance
         {
             get
             {
-                return _distance;
+                return _maxDistance;
             }
-            set
+            private set
             {
-                _distance = value;
-                NotifyPropertyChanged("Distance");
+                _maxDistance = value;
+                NotifyPropertyChanged("MaxDistance");
             }
         }
 
-        public int Sum
+        public virtual int Sum
         {
             get
             {
                 return _sum;
             }
-            set
+            protected set
             {
                 _sum = value;
                 NotifyPropertyChanged("Sum");
             }
         }
 
-        public List<SquareViewModel> SquaresInSum
+        public virtual List<SquareViewModel> SquaresInSum
         {
             get
             {
+                if (_squaresInSum == null) {
+                    _squaresInSum = new List<SquareViewModel>();
+                }
                 return _squaresInSum;
             }
-            set
-            {
-                _squaresInSum = value;
-                NotifyPropertyChanged("SquaresInSum");
+        }
+
+        public virtual void AddSquareToSum(SquareViewModel newSquare)
+        {
+            SquaresInSum.Add(newSquare);
+            int sum = 0;
+            foreach (SquareViewModel sq in _squaresInSum) {
+                sum += sq.Value;
+                int maxDistance = newSquare.DistanceTo(sq);
+                if (maxDistance > MaxDistance)
+                {
+                    MaxDistance = maxDistance;
+                }
             }
+            Sum = sum;
+            NotifyPropertyChanged("SquaresInSum");
         }
 
         #endregion Properties
 
         #region Constructors
 
+        public DistanceSum(SquareViewModel sq)
+        {
+            AddSquareToSum(sq);
 
+        }
+
+        public DistanceSum(SquareViewModel newSquare, DistanceSum existingSum)
+        {
+            foreach (SquareViewModel sq in existingSum.SquaresInSum) {
+                AddSquareToSum(sq);
+            }
+            AddSquareToSum(newSquare);
+        }
 
         #endregion Constructors
-
-        internal DistanceSum AddSum(int additionalDistance, int additionalAmmount, SquareViewModel sq)
-        {
-            DistanceSum distanceSum = new DistanceSum()
-            {
-                Distance = Distance + additionalDistance,
-                Sum = Sum + additionalAmmount
-            };
-            distanceSum.SquaresInSum = new List<SquareViewModel>(SquaresInSum);
-            distanceSum.SquaresInSum.Add(sq);
-            return distanceSum;
-        }
     }
 }

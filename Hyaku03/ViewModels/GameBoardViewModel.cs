@@ -33,9 +33,10 @@ namespace Hyaku.ViewModels
 
         private DispatcherTimer _timer;
         List<int> numberSelections;
-        private HyakuSettings settings;
+        private HyakuSettings hyakuSettings;
         private int _randomListSize = 100;
         private RandomListGenerator _randomListGenerator = null;
+        private DistanceSumsTable _sumsTable = null;
         private int _score;
         private int _counts;
         private int _availableSquares;
@@ -83,6 +84,22 @@ namespace Hyaku.ViewModels
             }
         }
 
+        public DistanceSumsTable SumsTable
+        {
+            get
+            {
+                if (_sumsTable == null) {
+                    _sumsTable = new DistanceSumsTable();
+                    _sumsTable.HyakuFound += new HyakuFoundEventHandler(HyakuFoundHandler);
+                }
+                return _sumsTable;
+            }
+            set
+            {
+                _sumsTable = value;
+            }
+        }
+
         public int Score
         {
             get
@@ -113,7 +130,7 @@ namespace Hyaku.ViewModels
         {
             get
             {
-                return settings.SweepTimerPeriodSetting;
+                return hyakuSettings.SweepTimerPeriodSetting;
             }
         }
 
@@ -121,7 +138,7 @@ namespace Hyaku.ViewModels
         {
             get
             {
-                return settings.GameOverFileName;
+                return hyakuSettings.GameOverFileName;
             }
         }
 
@@ -138,8 +155,13 @@ namespace Hyaku.ViewModels
             {
                 if (numberSelections == null || numberSelections.Count < 1)
                 {
-                    numberSelections = RandomListGenerator.SelectRandomItems(RandomListSize, new List<int>(new int[] { 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95 }));
-                    //numberSelections = RandomListGenerator.SelectRandomItems(RandomListSize, new List<int>(new int[] { 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50 }));
+                    if (hyakuSettings.UseDebugNumbersSetting && hyakuSettings.DebugNumbersSetting != null && hyakuSettings.DebugNumbersSetting.Count > 0) {
+                        numberSelections = hyakuSettings.DebugNumbersSetting;
+                        hyakuSettings.UseDebugNumbersSetting = false;
+                    } else {
+                        numberSelections = RandomListGenerator.SelectRandomItems(RandomListSize, hyakuSettings.NumberListSetting);
+                        //numberSelections = RandomListGenerator.SelectRandomItems(RandomListSize, new List<int>(new int[] { 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50 }));
+                    }
                 }
 
                 int nextNumber = numberSelections[0];
@@ -172,13 +194,13 @@ namespace Hyaku.ViewModels
 
         public GameBoardViewModel()
         {
-            settings = new HyakuSettings();
+            hyakuSettings = new HyakuSettings();
             Timer = new DispatcherTimer();
-            Timer.Interval = TimeSpan.FromMilliseconds(settings.TimerTickIntervalSetting);
+            Timer.Interval = TimeSpan.FromMilliseconds(hyakuSettings.TimerTickIntervalSetting);
             Timer.Tick += new EventHandler(Tick);
-            GameGrid = new List<List<SquareViewModel>>(settings.GameSizeSetting);
+            GameGrid = new List<List<SquareViewModel>>(hyakuSettings.GameSizeSetting);
             _minAvailibleSquares = 0;
-            _maxAvailibleSquares = settings.GameSizeSetting * settings.GameSizeSetting;
+            _maxAvailibleSquares = hyakuSettings.GameSizeSetting * hyakuSettings.GameSizeSetting;
             AvailableSquares = _maxAvailibleSquares;
             Counts = 0;
         }
@@ -189,19 +211,16 @@ namespace Hyaku.ViewModels
 
         public void SendNumber(int theNumber)
         {
-            if (CurrentSquare != null)
+            if (CurrentSquare != null && CurrentSquare.Value == 0)
             {
                 CurrentSquare.Value = theNumber;
-                List<SquareViewModel> hyaku = null;
-                hyaku = FindNewHyakus(CurrentSquare);
-                if (hyaku != null)
-                {
-                    MarkHyakuBlocks(hyaku);
-                }
+                AvailableSquares -= 1;
+
+                FindNewHyakus(CurrentSquare);
+                
                 CurrentSquare.IsCurrent = false;
                 CurrentSquare.IsLocked = true;
                 CurrentSquare = null;
-                AvailableSquares -= 1;
                 if (AvailableSquares <= 0) {
                     OnGameOver(GameOverReason.RanOutOfSpace);
                     return;
@@ -213,14 +232,15 @@ namespace Hyaku.ViewModels
         {
             foreach (SquareViewModel sq in hyaku)
             {
-                sq.IsHyakuBlock = true;
-                AvailableSquares += 1;
+                if (!sq.IsHyakuBlock) {
+                    sq.IsHyakuBlock = true;
+                    AvailableSquares += 1;
+                }
             }
         }
 
-        public List<SquareViewModel> FindNewHyakus(SquareViewModel sq1)
+        public void FindNewHyakus(SquareViewModel sq1)
         {
-            List<SquareViewModel> hyaku = null;
             for (int columnOffset = -1; columnOffset <= 1; columnOffset++)
             {
                 int columnToCheck = sq1.Column + columnOffset;
@@ -234,17 +254,17 @@ namespace Hyaku.ViewModels
                             SquareViewModel sq2 = GameGrid[columnToCheck][rowTocheck];
                             if (sq1 != sq2)
                             {
-                                hyaku = CheckTwoSquares(sq1, sq2);
-                                if (hyaku != null)
-                                {
-                                    return hyaku;
-                                }
+                                SumsTable.AddSumsForNewSquare(sq1, sq2);
                             }
                         }
                     }
                 }
             }
-            return hyaku;
+        }
+
+        public virtual void HyakuFoundHandler(object sender, HyakuFoundEventArgs e)
+        {
+            MarkHyakuBlocks(e.Sum.SquaresInSum);
         }
 
         public List<SquareViewModel> CheckTwoSquares(SquareViewModel sq1, SquareViewModel sq2)
@@ -265,7 +285,7 @@ namespace Hyaku.ViewModels
             Timer.Stop();
 #endif
             Counts += 1;
-            if (Counts == settings.SweepTimerPeriodSetting) {
+            if (Counts == hyakuSettings.SweepTimerPeriodSetting) {
                 Counts = 0;
                 DoSweep();
                 AddTrashBlocksToAllColumns();
@@ -313,15 +333,9 @@ namespace Hyaku.ViewModels
                 target = null;
                 source = null;
             }
-            foreach (SquareViewModel sq in movedSquares)
-            {
-                List<SquareViewModel> comboHyakus = FindNewHyakus(sq);
-                if (comboHyakus != null)
-                {
-                    newHyakus.AddRange(comboHyakus);
-                }
+            foreach (SquareViewModel sq in movedSquares) {
+                FindNewHyakus(sq);
             }
-            MarkHyakuBlocks(newHyakus);
         }
 
         protected virtual SquareViewModel FirstHyaku(List<SquareViewModel> column)
@@ -386,10 +400,7 @@ namespace Hyaku.ViewModels
             }
             List<SquareViewModel> hyakus = new List<SquareViewModel>();
             foreach (SquareViewModel sq in movedSquares) {
-                List<SquareViewModel> newHyakus = FindNewHyakus(sq);
-                if (newHyakus != null) {
-                    hyakus.AddRange(newHyakus);
-                }
+                FindNewHyakus(sq);
             }
         }
 
