@@ -26,6 +26,7 @@ namespace Hyaku
         const string NumberListStringKeyName = "NumberListStringSetting";
         const string UseDebugNumbersKeyName = "UseDebugNumbers";
         const string DebugNumbersStringKeyName = "DebugNumbers";
+        const string MaxDistanceKeyName = "MaxDistance";
 
         // Default settings values
         const int GameSizeSettingDefault = 9;
@@ -36,6 +37,7 @@ namespace Hyaku
         const string NumberListStringDefault = "5,10,15,20,25,30,35,40,45";
         const bool UseDebugNumbersDefault = false;
         const string DebugNumbersStringDefault = "";
+        const int MaxDistanceDefault = 2;
 
         public int GameSizeSetting
         {
@@ -176,6 +178,18 @@ namespace Hyaku
                                        select i.ToString()).ToArray();
                 string list = string.Join(",", listString);
                 AddOrUpdateValue(DebugNumbersStringKeyName, list);
+            }
+        }
+
+        public int MaxDistanceSetting
+        {
+            get
+            {
+                return GetValueOrDefault<int>(MaxDistanceKeyName, MaxDistanceDefault);
+            }
+            set
+            {
+                AddOrUpdateValue(MaxDistanceKeyName, value);
             }
         }
     }

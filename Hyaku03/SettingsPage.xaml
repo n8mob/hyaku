@@ -48,20 +48,25 @@
                         <Grid.RowDefinitions>
                             <RowDefinition />
                             <RowDefinition />
+                            <RowDefinition />
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Column="0" Grid.Row="0" Name="GameSizeLabel" Text="Game Size" Margin="20" FontSize="{StaticResource PhoneFontSizeMedium}" FontFamily="Segoe WP Light" />
-                        <TextBox Grid.Column="1" Grid.Row="0" Name="CurrentGameSizeTextBox" HorizontalAlignment="Right" Width="100" Margin="0,0,20,0"
+                        <TextBox Grid.Column="1" Grid.Row="0" Name="CurrentGameSizeTextBox" HorizontalAlignment="Right" Width="125" Margin="0,0,20,0"
                              InputScope="TelephoneNumber" Text="{Binding Source={StaticResource hyakuSettings}, Path=GameSizeSetting, Mode=TwoWay}" />
                         <!-- SweepTimerPeriod -->
-                        <TextBlock Grid.Column="0" Grid.Row="1" Name="SweepTimerLabel" Text="Sweep Time (in seconds)" Margin="20" FontSize="{StaticResource PhoneFontSizeMedium}" FontFamily="Segoe WP Light" />
+                        <TextBlock Grid.Column="0" Grid.Row="1" Name="SweepTimerLabel2" Text="Sweep Time (In Seconds)" Margin="20" FontSize="{StaticResource PhoneFontSizeMedium}" FontFamily="Segoe WP Light" />
                         <TextBox Grid.Column="1" Grid.Row="1" Name="CurrentSweepTimeTextBox" HorizontalAlignment="Right" Width="125" Margin="0,0,20,0"
                              InputScope="TelephoneNumber" Text="{Binding Source={StaticResource hyakuSettings}, Path=SweepTimerPeriodSetting, Mode=TwoWay}"/>
+                        <!-- Max Distance -->
+                        <TextBlock Grid.Column="0" Grid.Row="2" Name="MaxDistanceLabel" Text="Max Distance for Hyakus" Margin="20" FontSize="{StaticResource PhoneFontSizeMedium}" FontFamily="Segoe WP Light" />
+                        <TextBox Grid.Column="1" Grid.Row="2" Name="MaxDistanceTextBox" HorizontalAlignment="Right" Width="125" Margin="0,0,20,0"
+                                 InputScope="TelephoneNumber" Text="{Binding Source={StaticResource hyakuSettings}, Path=MaxDistanceSetting, Mode=TwoWay}" />
                     </Grid>
                     <!-- Debug numbers -->
                     <CheckBox Content="Use Debug Numbers" Name="UseDebugNumbersSetting" FontFamily="Segoe WP Light"
                               Click="UseDebugNumbersSetting_Click"
                               IsChecked="{Binding Source={StaticResource hyakuSettings}, Path=UseDebugNumbersSetting, Mode=TwoWay}" />
-                    <TextBox x:Name="DebugNumbersTextBox" IsEnabled="False"
+                    <TextBox x:Name="DebugNumbersTextBox" InputScope="Digits" IsEnabled="False"
                              Text="{Binding Source={StaticResource hyakuSettings}, Path=DebugNumbersStringSetting, Mode=TwoWay}" />
                     <!-- Number List setting -->
                     <TextBlock x:Name="NumberListLabel" Text="Number List:" Margin="20" FontSize="{StaticResource PhoneFontSizeMedium}" FontFamily="Segoe WP Light" />
