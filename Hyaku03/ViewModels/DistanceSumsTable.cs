@@ -16,6 +16,23 @@ namespace Hyaku.ViewModels
 
     public class DistanceSumsTable : ViewModelBase
     {
+        private HyakuSettings _settings;
+
+        protected virtual HyakuSettings Settings
+        {
+            get
+            {
+                if (_settings == null) {
+                    _settings = new HyakuSettings();
+                }
+                return _settings;
+            }
+            set
+            {
+                _settings = value;
+            }
+        }
+
         #region Events
         public event HyakuFoundEventHandler HyakuFound;
         #endregion Events
@@ -35,8 +52,8 @@ namespace Hyaku.ViewModels
 
         public virtual void AddSumsForNewSquare(SquareViewModel newSquare, SquareViewModel existingSquare)
         {
-            if (newSquare.DistanceTo(existingSquare) > 2) {
-                // not interested in squares further away than 2
+            if (newSquare.DistanceTo(existingSquare) > Settings.MaxDistanceSetting) {
+                // not interested in squares further away than the max
                 return;
             }
 
@@ -69,7 +86,7 @@ namespace Hyaku.ViewModels
                 // make a copy so we can modify the copy while we iterate over the original
                 existingSquareSums = new List<DistanceSum>(Table[existingSquare]);
                 foreach (DistanceSum ds in Table[existingSquare]) {
-                    if (ds.MaxDistance < 3) { // not interested in any distances > 2
+                    if (ds.MaxDistance <= Settings.MaxDistanceSetting) { // not interested in any distances beyond the max setting
                         DistanceSum newDs = new DistanceSum(newSquare, ds);
                         if (newDs.Sum == 100) {
                             OnHyakuFound(newDs);
@@ -77,7 +94,7 @@ namespace Hyaku.ViewModels
                         // update the existing sums to include the new square
                         if (newDs.Sum < 100) {
                             existingSquareSums.Add(newDs);
-                            if (ds.MaxDistance < 2) {
+                            if (ds.MaxDistance < Settings.MaxDistanceSetting) {
                                 // make sums for the new square
                                 newSquareSums.Add(newDs);
                             }

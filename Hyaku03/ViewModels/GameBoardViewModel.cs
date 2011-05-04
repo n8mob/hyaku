@@ -406,8 +406,8 @@ namespace Hyaku.ViewModels
 
         public virtual void OnGameOver(GameOverReason reason)
         {
+            Timer.Stop();
             if (GameOver != null) {
-                Timer.Stop();
                 GameOver(this, new GameOverEventArgs(reason));
             }
         }
@@ -427,17 +427,17 @@ namespace Hyaku.ViewModels
             if (AvailableSquares <= 0) {
                 OnGameOver(GameOverReason.RanOutOfSpace);
             }
-            for (int i = firstEmptyBlock.Row; i < column.Count - 1; i += 1) {
+            for (int i = firstEmptyBlock.Row; i < insertIndex; i += 1) {
                 SquareViewModel target = column[i];
                 SquareViewModel source = column[i + 1];
                 target.Value = source.Value;
                 target.CurrentState = source.CurrentState;
                 source.Reset();
             }
-            column[column.Count - 1].Value = valueToInsert;
-            column[column.Count - 1].CurrentState = SquareState.Locked;
+            column[insertIndex].Value = valueToInsert;
+            column[insertIndex].CurrentState = SquareState.Locked;
             AvailableSquares -= 1;
-            return column[column.Count - 1];
+            return column[insertIndex];
         }
 
         protected virtual void CountScore(SquareViewModel target)
@@ -484,10 +484,8 @@ namespace Hyaku.ViewModels
                     int parsedValue;
                     int.TryParse(row[rowIndex], out parsedValue);
                     SquareViewModel sq = new SquareViewModel(columnIndex, rowIndex);
-                    sq.Value = parsedValue;
-                    if (sq.Value > 0) {
-                        gameBoard.AvailableSquares -= 1;
-                    }
+                    gameBoard.CurrentSquare = sq;
+                    gameBoard.SendNumber(parsedValue);
                     gameBoard.GameGrid[columnIndex].Insert(rowIndex, sq);
                 }
             }
