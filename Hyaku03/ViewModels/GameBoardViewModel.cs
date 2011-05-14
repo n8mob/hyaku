@@ -342,7 +342,6 @@ namespace Hyaku.ViewModels
 
                     if (target.Score > 0) {
                         CountScore(target);
-                        EmptySquares += 1;
                     }
 
                     if (source != null) {
@@ -350,8 +349,10 @@ namespace Hyaku.ViewModels
                         target.CurrentState = source.CurrentState;
                         movedSquares.Add(target);
                         source.Reset();
+                        EmptySquares += 1;
                     } else {
                         target.Reset();
+                        EmptySquares += 1;
                     }
 
                     target = NextTarget(column, target);
@@ -432,7 +433,6 @@ namespace Hyaku.ViewModels
 
         public virtual void OnGameOver(GameOverReason reason)
         {
-            Timer.Stop();
             if (GameOver != null) {
                 GameOver(this, new GameOverEventArgs(reason));
             }
