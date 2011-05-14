@@ -337,7 +337,7 @@ namespace Hyaku.ViewModels
             foreach (List<SquareViewModel> column in GameGrid)
             {
                 target = FirstHyaku(column);
-                while (target != null) {
+                while (target != null && target.Value > 0) {
                     source = NextSource(column, target);
 
                     if (target.Score > 0) {
@@ -349,12 +349,11 @@ namespace Hyaku.ViewModels
                         target.CurrentState = source.CurrentState;
                         movedSquares.Add(target);
                         source.Reset();
-                        EmptySquares += 1;
                     } else {
                         target.Reset();
-                        EmptySquares += 1;
                     }
 
+                    EmptySquares += 1;
                     target = NextTarget(column, target);
                 }
                 target = null;

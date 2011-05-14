@@ -61,7 +61,9 @@ namespace Hyaku
 
         protected override void OnNavigatingFrom(System.Windows.Navigation.NavigatingCancelEventArgs e)
         {
-            
+            if (MainBoard.GameBoard != null && MainBoard.GameBoard.Timer != null) {
+                MainBoard.GameBoard.Timer.Stop();
+            }
             string gameState;
             try {
                 if (!e.Uri.ToString().Equals("/GameOver.xaml")) {
