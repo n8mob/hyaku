@@ -312,20 +312,20 @@ namespace Hyaku.ViewModels
 
         public virtual void Tick(object sender, EventArgs e)
         {
-#if DEBUG
-            // turn off the timer so tick events don't pile up
-            Timer.Stop();
-#endif
+//#if DEBUG
+//            // turn off the timer so tick events don't pile up
+//            Timer.Stop();
+//#endif
             Counts += 1;
             if (Counts == hyakuSettings.SweepTimerPeriodSetting) {
                 Counts = 0;
                 DoSweep();
                 AddTrashBlocksToAllColumns();
             }
-#if DEBUG
-            // turn on the timer again
-            Timer.Start();
-#endif
+//#if DEBUG
+//            // turn on the timer again
+//            Timer.Start();
+//#endif
         }
 
         protected virtual void DoSweep()
