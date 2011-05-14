@@ -63,7 +63,10 @@ namespace Hyaku.Views
             {
                 case SquareState.Hyaku:
                     MainText.Foreground = (SolidColorBrush)Resources["PhoneAccentBrush"];
-                    LayoutRoot.Background = (SolidColorBrush)Resources["PhoneBackgroundBrush"];
+                    LayoutRoot.Background = new SolidColorBrush(new Color()
+                    {
+                        R = (byte)(_square.Score / 10)
+                    });
                     break;
                 case SquareState.Current:
                     MainText.Foreground = (SolidColorBrush)Resources["PhoneAccentBrush"];

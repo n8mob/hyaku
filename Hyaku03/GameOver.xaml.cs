@@ -23,8 +23,28 @@ namespace Hyaku
 
         private void PhoneApplicationPage_Loaded(object sender, RoutedEventArgs e)
         {
+            App app = Application.Current as App;
             HyakuSettings settings = new HyakuSettings();
-            string gameOverMessage = IsolatedStorageHandler.ReadUtf8String(settings.GameOverFileName);
+            string gameOverMessage = Messages.UnknownGameOverMessage;
+            if (app != null) {
+                switch (app.LastGameOver) {
+                    case GameOverReason.PushedPastTop:
+                        gameOverMessage = Messages.PushedPastTopMessage;
+                        break;
+                    case GameOverReason.RanOutOfSpace:
+                        gameOverMessage = Messages.RanOutOfSpaceMessage;
+                        break;
+                    case GameOverReason.LessThanZero:
+                        gameOverMessage = Messages.LessThanZeroMessage;
+                        break;
+                    case GameOverReason.MoreThanMax:
+                        gameOverMessage = Messages.MoreThanMaxMessage;
+                        break;
+                    default:
+                        gameOverMessage = Messages.UnknownGameOverMessage;
+                        break;
+                }
+            }
             GameOverMessageTextBlock.Text = gameOverMessage;
         }
     }

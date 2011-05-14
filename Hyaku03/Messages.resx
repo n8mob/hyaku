@@ -120,6 +120,12 @@
   <data name="GameOverCaption" xml:space="preserve">
     <value>GAME OVER!</value>
   </data>
+  <data name="LessThanZeroMessage" xml:space="preserve">
+    <value>The availible-space counter went below zero.</value>
+  </data>
+  <data name="MoreThanMaxMessage" xml:space="preserve">
+    <value>The availible-space counter went above the maximum.</value>
+  </data>
   <data name="PushedPastTopMessage" xml:space="preserve">
     <value>Ohhh! Over the top!</value>
   </data>
@@ -143,5 +149,8 @@
   </data>
   <data name="SaveGameQuestion" xml:space="preserve">
     <value>Would you like to save your game?</value>
+  </data>
+  <data name="UnknownGameOverMessage" xml:space="preserve">
+    <value>An unknown issue caused a game-over.</value>
   </data>
 </root>

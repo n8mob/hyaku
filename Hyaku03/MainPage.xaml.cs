@@ -81,15 +81,6 @@ namespace Hyaku
 
         public void GameOverHandler(object sender, GameOverEventArgs e)
         {
-            string gameOverMessage = Messages.GameOverCaption;
-            if (e.Reason == GameOverReason.RanOutOfSpace) {
-                gameOverMessage = Messages.RanOutOfSpaceMessage;
-            } else if (e.Reason == GameOverReason.PushedPastTop) { 
-                gameOverMessage = Messages.PushedPastTopMessage;
-            }
-
-            //MainBoard.GameBoard = null;
-            IsolatedStorageHandler.WriteUtf8String(this.MainBoard.GameBoard.GameOverFileName, gameOverMessage);
             NavigationService.Navigate(new Uri("/GameOver.xaml", UriKind.Relative));
         }
 
@@ -102,6 +93,7 @@ namespace Hyaku
         {
             MessageBoxResult resetGame = MessageBox.Show(Messages.ResetGameQuestion, Messages.ResetGameCaption, MessageBoxButton.OKCancel);
             if (resetGame == MessageBoxResult.OK) {
+                MainBoard.GameBoard = null;
                 MainBoard.GameBoard = GameBoardViewModel.CreateNewGame();
             }
         }

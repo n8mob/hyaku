@@ -23,6 +23,8 @@ namespace Hyaku
     {
         PushedPastTop,
         RanOutOfSpace,
-        Error
+        LessThanZero,
+        MoreThanMax,
+        UnknownError
     }
 }

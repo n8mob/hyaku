@@ -22,7 +22,8 @@ namespace Hyaku.ViewModels
         private int _value;
         private bool _isCurrent;
         private bool _isLocked;
-        private bool _isHyaku;
+        //private bool _isHyaku;
+        private int _score;
         private SquareView _uiSquare;
         private SquareState _currentState;
         private Dictionary<int, List<DistanceSum>> _distanceSums;
@@ -98,11 +99,24 @@ namespace Hyaku.ViewModels
             }
         }
 
-        public virtual bool IsHyakuBlock
+        //public virtual bool IsHyakuBlock
+        //{
+        //    get { return _isHyaku; }
+        //    set {
+        //        _isHyaku = value;
+        //        UpdateState();
+        //    }
+        //}
+
+        public virtual int Score
         {
-            get { return _isHyaku; }
-            set {
-                _isHyaku = value;
+            get
+            {
+                return _score;
+            }
+            set
+            {
+                _score = value;
                 UpdateState();
             }
         }
@@ -169,7 +183,7 @@ namespace Hyaku.ViewModels
 
         private void UpdateState()
         {
-            if (IsHyakuBlock)
+            if (Score > 0)
             {
                 CurrentState = SquareState.Hyaku;
             }
@@ -195,9 +209,10 @@ namespace Hyaku.ViewModels
 
         public virtual void Reset()
         {
-            this.IsHyakuBlock = false;
-            this.IsLocked = false;
+            //this.IsHyakuBlock = false;
+            this.Score = 0;
             this.Value = 0;
+            this.IsLocked = false;
         }
 
         public virtual int DistanceTo(SquareViewModel sq)

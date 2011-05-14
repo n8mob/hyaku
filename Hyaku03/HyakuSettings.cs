@@ -22,7 +22,6 @@ namespace Hyaku
         const string EnableTrashRowsKeyName = "EnableTrashRowsSetting";
         const string SweepTimerPeriodKeyName = "SweepTimerPeriodSetting";
         const string TimerTickIntervalKeyName = "TimerTickIntervalSetting";
-        const string GameOverFileNameKeyName = "GameOverFileNameSetting";
         const string NumberListStringKeyName = "NumberListStringSetting";
         const string UseDebugNumbersKeyName = "UseDebugNumbers";
         const string DebugNumbersStringKeyName = "DebugNumbers";
@@ -33,7 +32,6 @@ namespace Hyaku
         const bool EnableTrashRowsDefault = true;
         const int SweepTimerPeriodDefault = 100;
         const int TimerTickIntervalDefault = 300; // milliseconds
-        const string GameOverFileNameDefault = "GameOver.dat";
         const string NumberListStringDefault = "5,10,15,20,25,30,35,40,45";
         const bool UseDebugNumbersDefault = false;
         const string DebugNumbersStringDefault = "";
@@ -94,18 +92,6 @@ namespace Hyaku
             set
             {
                 AddOrUpdateValue(TimerTickIntervalKeyName, value);
-            }
-        }
-
-        public string GameOverFileName
-        {
-            get
-            {
-                return GetValueOrDefault(GameOverFileNameKeyName, GameOverFileNameDefault);
-            }
-            set
-            {
-                AddOrUpdateValue(GameOverFileNameKeyName, value);
             }
         }
 

@@ -42,12 +42,14 @@ namespace Hyaku.Views
                 return;
             }
 
+            // cast the sender to a SquareView
             SquareView selectedUiSquare = sender as SquareView;
             if (selectedUiSquare == null)
             {
                 return;
             }
 
+            // get the SquareViewModel out of the selected square
             SquareViewModel selectedSquareModel = selectedUiSquare.Square;
             if (selectedSquareModel == null)
             {
@@ -90,7 +92,6 @@ namespace Hyaku.Views
             else
             {
                 GameBoard.CurrentSquare = selectedSquareModel;
-                GameBoard.CurrentSquare.IsCurrent = true;
                 GameBoard.SendNumber((int)NextNumberTextBlock.Tag);
 
                 if (_gameOverEventHasFired) {

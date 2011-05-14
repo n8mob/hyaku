@@ -19,6 +19,11 @@ namespace Hyaku
 {
     public partial class App : Application
     {
+        public GameOverReason LastGameOver
+        {
+            get;
+            set;
+        }
         /// <summary>
         /// Provides easy access to the root frame of the Phone Application.
         /// </summary>

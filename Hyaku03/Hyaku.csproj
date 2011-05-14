@@ -53,8 +53,9 @@
     <Reference Include="NateGrigg.Mobile.Random">
       <HintPath>..\lib\NateGrigg.Mobile.Random.dll</HintPath>
     </Reference>
-    <Reference Include="NateGrigg.Mobile.Utility">
-      <HintPath>..\lib\NateGrigg.Mobile.Utility.dll</HintPath>
+    <Reference Include="NateGrigg.Mobile.Utility, Version=1.0.4144.28910, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Me\Windows Phone\NateGrigg.Mobile.Utility\NateGrigg.Mobile.Utility\Bin\Release\NateGrigg.Mobile.Utility.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows" />
     <Reference Include="system" />
