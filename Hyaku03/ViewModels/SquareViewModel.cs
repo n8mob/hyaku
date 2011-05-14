@@ -26,7 +26,6 @@ namespace Hyaku.ViewModels
         private int _score;
         private SquareView _uiSquare;
         private SquareState _currentState;
-        private Dictionary<int, List<DistanceSum>> _distanceSums;
 
 
         #endregion Declarations
@@ -151,22 +150,6 @@ namespace Hyaku.ViewModels
             }
         }
 
-        public Dictionary<int, List<DistanceSum>> DistanceSums
-        {
-            get
-            {
-                if (_distanceSums == null) {
-                    _distanceSums = new Dictionary<int, List<DistanceSum>>();
-                }
-                return _distanceSums;
-            }
-            set
-            {
-                _distanceSums = value;
-                NotifyPropertyChanged("DistanceSums");
-            }
-        }
-
         #endregion Properties
 
         #region Constructors
@@ -220,32 +203,6 @@ namespace Hyaku.ViewModels
             int rowDistance = Math.Abs(Row - sq.Row);
             int columnDistance = Math.Abs(Column - sq.Column);
             return Math.Max(rowDistance, columnDistance);
-        }
-
-        public virtual void UpdateAllSums(SquareViewModel sq)
-        {
-            int distanceToSquare = DistanceTo(sq);
-            foreach (int givenDistance in sq.DistanceSums.Keys) {
-                int distanceForNewSum = givenDistance + distanceToSquare;
-                if (distanceForNewSum > 2) { // TODO make a setting
-                    // skip distances athat are too far
-                    continue;
-                }
-                List<DistanceSum> sqSumsForGivenDistance = sq.DistanceSums[givenDistance];
-                List<DistanceSum> mySumsForGivenDistance = new List<DistanceSum>();
-                foreach (DistanceSum sum in sqSumsForGivenDistance) {
-                    // create my sums
-                    // mySumsForGivenDistance.Add(sum.AddSum(distanceForNewSum, Value, this));
-                    // TODO update his sums
-                }
-                if (mySumsForGivenDistance.Count > 0) {
-                    if (!DistanceSums.ContainsKey(distanceForNewSum)) {
-                        DistanceSums.Add(distanceForNewSum, mySumsForGivenDistance);
-                    } else {
-                        DistanceSums[distanceForNewSum].AddRange(mySumsForGivenDistance);
-                    }
-                }
-            }
         }
 
         #endregion Methods
