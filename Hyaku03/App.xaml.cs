@@ -14,6 +14,7 @@ using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using System.IO.IsolatedStorage;
 using Hyaku.ViewModels;
+using Wintellect.Sterling;
 
 namespace Hyaku
 {
@@ -24,6 +25,11 @@ namespace Hyaku
             get;
             set;
         }
+        
+        //private static ISterlingDatabaseInstance _squareSumDatabase = null;
+        //private static SterlingEngine _engine = null;
+        //private static SterlingDefaultLogger _logger = null;
+
         /// <summary>
         /// Provides easy access to the root frame of the Phone Application.
         /// </summary>

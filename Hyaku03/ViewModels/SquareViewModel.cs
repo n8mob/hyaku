@@ -10,6 +10,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Hyaku.Views;
 using System.Collections.Generic;
+using Hyaku.Data;
 
 namespace Hyaku.ViewModels
 {
@@ -17,11 +18,11 @@ namespace Hyaku.ViewModels
     {
         #region Declarations
 
-        private int _row;
-        private int _column;
+        private Square _dataSquare;
         private int _value;
         private bool _isCurrent;
         private bool _isLocked;
+        //private List<int> _sums;
         //private bool _isHyaku;
         private int _score;
         private SquareView _uiSquare;
@@ -32,27 +33,35 @@ namespace Hyaku.ViewModels
 
         #region Properties
 
-        public int Row
+        public ushort Row
         {
-            get { return _row; }
+            get { return _dataSquare.Row; }
             set {
-                _row = value;
+                _dataSquare.Row = value;
                 if (this.UiSquare != null)
                 {
-                    Grid.SetRow(this.UiSquare, _row);
+                    Grid.SetRow(this.UiSquare, _dataSquare.Row);
                 }
             }
         }
 
-        public int Column
+        public ushort Column
         {
-            get { return _column; }
+            get { return _dataSquare.Column; }
             set {
-                _column = value;
+                _dataSquare.Column = value;
                 if (this.UiSquare != null)
                 {
-                    Grid.SetColumn(this.UiSquare, _column);
+                    Grid.SetColumn(this.UiSquare, _dataSquare.Column);
                 }
+            }
+        }
+
+        public uint Id
+        {
+            get
+            {
+                return _dataSquare.Id;
             }
         }
 
@@ -97,6 +106,19 @@ namespace Hyaku.ViewModels
                 UpdateState();
             }
         }
+
+        //public virtual List<int> Sums
+        //{
+        //    get
+        //    {
+        //        return _sums;
+        //    }
+        //    set
+        //    {
+        //        _sums = value;
+        //        NotifyPropertyChanged("Sums");
+        //    }
+        //}
 
         //public virtual bool IsHyakuBlock
         //{
@@ -154,10 +176,13 @@ namespace Hyaku.ViewModels
 
         #region Constructors
 
-        public SquareViewModel(int columnIndex, int rowIndex)
+        public SquareViewModel(Hyaku.Data.Square dataSquare) : base()
         {
-            this.Column = columnIndex;
-            this.Row = rowIndex;
+            this._dataSquare = dataSquare;
+        }
+
+        public SquareViewModel(ushort columnIndex, ushort rowIndex) : this (new Square(columnIndex, rowIndex))
+        {
         }
 
         #endregion Constructors

@@ -27,7 +27,7 @@
                          Background="{StaticResource PhoneBackgroundBrush}" Foreground="{StaticResource PhoneAccentBrush}"
                          IsIndeterminate="False" Minimum="0" Maximum="{Binding SweepSteps}" />
         </Grid>
-        <Grid x:Name="GameGrid" Height="480" Width="480">
+        <Grid x:Name="InputGrid" Height="480" Width="480">
         	<Grid.Background>
         		<SolidColorBrush Color="#FF1F1F1F"/>
         	</Grid.Background>

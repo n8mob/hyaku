@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Hyaku.ViewModels;
+using System.Collections.Generic;
 
 namespace Hyaku
 {
@@ -20,9 +21,16 @@ namespace Hyaku
             set;
         }
 
-        public HyakuFoundEventArgs(DistanceSum distanceSum)
+        public List<SquareViewModel> SquaresToMark
+        {
+            get;
+            set;
+        }
+
+        public HyakuFoundEventArgs(DistanceSum distanceSum, List<SquareViewModel> squaresTomark)
         {
             Sum = distanceSum;
+            SquaresToMark = squaresTomark;
         }
     }
 }

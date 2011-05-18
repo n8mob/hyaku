@@ -111,27 +111,27 @@ namespace Hyaku.Views
         {
             NextNumberTextBlock.Tag = GameBoard.NextNumber;
             NextNumberTextBlock.Text = NextNumberTextBlock.Tag.ToString();
-            this.GameGrid.ColumnDefinitions.Clear();
-            this.GameGrid.RowDefinitions.Clear();
+            this.InputGrid.ColumnDefinitions.Clear();
+            this.InputGrid.RowDefinitions.Clear();
             for (int columnIndex = 0; columnIndex < GameBoard.GameGrid.Count; columnIndex++)
             {
-                this.GameGrid.ColumnDefinitions.Add(new ColumnDefinition()
+                this.InputGrid.ColumnDefinitions.Add(new ColumnDefinition()
                 {
-                    MinWidth = GameGrid.Width / (double)GameBoard.GameGrid.Count
+                    MinWidth = InputGrid.Width / (double)GameBoard.GameGrid.Count
                 });
                 for (int rowIndex = 0; rowIndex < GameBoard.GameGrid[0].Count; rowIndex++)
                 {
-                    if (this.GameGrid.RowDefinitions.Count <= rowIndex) {
-                        this.GameGrid.RowDefinitions.Add(new RowDefinition()
+                    if (this.InputGrid.RowDefinitions.Count <= rowIndex) {
+                        this.InputGrid.RowDefinitions.Add(new RowDefinition()
                         {
-                            MinHeight = this.GameGrid.Height / GameBoard.GameGrid.Count
+                            MinHeight = this.InputGrid.Height / GameBoard.GameGrid.Count
                         });
                     }
                     SquareViewModel square = GameBoard.GameGrid[columnIndex][rowIndex];
                     GameBoard.FindNewHyakus(square);
                     SquareView uiSquare = new SquareView(square);
 
-                    GameGrid.Children.Add(uiSquare);
+                    this.InputGrid.Children.Add(uiSquare);
                     uiSquare.SquareClicked += new EventHandler(ChildSquareClicked);
                 }
             }

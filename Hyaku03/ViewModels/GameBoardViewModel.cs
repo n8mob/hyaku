@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Runtime.Serialization;
 using System.Windows;
@@ -17,6 +18,8 @@ using System.Text;
 using NateGrigg.Mobile.Utility;
 using System.Windows.Threading;
 using System.Diagnostics;
+using Wintellect.Sterling;
+using Hyaku.Data;
 
 namespace Hyaku.ViewModels
 {
@@ -37,7 +40,7 @@ namespace Hyaku.ViewModels
         private HyakuSettings hyakuSettings;
         private int _randomListSize = 100;
         private RandomListGenerator _randomListGenerator = null;
-        private DistanceSumsTable _sumsTable = null;
+        private DistanceSumsStorage _distanceSumsStorage = null;
         private SquareViewModel _currentSquare = null;
         private int _score;
         private int _counts;
@@ -87,19 +90,19 @@ namespace Hyaku.ViewModels
             }
         }
 
-        public DistanceSumsTable SumsTable
+        public DistanceSumsStorage SumsStorage
         {
             get
             {
-                if (_sumsTable == null) {
-                    _sumsTable = new DistanceSumsTable();
-                    _sumsTable.HyakuFound += new HyakuFoundEventHandler(HyakuFoundHandler);
+                if (_distanceSumsStorage == null) {
+                    _distanceSumsStorage = new DistanceSumsStorage();
+                    _distanceSumsStorage.HyakuFound += new HyakuFoundEventHandler(HyakuFoundHandler);
                 }
-                return _sumsTable;
+                return _distanceSumsStorage;
             }
             set
             {
-                _sumsTable = value;
+                _distanceSumsStorage = value;
             }
         }
 
@@ -223,7 +226,7 @@ namespace Hyaku.ViewModels
 
         #endregion Properties
 
-        #region Constructors 
+        #region Constructors
 
         public GameBoardViewModel()
         {
@@ -252,12 +255,16 @@ namespace Hyaku.ViewModels
                 } else {
                     CurrentSquare.Value = theNumber;
                     if (theNumber > 0) {
-                        EmptySquares -= 1;
-                        FindNewHyakus(CurrentSquare);
+                        Square sq = new Square(CurrentSquare.Column, CurrentSquare.Row, theNumber);
+                        if (sq.Value == 0) {
+                            sq.Value = theNumber;
+                            CurrentSquare.IsLocked = true;
+                            EmptySquares -= 1;
+                            FindNewHyakus(CurrentSquare);
+                        }
                     }
 
                     CurrentSquare.IsCurrent = false;
-                    CurrentSquare.IsLocked = true;
                     CurrentSquare = null;
                 }
             }
@@ -271,22 +278,26 @@ namespace Hyaku.ViewModels
             }
         }
 
-        public virtual void FindNewHyakus(SquareViewModel sq1)
+        public virtual void FindNewHyakus(SquareViewModel movedSquare)
         {
             for (int columnOffset = -1; columnOffset <= 1; columnOffset++)
             {
-                int columnToCheck = sq1.Column + columnOffset;
+                int columnToCheck = movedSquare.Column + columnOffset;
                 if (0 <= columnToCheck && columnToCheck < GameGrid.Count) // GameGrid is column-major
                 {
                     for (int rowOffset = -1; rowOffset <= 1; rowOffset++)
                     {
-                        int rowTocheck = sq1.Row + rowOffset;
+                        int rowTocheck = movedSquare.Row + rowOffset;
                         if (0 <= rowTocheck && rowTocheck < GameGrid[columnToCheck].Count)
                         {
-                            SquareViewModel sq2 = GameGrid[columnToCheck][rowTocheck];
-                            if (sq1 != sq2)
-                            {
-                                SumsTable.AddSumsForNewSquare(sq1, sq2);
+                            uint keyForSqareToCheck = Square.ConcatUInt16ToUInt32((ushort)columnToCheck, (ushort)rowTocheck);
+
+                            Square squareToCheck = SumsStorage.GetSquare(columnToCheck, rowTocheck);
+                            if (squareToCheck != null) {
+                                SquareViewModel neighborSquare = GameGrid[columnToCheck][rowTocheck];
+                                if (movedSquare != neighborSquare) {
+                                    SumsStorage.AddSumsForNewSquare(movedSquare, neighborSquare);
+                                }
                             }
                         }
                     }
@@ -296,7 +307,7 @@ namespace Hyaku.ViewModels
 
         public virtual void HyakuFoundHandler(object sender, HyakuFoundEventArgs e)
         {
-            MarkHyakuBlocks(e.Sum.SquaresInSum);
+            MarkHyakuBlocks(e.SquaresToMark);
         }
 
         public virtual List<SquareViewModel> CheckTwoSquares(SquareViewModel sq1, SquareViewModel sq2)
@@ -498,10 +509,10 @@ namespace Hyaku.ViewModels
                 gameBoard.Score = score;
             }
             columns.Remove(scoreString);
-            for (int columnIndex = 0; columnIndex < columns.Count; columnIndex++) {
+            for (ushort columnIndex = 0; columnIndex < columns.Count; columnIndex++) {
                 string[] row = columns[columnIndex].Split('.');
                 gameBoard.GameGrid.Insert(columnIndex, new List<SquareViewModel>());
-                for (int rowIndex = 0; rowIndex < row.Length; rowIndex++) {
+                for (ushort rowIndex = 0; rowIndex < row.Length; rowIndex++) {
                     int parsedValue;
                     int.TryParse(row[rowIndex], out parsedValue);
                     SquareViewModel sq = new SquareViewModel(columnIndex, rowIndex);
@@ -518,10 +529,13 @@ namespace Hyaku.ViewModels
         {
             HyakuSettings settings = new HyakuSettings();
             GameBoardViewModel gameBoard = new GameBoardViewModel();
-            for (int columnIndex = 0; columnIndex < settings.GameSizeSetting ; columnIndex++) {
+            for (ushort columnIndex = 0; columnIndex < settings.GameSizeSetting; columnIndex++) {
                 gameBoard.GameGrid.Insert(columnIndex, new List<SquareViewModel>());
-                for (int rowIndex = 0; rowIndex < settings.GameSizeSetting; rowIndex++) {
-                    gameBoard.GameGrid[columnIndex].Insert(rowIndex, new SquareViewModel(columnIndex, rowIndex));
+                for (ushort rowIndex = 0; rowIndex < settings.GameSizeSetting; rowIndex++) {
+                    SquareViewModel square = new SquareViewModel(columnIndex, rowIndex);
+                    gameBoard.CurrentSquare = square;
+                    gameBoard.SendNumber(0);
+                    gameBoard.GameGrid[columnIndex].Insert(rowIndex, square);
                 }
             }
 

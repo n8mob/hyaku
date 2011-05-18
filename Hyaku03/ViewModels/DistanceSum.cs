@@ -9,16 +9,16 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Hyaku.ViewModels
 {
     public class DistanceSum : ViewModelBase
     {
         #region Declarations
-
+        
         private int _maxDistance;
         private int _sum;
-        private List<SquareViewModel> _squaresInSum;
 
         #endregion Declarations
 
@@ -50,49 +50,26 @@ namespace Hyaku.ViewModels
             }
         }
 
-        public virtual List<SquareViewModel> SquaresInSum
-        {
-            get
-            {
-                if (_squaresInSum == null) {
-                    _squaresInSum = new List<SquareViewModel>();
-                }
-                return _squaresInSum;
-            }
-        }
-
-        public virtual void AddSquareToSum(SquareViewModel newSquare)
-        {
-            SquaresInSum.Add(newSquare);
-            int sum = 0;
-            foreach (SquareViewModel sq in _squaresInSum) {
-                sum += sq.Value;
-                int maxDistance = newSquare.DistanceTo(sq);
-                if (maxDistance > MaxDistance)
-                {
-                    MaxDistance = maxDistance;
-                }
-            }
-            Sum = sum;
-            NotifyPropertyChanged("SquaresInSum");
-        }
-
         #endregion Properties
 
         #region Constructors
 
-        public DistanceSum(SquareViewModel sq)
+        public DistanceSum(SquareViewModel sq) : base()
         {
-            AddSquareToSum(sq);
-
+            this.MaxDistance = 0;
+            this.Sum = sq.Value;
         }
 
-        public DistanceSum(SquareViewModel newSquare, DistanceSum existingSum)
+        public DistanceSum(SquareViewModel newSquare, DistanceSum existingSum, int newMaxDistance) : base()
         {
-            foreach (SquareViewModel sq in existingSum.SquaresInSum) {
-                AddSquareToSum(sq);
-            }
-            AddSquareToSum(newSquare);
+            this.MaxDistance = newMaxDistance;
+            this.Sum = existingSum.Sum + newSquare.Value;
+        }
+
+        public DistanceSum(Data.Sum existingSum)
+        {
+            this.MaxDistance = existingSum.MaxDistance;
+            this.Sum = existingSum.Total;
         }
 
         #endregion Constructors
