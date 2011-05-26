@@ -18,7 +18,6 @@ using System.Text;
 using NateGrigg.Mobile.Utility;
 using System.Windows.Threading;
 using System.Diagnostics;
-using Wintellect.Sterling;
 using Hyaku.Data;
 
 namespace Hyaku.ViewModels
