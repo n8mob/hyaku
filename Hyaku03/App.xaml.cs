@@ -14,7 +14,6 @@ using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using System.IO.IsolatedStorage;
 using Hyaku.ViewModels;
-using Wintellect.Sterling;
 
 namespace Hyaku
 {

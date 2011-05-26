@@ -18,7 +18,6 @@ using System.Text;
 using NateGrigg.Mobile.Utility;
 using System.Windows.Threading;
 using System.Diagnostics;
-using Wintellect.Sterling;
 using Hyaku.Data;
 
 namespace Hyaku.ViewModels
@@ -250,17 +249,25 @@ namespace Hyaku.ViewModels
         {
             if (CurrentSquare != null && CurrentSquare.Value == 0)
             {
-                if (EmptySquares < 0) {
+                // square is not occupied, let's set it.
+                if (EmptySquares <= 0) {
                     OnGameOver(GameOverReason.RanOutOfSpace);
                 } else {
                     CurrentSquare.Value = theNumber;
                     if (theNumber > 0) {
-                        Square sq = new Square(CurrentSquare.Column, CurrentSquare.Row, theNumber);
-                        if (sq.Value == 0) {
-                            sq.Value = theNumber;
+                        // TODO this doesn't seem like the right call
+                        Square sq = SumsStorage.SaveSquare(CurrentSquare.Column, CurrentSquare.Row, CurrentSquare.Value);
+                        SumsStorage.InitializeSumsForSquare(sq);
+                        if (sq.Id > 0) {
                             CurrentSquare.IsLocked = true;
                             EmptySquares -= 1;
                             FindNewHyakus(CurrentSquare);
+                        }
+                    } else {
+                        if (CurrentSquare.Value > 0 ) {
+                            // remove sums etc.
+                        } else {
+                            // ??
                         }
                     }
 
@@ -274,7 +281,7 @@ namespace Hyaku.ViewModels
         {
             foreach (SquareViewModel sq in hyaku)
             {
-                sq.Score += 100;
+                sq.IsHyakuBlock = true;
             }
         }
 
@@ -290,8 +297,6 @@ namespace Hyaku.ViewModels
                         int rowTocheck = movedSquare.Row + rowOffset;
                         if (0 <= rowTocheck && rowTocheck < GameGrid[columnToCheck].Count)
                         {
-                            uint keyForSqareToCheck = Square.ConcatUInt16ToUInt32((ushort)columnToCheck, (ushort)rowTocheck);
-
                             Square squareToCheck = SumsStorage.GetSquare(columnToCheck, rowTocheck);
                             if (squareToCheck != null) {
                                 SquareViewModel neighborSquare = GameGrid[columnToCheck][rowTocheck];
@@ -351,7 +356,7 @@ namespace Hyaku.ViewModels
                 while (target != null && target.Value > 0) {
                     source = NextSource(column, target);
 
-                    if (target.Score > 0) {
+                    if (target.IsHyakuBlock) {
                         CountScore(target);
                     }
 
@@ -392,7 +397,7 @@ namespace Hyaku.ViewModels
             int startIndex = previousTarget != null ? previousTarget.Row - 1 : column.Count - 1;
             for (int i = startIndex; i >= 0; i -= 1)
             {
-                if (column[i] != null && (column[i].Score > 0 || column[i].Value == 0))
+                if (column[i] != null && (column[i].IsHyakuBlock || column[i].Value == 0))
                 {
                     return column[i];
                 }
@@ -405,7 +410,7 @@ namespace Hyaku.ViewModels
             int startIndex = target != null ? target.Row - 1 : column.Count - 1;
             for (int i = startIndex; i >= 0; i -= 1)
             {
-                if (column[i] != null && (!(column[i].Score > 0) && column[i].Value > 0))
+                if (column[i] != null && (!(column[i].IsHyakuBlock) && column[i].Value > 0))
                 {
                     return column[i];
                 }
@@ -474,7 +479,7 @@ namespace Hyaku.ViewModels
 
         protected virtual void CountScore(SquareViewModel target)
         {
-            Score += target.Score;
+            Score += 100;
         }
 
         public override string ToString()

@@ -98,7 +98,7 @@ namespace Hyaku.ViewModels
 
         #region Methods
 
-        public virtual uint SaveNewSquare(ushort column, ushort row, int value)
+        public virtual Square SaveSquare(ushort column, ushort row, int value)
         {
             Square sq = new Square(column, row, value);
             if (!Squares.ContainsKey(sq.Id)) {
@@ -106,11 +106,12 @@ namespace Hyaku.ViewModels
             } else {
                 Squares[sq.Id] = sq;
             }
-            return sq.Id;
+            return sq;
         }
 
         public virtual ulong SaveNewSum(int distance, int total)
         {
+            // TODO Sum constructor will always generate a new key, so even if the Sum is already in the dictionary, it will be added again.
             Sum sum = new Sum(distance, total);
             Sums.Add(sum.Id, sum);
             return sum.Id;
@@ -124,7 +125,7 @@ namespace Hyaku.ViewModels
         }
 
 
-        private void CreateNewSumForSquare(SquareViewModel newSquare)
+        private void CreateNewSumForSquare(Square newSquare)
         {
             ulong newSumIdForNewSq = SaveNewSum(0, newSquare.Value);
             ulong newSquareSumIdForNewSq = SaveNewSquareSum(newSquare.Id, newSumIdForNewSq);
@@ -192,12 +193,16 @@ namespace Hyaku.ViewModels
                 throw new ArgumentException(string.Format("Cannot create sum for value {0}", newSquare.Value.ToString()), "newSquare");
             }
 
-            List<Sum> sumsForNewSquare = null;
             // save the square (assuming it's new)
-            uint newSqId = SaveNewSquare(newSquare.Column, newSquare.Row, newSquare.Value);
+            Square newSq = SaveSquare(newSquare.Column, newSquare.Row, newSquare.Value);
+            return InitializeSumsForSquare(newSq);
+        }
 
+        public virtual List<Sum> InitializeSumsForSquare(Square sq)
+        {
             // get sums for newSquare
-            sumsForNewSquare = GetSumsBySquare(newSqId);
+            List<Sum> sumsForNewSquare = null;
+            sumsForNewSquare = GetSumsBySquare(sq.Id);
 
             if (sumsForNewSquare == null) {
                 // I don't know if GetSumsBySquare returns null or an empty list
@@ -206,7 +211,8 @@ namespace Hyaku.ViewModels
 
             if (sumsForNewSquare.Count <= 0) {
                 // create the new sum
-                CreateNewSumForSquare(newSquare);
+                CreateNewSumForSquare(sq);
+                sumsForNewSquare = GetSumsBySquare(sq.Id);
             }
             return sumsForNewSquare;
         }
@@ -279,13 +285,18 @@ namespace Hyaku.ViewModels
         public virtual Square GetSquare(ushort column, ushort row)
         {
             uint sqId = Square.ConcatUInt16ToUInt32(column, row);
+            return GetSquare(sqId);
+
+        #endregion Methods
+        }
+
+        public virtual Square GetSquare(uint sqId)
+        {
             try {
                 return Squares[sqId];
             } catch (KeyNotFoundException) {
                 return null;
             }
-
-        #endregion Methods
         }
     }
 }

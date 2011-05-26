@@ -23,8 +23,7 @@ namespace Hyaku.ViewModels
         private bool _isCurrent;
         private bool _isLocked;
         //private List<int> _sums;
-        //private bool _isHyaku;
-        private int _score;
+        private bool _isHyaku;
         private SquareView _uiSquare;
         private SquareState _currentState;
 
@@ -120,24 +119,15 @@ namespace Hyaku.ViewModels
         //    }
         //}
 
-        //public virtual bool IsHyakuBlock
-        //{
-        //    get { return _isHyaku; }
-        //    set {
-        //        _isHyaku = value;
-        //        UpdateState();
-        //    }
-        //}
-
-        public virtual int Score
+        public virtual bool IsHyakuBlock
         {
             get
             {
-                return _score;
+                return _isHyaku;
             }
             set
             {
-                _score = value;
+                _isHyaku = value;
                 UpdateState();
             }
         }
@@ -191,7 +181,7 @@ namespace Hyaku.ViewModels
 
         private void UpdateState()
         {
-            if (Score > 0)
+            if (IsHyakuBlock)
             {
                 CurrentState = SquareState.Hyaku;
             }
@@ -217,8 +207,7 @@ namespace Hyaku.ViewModels
 
         public virtual void Reset()
         {
-            //this.IsHyakuBlock = false;
-            this.Score = 0;
+            this.IsHyakuBlock = false;
             this.Value = 0;
             this.IsLocked = false;
         }
