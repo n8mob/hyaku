@@ -56,12 +56,9 @@ namespace Hyaku.ViewModels
             }
         }
 
-        public uint Id
+        public override int GetHashCode()
         {
-            get
-            {
-                return _dataSquare.Id;
-            }
+            return _dataSquare.GetHashCode();
         }
 
         public int Value

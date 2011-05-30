@@ -9,53 +9,43 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Runtime.Serialization;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Hyaku.Data
 {
     [DataContract]
-    public class SquareSum : IdBase
+    public class SquareSum
     {
         [DataMember]
-        public int SquareColumn
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        [DataMember]
-        public int SquareRow
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        [DataMember]
-        public ulong SumId
+        public int SumHashCode
         {
             get;
             set;
         }
 
         [DataMember]
-        public UInt32 SquareId
+        public int SquareHashCode
         {
             get;
             set;
         }
 
-        //public SquareSum()
-        //{
-        //}
-
-        public SquareSum(UInt32 squareId, ulong sumId)
-            : base()
+        [DebuggerStepThrough]
+        public override int GetHashCode()
         {
-            SquareId = squareId;
-            SumId = sumId;
+            return SumHashCode ^ SquareHashCode;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("0x{0}: (sq 0x{1}, sum 0x{2})", GetHashCode().ToString("x"), SquareHashCode.ToString("x"), SumHashCode.ToString("x"));
+        }
+
+        public SquareSum(int squareHashCode, int sumHashCode)
+        {
+            SquareHashCode = squareHashCode;
+            SumHashCode = sumHashCode;
         }
     }
 }

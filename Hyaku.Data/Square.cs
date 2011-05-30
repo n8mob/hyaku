@@ -13,7 +13,7 @@ using System.Runtime.Serialization;
 namespace Hyaku.Data
 {
     [DataContract]
-    public class Square
+    public class Square : IComparable<Square>, IEquatable<Square>
     {
         [DataMember]
         public UInt16 Column
@@ -37,7 +37,7 @@ namespace Hyaku.Data
         }
 
         [DataMember]
-        public UInt32 Id
+        public UInt32 SquareId
         {
             get
             {
@@ -46,6 +46,25 @@ namespace Hyaku.Data
                 UInt32 id = ConcatUInt16ToUInt32(column, row);
                 return id;
             }
+        }
+
+        [System.Diagnostics.DebuggerStepThrough]
+        public override int GetHashCode()
+        {
+            return (int)SquareId;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Square) {
+                return this.Equals(obj as Square);
+            }
+            return base.Equals(obj);
+        }
+
+        public virtual bool Equals(Square that)
+        {
+            return this.Column == that.Column && this.Row == that.Row && this.Value == that.Value;
         }
 
         public override string ToString()
@@ -76,14 +95,6 @@ namespace Hyaku.Data
             return new UInt16[] { column, row };
         }
 
-        public static int GetDistance(Square sq1, Square sq2)
-        {
-            if (sq2 == null) {
-                return 0;
-            }
-            return Math.Max(Math.Abs(sq1.Column - sq2.Column), Math.Abs(sq1.Row - sq2.Row));
-        }
-
         //public Square()
         //{
         //}
@@ -95,13 +106,18 @@ namespace Hyaku.Data
             this.Value = value;
         }
 
-        public static int GetDistance(Square sq, System.Collections.Generic.List<Square> squaresInSum)
+        //public static int GetDistance(Square sq, System.Collections.Generic.List<Square> squaresInSum)
+        //{
+        //    int maxDistance = 0;
+        //    foreach (Square sq2 in squaresInSum) {
+        //        maxDistance = Math.Max(maxDistance, GetDistance(sq, sq2));
+        //    }
+        //    return maxDistance;
+        //}
+
+        public int CompareTo(Square that)
         {
-            int maxDistance = 0;
-            foreach (Square sq2 in squaresInSum) {
-                maxDistance = Math.Max(maxDistance, GetDistance(sq, sq2));
-            }
-            return maxDistance;
+            return this.SquareId.CompareTo(that.SquareId);
         }
     }
 }

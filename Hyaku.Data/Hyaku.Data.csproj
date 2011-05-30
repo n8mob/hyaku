@@ -52,7 +52,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IdBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Square.cs" />
     <Compile Include="SquareSum.cs" />

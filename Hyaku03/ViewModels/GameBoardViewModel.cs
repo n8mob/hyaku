@@ -94,6 +94,9 @@ namespace Hyaku.ViewModels
             get
             {
                 if (_distanceSumsStorage == null) {
+#if DEBUG
+                    Debug.WriteLine("Initializing SumStorage: {0}", this.GetHashCode());
+#endif
                     _distanceSumsStorage = new DistanceSumsStorage();
                     _distanceSumsStorage.HyakuFound += new HyakuFoundEventHandler(HyakuFoundHandler);
                 }
@@ -196,7 +199,7 @@ namespace Hyaku.ViewModels
                 } else {
                     _emptySquares = value;
 #if DEBUG
-                    Debug.WriteLine("EmptySquares set to {0}", _emptySquares);
+                    //Debug.WriteLine("EmptySquares set to {0}", _emptySquares);
 #endif
                 }
             }
@@ -258,11 +261,9 @@ namespace Hyaku.ViewModels
                         // TODO this doesn't seem like the right call
                         Square sq = SumsStorage.SaveSquare(CurrentSquare.Column, CurrentSquare.Row, CurrentSquare.Value);
                         SumsStorage.InitializeSumsForSquare(sq);
-                        if (sq.Id > 0) {
-                            CurrentSquare.IsLocked = true;
-                            EmptySquares -= 1;
-                            FindNewHyakus(CurrentSquare);
-                        }
+                        CurrentSquare.IsLocked = true;
+                        EmptySquares -= 1;
+                        FindNewHyakus(CurrentSquare);
                     } else {
                         if (CurrentSquare.Value > 0 ) {
                             // remove sums etc.
@@ -287,6 +288,10 @@ namespace Hyaku.ViewModels
 
         public virtual void FindNewHyakus(SquareViewModel movedSquare)
         {
+            if (movedSquare.Value <= 0) {
+                return;
+            }
+
             for (int columnOffset = -1; columnOffset <= 1; columnOffset++)
             {
                 int columnToCheck = movedSquare.Column + columnOffset;
@@ -300,7 +305,7 @@ namespace Hyaku.ViewModels
                             Square squareToCheck = SumsStorage.GetSquare(columnToCheck, rowTocheck);
                             if (squareToCheck != null) {
                                 SquareViewModel neighborSquare = GameGrid[columnToCheck][rowTocheck];
-                                if (movedSquare != neighborSquare) {
+                                if (movedSquare != neighborSquare && movedSquare.Value > 0) {
                                     SumsStorage.AddSumsForNewSquare(movedSquare, neighborSquare);
                                 }
                             }
@@ -336,7 +341,9 @@ namespace Hyaku.ViewModels
             if (Counts == hyakuSettings.SweepTimerPeriodSetting) {
                 Counts = 0;
                 DoSweep();
-                AddTrashBlocksToAllColumns();
+                if (hyakuSettings.EnableTrashRowsSetting == true) {
+                    AddTrashBlocksToAllColumns();
+                }
             }
 //#if DEBUG
 //            // turn on the timer again
@@ -545,6 +552,11 @@ namespace Hyaku.ViewModels
             }
 
             return gameBoard;
+        }
+
+        internal void Stop()
+        {
+            this.Timer.Tick -= new EventHandler(Tick);
         }
     }
 }
