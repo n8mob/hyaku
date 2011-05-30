@@ -8,26 +8,26 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
-using Hyaku.ViewModels;
 using System.Collections.Generic;
+using Hyaku.Data;
 
 namespace Hyaku
 {
     public class HyakuFoundEventArgs
     {
-        public virtual DistanceSum Sum
+        public virtual Sum Sum
         {
             get;
             set;
         }
 
-        public List<SquareViewModel> SquaresToMark
+        public List<Square> SquaresToMark
         {
             get;
             set;
         }
 
-        public HyakuFoundEventArgs(DistanceSum distanceSum, List<SquareViewModel> squaresTomark)
+        public HyakuFoundEventArgs(Sum distanceSum, List<Square> squaresTomark)
         {
             Sum = distanceSum;
             SquaresToMark = squaresTomark;

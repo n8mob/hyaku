@@ -33,7 +33,7 @@ namespace Hyaku.ViewModels
             Squares = 0x1,
             Sums = 0x2,
             SquareSums = 0x4 };
-        private WhichToDebug whichToDebug = (WhichToDebug.Squares | WhichToDebug.SquareSums | WhichToDebug.Sums);
+        private WhichToDebug whichToDebug = WhichToDebug.None;// (WhichToDebug.Squares | WhichToDebug.SquareSums | WhichToDebug.Sums);
 #endif
 
         private HyakuSettings _settings;
@@ -216,6 +216,10 @@ namespace Hyaku.ViewModels
                 throw new ArgumentNullException("squaresInSum");
             }
 
+            if (squaresInSum.Contains(newSquare)) {
+                return null;
+            }
+
             squaresInSum.Add(newSquare);
 
             Sum newSum = SaveSum(squaresInSum.ToArray());
@@ -299,13 +303,10 @@ namespace Hyaku.ViewModels
         private void OnHyakuFound(Sum newHyakuSum)
         {
             List<Square> squaresToMark = GetSquaresBySum(newHyakuSum.GetHashCode());
-            List<SquareViewModel> squareViewModelsToark = (from sq in squaresToMark
-                                                           select new SquareViewModel(sq)).ToList();
 
             Sum sum = Sums[newHyakuSum.GetHashCode()];
-            DistanceSum distanceSum = new DistanceSum(sum);
             if (HyakuFound != null) {
-                HyakuFound(this, new HyakuFoundEventArgs(distanceSum, squareViewModelsToark));
+                HyakuFound(this, new HyakuFoundEventArgs(sum, squaresToMark));
             }
         }
 
@@ -326,7 +327,7 @@ namespace Hyaku.ViewModels
             foreach (Sum sum in sumsForExistingSquare) {
                 if (sum.MaxDistance <= Settings.MaxDistanceSetting) {
                     List<Square> squaresInExistingSum = GetSquaresBySum(sum.GetHashCode());
-                    if (sum.Total <= 100) { // TODO make "100" a setting
+                    if (!squaresInExistingSum.Contains(newSquare) && sum.Total <= 100) { // TODO make "100" a setting
                         CreateAndSaveNewSum(newSquare, squaresInExistingSum);
                         if (sum.Total == 100) {
                             OnHyakuFound(sum);

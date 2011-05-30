@@ -278,11 +278,11 @@ namespace Hyaku.ViewModels
             }
         }
 
-        public virtual void MarkHyakuBlocks(List<SquareViewModel> hyaku)
+        public virtual void MarkHyakuBlocks(List<Square> hyaku)
         {
-            foreach (SquareViewModel sq in hyaku)
+            foreach (Square sq in hyaku)
             {
-                sq.IsHyakuBlock = true;
+                GameGrid[sq.Column][sq.Row].IsHyakuBlock = true;
             }
         }
 
