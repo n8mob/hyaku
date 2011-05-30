@@ -370,6 +370,7 @@ namespace Hyaku.ViewModels
                     if (source != null) {
                         target.Value = source.Value;
                         target.CurrentState = source.CurrentState;
+                        SumsStorage.SaveSquare(target.Column, target.Row, source.Value);
                         movedSquares.Add(target);
                         ClearSquare(source);
                     } else {
@@ -390,9 +391,7 @@ namespace Hyaku.ViewModels
         private void ClearSquare(SquareViewModel sq)
         {
             sq.Reset();
-            // delete sums
-            // delete sum-squares
-            // delete square
+            SumsStorage.DeleteSquareAndCascade(sq.Column, sq.Row);
         }
 
         protected virtual SquareViewModel FirstHyaku(List<SquareViewModel> column)

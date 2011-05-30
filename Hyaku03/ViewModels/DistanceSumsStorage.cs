@@ -358,5 +358,27 @@ namespace Hyaku.ViewModels
                 return null;
             }
         }
+
+        /// <summary>
+        /// Deletes Sums, SquareSums, and finaly the Square itself
+        /// </summary>
+        internal void DeleteSquareAndCascade(ushort column, ushort row)
+        {
+            // delete sums
+            Square sq = new Square(column, row);
+            foreach (Sum sum in GetSumsBySquare(sq.GetHashCode()))
+            {
+                Sums.Remove(sum.GetHashCode());
+            }
+
+            // delete sum-squares
+            foreach (SquareSum sqSum in GetSquareSumsBySquare(sq.GetHashCode()))
+            {
+                SquareSums.Remove(sqSum.GetHashCode());
+            }
+
+            // delete square
+            Squares.Remove(sq.GetHashCode());
+        }
     }
 }
