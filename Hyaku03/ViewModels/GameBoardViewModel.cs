@@ -359,8 +359,10 @@ namespace Hyaku.ViewModels
             List<SquareViewModel> newHyakus = new List<SquareViewModel>();
             foreach (List<SquareViewModel> column in GameGrid)
             {
+                Debug.WriteLine("Sweeping column {0}", GameGrid.IndexOf(column));
+
                 target = FirstHyaku(column);
-                while (target != null && target.Value > 0) {
+                while (target != null) {
                     source = NextSource(column, target);
 
                     if (target.IsHyakuBlock) {
@@ -368,16 +370,17 @@ namespace Hyaku.ViewModels
                     }
 
                     if (source != null) {
+                        Debug.WriteLine("Moving source {0} to target {1}", source.ToString(), target.ToString());
                         target.Value = source.Value;
                         target.CurrentState = source.CurrentState;
                         SumsStorage.SaveSquare(target.Column, target.Row, source.Value);
                         movedSquares.Add(target);
                         ClearSquare(source);
                     } else {
+                        Debug.WriteLine("No source, clearing target {0}", target.ToString());
                         ClearSquare(target);
                     }
 
-                    EmptySquares += 1;
                     target = NextTarget(column, target);
                 }
                 target = null;
@@ -408,6 +411,7 @@ namespace Hyaku.ViewModels
 
         protected virtual SquareViewModel NextTarget(List<SquareViewModel> column, SquareViewModel previousTarget)
         {
+            Debug.WriteLine("Finding next target in column {0} starting from {1}", GameGrid.IndexOf(column), previousTarget.ToString());
             int startIndex = previousTarget != null ? previousTarget.Row - 1 : column.Count - 1;
             for (int i = startIndex; i >= 0; i -= 1)
             {
