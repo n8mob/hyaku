@@ -371,9 +371,9 @@ namespace Hyaku.ViewModels
                         target.Value = source.Value;
                         target.CurrentState = source.CurrentState;
                         movedSquares.Add(target);
-                        source.Reset();
+                        ClearSquare(source);
                     } else {
-                        target.Reset();
+                        ClearSquare(target);
                     }
 
                     EmptySquares += 1;
@@ -385,6 +385,14 @@ namespace Hyaku.ViewModels
             foreach (SquareViewModel sq in movedSquares) {
                 FindNewHyakus(sq);
             }
+        }
+
+        private void ClearSquare(SquareViewModel sq)
+        {
+            sq.Reset();
+            // delete sums
+            // delete sum-squares
+            // delete square
         }
 
         protected virtual SquareViewModel FirstHyaku(List<SquareViewModel> column)
