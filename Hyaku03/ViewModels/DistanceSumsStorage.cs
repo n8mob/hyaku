@@ -313,6 +313,11 @@ namespace Hyaku.ViewModels
         public virtual void AddSumsForNewSquare(SquareViewModel newSquareviewModel, SquareViewModel existingSqare)
         {
             Square newSquare;
+            if (newSquareviewModel.IsHyakuBlock || existingSqare.IsHyakuBlock)
+            {
+                return;
+            }
+
             if (!Squares.TryGetValue(newSquareviewModel.GetHashCode(), out newSquare)) {
                 newSquare = SaveSquare(newSquareviewModel.Column, newSquareviewModel.Row, newSquareviewModel.Value);
             }
