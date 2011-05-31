@@ -40,6 +40,7 @@ namespace Hyaku.ViewModels
         private Dictionary<int, Square> _squares;
         private Dictionary<int, Sum> _sums;
         private Dictionary<int, SquareSum> _squareSums;
+        private int _maxDistanceCache;
 
         #endregion Declarations
 
@@ -60,6 +61,16 @@ namespace Hyaku.ViewModels
             }
         }
 
+        protected virtual int MaxDistanceCache
+        {
+            get
+            {
+                if (_maxDistanceCache <= 0) {
+                    _maxDistanceCache = Settings.MaxDistanceSetting;
+                }
+                return _maxDistanceCache;
+            }
+        }
 
         public virtual Dictionary<int, Square> Squares
         {
@@ -285,7 +296,7 @@ namespace Hyaku.ViewModels
                        where sqSum.SquareHashCode == sqHashCode
                        join sum in Sums.Values
                        on sqSum.SumHashCode equals sum.GetHashCode()
-                       where sum.MaxDistance < Settings.MaxDistanceSetting
+                       where sum.MaxDistance < MaxDistanceCache
                        select sum;
             return sums.ToList();
         }
@@ -330,7 +341,7 @@ namespace Hyaku.ViewModels
 
             // from each sum for existingSquare that's < 100, create a new sum including newSquare
             foreach (Sum sum in sumsForExistingSquare) {
-                if (sum.MaxDistance <= Settings.MaxDistanceSetting) {
+                if (sum.MaxDistance <= MaxDistanceCache) {
                     List<Square> squaresInExistingSum = GetSquaresBySum(sum.GetHashCode());
                     if (!squaresInExistingSum.Contains(newSquare) && sum.Total <= 100) { // TODO make "100" a setting
                         CreateAndSaveNewSum(newSquare, squaresInExistingSum);
