@@ -42,9 +42,9 @@ namespace Hyaku.ViewModels
         private DistanceSumsStorage _distanceSumsStorage = null;
         private SquareViewModel _currentSquare = null;
         private int _score;
-        private int _counts;
-        private int _emptySquares;
-        private int _currentHyakuCount;
+        private int _tickCount;
+        private int _emptyBlockCount;
+        private int _hyakuBlockCount;
         private int _minAvailibleSquares;
         private int _maxAvailibleSquares;
 
@@ -121,16 +121,57 @@ namespace Hyaku.ViewModels
             }
         }
 
-        public int Counts
+        public int TickCount
         {
             get
             {
-                return _counts;
+                return _tickCount;
             }
             set
             {
-                _counts = value;
-                NotifyPropertyChanged("Counts");
+                _tickCount = value;
+                NotifyPropertyChanged("TickCount");
+            }
+        }
+
+        public int EmptyBlockCount
+        {
+            get
+            {
+                return _emptyBlockCount;
+            }
+            set
+            {
+                int adjustedValue = value - HyakuBlockCount;
+                if (adjustedValue < _minAvailibleSquares)
+                {
+                    // WTF?
+                    OnGameOver(GameOverReason.LessThanZero);
+                }
+                else if (adjustedValue > _maxAvailibleSquares)
+                {
+                    OnGameOver(GameOverReason.MoreThanMax);
+                }
+                else
+                {
+                    _emptyBlockCount = value;
+                    Debug.WriteLine("EmptySquares set to {0} (adjusted to {1} by discounting hyaku blocks)", _emptyBlockCount, _emptyBlockCount + HyakuBlockCount);
+                    NotifyPropertyChanged("EmptyBlockCount");
+                }
+            }
+        }
+
+        public int HyakuBlockCount
+        {
+            get
+            {
+                return _hyakuBlockCount;
+            }
+            set
+            {
+                _hyakuBlockCount = value;
+                Debug.WriteLine("HyakuBlockCount set to {0}", _hyakuBlockCount);
+                NotifyPropertyChanged("HyakuBlockCount");
             }
         }
 
@@ -183,27 +224,6 @@ namespace Hyaku.ViewModels
             }
         }
 
-        public int EmptySquares
-        {
-            get
-            {
-                return _emptySquares;
-            }
-            set
-            {
-                if (value < _minAvailibleSquares) {
-                    // WTF?
-                    OnGameOver(GameOverReason.LessThanZero);
-                } else if (value > _maxAvailibleSquares) {
-                    OnGameOver(GameOverReason.MoreThanMax);
-                } else {
-                    _emptySquares = value;
-#if DEBUG
-                    //Debug.WriteLine("EmptySquares set to {0}", _emptySquares);
-#endif
-                }
-            }
-        }
 
 //        public virtual int CurrentHyakuCount
 //        {
@@ -239,9 +259,8 @@ namespace Hyaku.ViewModels
             GameGrid = new List<List<SquareViewModel>>(hyakuSettings.GameSizeSetting);
             _minAvailibleSquares = 0;
             _maxAvailibleSquares = hyakuSettings.GameSizeSetting * hyakuSettings.GameSizeSetting;
-            EmptySquares = _maxAvailibleSquares;
-            //CurrentHyakuCount = _minAvailibleSquares;
-            Counts = 0;
+            EmptyBlockCount = _maxAvailibleSquares;
+            HyakuBlockCount = _minAvailibleSquares;
         }
 
         #endregion Constructors
@@ -253,7 +272,7 @@ namespace Hyaku.ViewModels
             if (CurrentSquare != null && CurrentSquare.Value == 0)
             {
                 // square is not occupied, let's set it.
-                if (EmptySquares <= 0) {
+                if (EmptyBlockCount < _minAvailibleSquares) {
                     OnGameOver(GameOverReason.RanOutOfSpace);
                 } else {
                     CurrentSquare.Value = theNumber;
@@ -262,14 +281,10 @@ namespace Hyaku.ViewModels
                         Square sq = SumsStorage.SaveSquare(CurrentSquare.Column, CurrentSquare.Row, CurrentSquare.Value);
                         SumsStorage.InitializeSumsForSquare(sq);
                         CurrentSquare.IsLocked = true;
-                        EmptySquares -= 1;
+                        EmptyBlockCount -= 1;
                         FindNewHyakus(CurrentSquare);
-                    } else {
-                        if (CurrentSquare.Value > 0 ) {
-                            // remove sums etc.
-                        } else {
-                            // ??
-                        }
+                    } else { // the number is <= 0
+                        // ??
                     }
 
                     CurrentSquare.IsCurrent = false;
@@ -283,6 +298,7 @@ namespace Hyaku.ViewModels
             foreach (Square sq in hyaku)
             {
                 GameGrid[sq.Column][sq.Row].IsHyakuBlock = true;
+                HyakuBlockCount += 1;
             }
         }
 
@@ -337,9 +353,9 @@ namespace Hyaku.ViewModels
 //            // turn off the timer so tick events don't pile up
 //            Timer.Stop();
 //#endif
-            Counts += 1;
-            if (Counts == hyakuSettings.SweepTimerPeriodSetting) {
-                Counts = 0;
+            TickCount += 1;
+            if (TickCount == hyakuSettings.SweepTimerPeriodSetting) {
+                TickCount = 0;
                 DoSweep();
                 if (hyakuSettings.EnableTrashRowsSetting == true) {
                     AddTrashBlocksToAllColumns();
@@ -359,7 +375,7 @@ namespace Hyaku.ViewModels
             List<SquareViewModel> newHyakus = new List<SquareViewModel>();
             foreach (List<SquareViewModel> column in GameGrid)
             {
-                Debug.WriteLine("Sweeping column {0}", GameGrid.IndexOf(column));
+                //Debug.WriteLine("Sweeping column {0}", GameGrid.IndexOf(column));
 
                 target = FirstHyaku(column);
                 while (target != null) {
@@ -370,14 +386,14 @@ namespace Hyaku.ViewModels
                     }
 
                     if (source != null) {
-                        Debug.WriteLine("Moving source {0} to target {1}", source.ToString(), target.ToString());
+                        //Debug.WriteLine("Moving source {0} to target {1}", source.ToString(), target.ToString());
                         target.Value = source.Value;
                         target.CurrentState = source.CurrentState;
                         SumsStorage.SaveSquare(target.Column, target.Row, source.Value);
                         movedSquares.Add(target);
                         ClearSquare(source);
                     } else {
-                        Debug.WriteLine("No source, clearing target {0}", target.ToString());
+                        //Debug.WriteLine("No source, clearing target {0}", target.ToString());
                         ClearSquare(target);
                     }
 
@@ -393,6 +409,11 @@ namespace Hyaku.ViewModels
 
         private void ClearSquare(SquareViewModel sq)
         {
+            if (sq.IsHyakuBlock)
+            {
+                HyakuBlockCount -= 1;
+            }
+            EmptyBlockCount += 1;
             sq.Reset();
             SumsStorage.DeleteSquareAndCascade(sq.Column, sq.Row);
         }
