@@ -415,9 +415,18 @@ namespace Hyaku.ViewModels
             int startIndex = previousTarget != null ? previousTarget.Row - 1 : column.Count - 1;
             for (int i = startIndex; i >= 0; i -= 1)
             {
-                if (column[i] != null && (column[i].IsHyakuBlock || column[i].Value == 0))
+                Debug.WriteLine("Checking row {0}", i);
+                if (column[i] != null)
                 {
-                    return column[i];
+                    Debug.WriteLine("Row {0}: {1}", i, column[i].ToString());
+                    if ((column[i].IsHyakuBlock || column[i].Value == 0))
+                    {
+                        return column[i];
+                    }
+                }
+                else
+                {
+                    Debug.WriteLine("Row {0}: null");
                 }
             }
             return null;
