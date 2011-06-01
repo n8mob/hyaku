@@ -33,7 +33,7 @@ namespace Hyaku.ViewModels
             Squares = 0x1,
             Sums = 0x2,
             SquareSums = 0x4 };
-        private WhichToDebug whichToDebug = WhichToDebug.None;// (WhichToDebug.Squares | WhichToDebug.SquareSums | WhichToDebug.Sums);
+        private WhichToDebug whichToDebug = WhichToDebug.None;// WhichToDebug.Squares | WhichToDebug.SquareSums | WhichToDebug.Sums;
 #endif
 
         private HyakuSettings _settings;
@@ -396,19 +396,30 @@ namespace Hyaku.ViewModels
         {
             // delete sums
             Square sq = new Square(column, row);
-            foreach (Sum sum in GetSumsBySquare(sq.GetHashCode()))
+            //Debug.WriteLine("Deleting square: {0}", sq.ToString());
+            List<Sum> sumsToDelete = GetSumsBySquare(sq.GetHashCode());
+            //int initialSumsCount = Sums.Count;
+            //int sumsToDeleteCount = sumsToDelete.Count;
+            foreach (Sum sum in sumsToDelete)
             {
                 Sums.Remove(sum.GetHashCode());
             }
+            //Debug.WriteLine("Deleted {0} sums from {1} to get {2}", sumsToDeleteCount, initialSumsCount, Sums.Count);
 
             // delete sum-squares
-            foreach (SquareSum sqSum in GetSquareSumsBySquare(sq.GetHashCode()))
+            List<SquareSum> sqSumsToDelete = GetSquareSumsBySquare(sq.GetHashCode());
+            //int initialSqSumsCount = SquareSums.Count;
+            //int sqSumsToDeleteCount = sqSumsToDelete.Count;
+            foreach (SquareSum sqSum in sqSumsToDelete)
             {
                 SquareSums.Remove(sqSum.GetHashCode());
             }
+            //Debug.WriteLine("Deleted {0} square-sums from {1} to get {2}", sqSumsToDeleteCount, initialSqSumsCount, SquareSums.Count);
 
             // delete square
+            //int initialSquaresCount = Squares.Count;
             Squares.Remove(sq.GetHashCode());
+            //Debug.WriteLine("Deleted square {0} from {1} to get {2}", sq.ToString(), initialSquaresCount, Squares.Count);
         }
 
         internal void DeleteNonHyakuSumsBySquare(Square sq)
@@ -422,13 +433,18 @@ namespace Hyaku.ViewModels
 
         internal void DeleteSumsAndCascade(List<Sum> sumsToDelete)
         {
+            //int initialSums = Sums.Count;
             foreach (Sum sum in sumsToDelete)
             {
-                foreach (SquareSum sqSum in GetSquareSumsBySum(sum.GetHashCode()))
+                List<SquareSum> sqSumsToDelete = GetSquareSumsBySum(sum.GetHashCode());
+                //int initialSqSums = sqSumsToDelete.Count;
+                foreach (SquareSum sqSum in sqSumsToDelete)
                 {
                     SquareSums.Remove(sqSum.GetHashCode());
                 }
+                //Debug.WriteLine("Deleted {0} square-sums from {1} to get {2}", sqSumsToDelete.Count, initialSqSums, SquareSums.Count);
             }
+            //Debug.WriteLine("Deleted {0} sums from {1} to get {2}", sumsToDelete.Count, initialSums, Sums.Count);
         }
     }
 }
