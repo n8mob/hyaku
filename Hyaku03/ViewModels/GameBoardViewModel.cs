@@ -142,20 +142,20 @@ namespace Hyaku.ViewModels
             }
             set
             {
+                Debug.WriteLine("EmptyBlockCount changing from {0} to {1} - {2} HyakuBlocks", _emptyBlockCount, value, HyakuBlockCount);
                 int adjustedValue = value - HyakuBlockCount;
-                if (adjustedValue < _minAvailibleSquares)
+                if (adjustedValue <= _minAvailibleSquares)
                 {
-                    // WTF?
                     OnGameOver(GameOverReason.LessThanZero);
                 }
                 else if (adjustedValue > _maxAvailibleSquares)
                 {
+                    // WTF?
                     OnGameOver(GameOverReason.MoreThanMax);
                 }
                 else
                 {
                     _emptyBlockCount = value;
-                    Debug.WriteLine("EmptySquares set to {0} (adjusted to {1} by discounting hyaku blocks)", _emptyBlockCount, _emptyBlockCount + HyakuBlockCount);
                     NotifyPropertyChanged("EmptyBlockCount");
                 }
             }
@@ -413,7 +413,10 @@ namespace Hyaku.ViewModels
             {
                 HyakuBlockCount -= 1;
             }
-            EmptyBlockCount += 1;
+            if (sq.Value > 0)
+            {
+                EmptyBlockCount += 1;
+            }
             sq.Reset();
             SumsStorage.DeleteSquareAndCascade(sq.Column, sq.Row);
         }
