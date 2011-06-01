@@ -47,9 +47,6 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Net" />
-    <Reference Include="Wintellect.Sterling.WindowsPhone">
-      <HintPath>..\..\..\sterling-1.0.0.0-src\src\SterlingSln\Wintellect.Sterling.WindowsPhone\Bin\Release\Wintellect.Sterling.WindowsPhone.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
