@@ -142,7 +142,7 @@ namespace Hyaku.ViewModels
             }
             set
             {
-                Debug.WriteLine("EmptyBlockCount changing from {0} to {1} - {2} HyakuBlocks", _emptyBlockCount, value, HyakuBlockCount);
+                //Debug.WriteLine("EmptyBlockCount changing from {0} to {1} - {2} HyakuBlocks", _emptyBlockCount, value, HyakuBlockCount);
                 int adjustedValue = value + HyakuBlockCount;
                 if (adjustedValue <= _minAvailibleSquares)
                 {
@@ -169,8 +169,8 @@ namespace Hyaku.ViewModels
             }
             set
             {
+                //Debug.WriteLine("HyakuBlockCount changing from {0} to {1}", _hyakuBlockCount, value);
                 _hyakuBlockCount = value;
-                Debug.WriteLine("HyakuBlockCount set to {0}", _hyakuBlockCount);
                 NotifyPropertyChanged("HyakuBlockCount");
             }
         }
@@ -295,8 +295,14 @@ namespace Hyaku.ViewModels
 
         public virtual void MarkHyakuBlocks(List<Square> hyaku)
         {
+#if DEBUG
+            List<string> squareStrings = new List<string>();
+#endif
             foreach (Square sq in hyaku)
             {
+#if DEBUG
+                squareStrings.Add(sq.ToString());
+#endif
                 SquareViewModel sqV = GameGrid[sq.Column][sq.Row];
                 if (!sqV.IsHyakuBlock)
                 {
@@ -304,6 +310,9 @@ namespace Hyaku.ViewModels
                     HyakuBlockCount += 1;
                 }
             }
+#if DEBUG
+            Debug.WriteLine("marking hyaku: " + string.Join(",", squareStrings.ToArray()));
+#endif
         }
 
         public virtual void FindNewHyakus(SquareViewModel movedSquare)
@@ -439,14 +448,14 @@ namespace Hyaku.ViewModels
 
         protected virtual SquareViewModel NextTarget(List<SquareViewModel> column, SquareViewModel previousTarget)
         {
-            Debug.WriteLine("Finding next target in column {0} starting from {1}", GameGrid.IndexOf(column), previousTarget.ToString());
+            //Debug.WriteLine("Finding next target in column {0} starting from {1}", GameGrid.IndexOf(column), previousTarget.ToString());
             int startIndex = previousTarget != null ? previousTarget.Row - 1 : column.Count - 1;
             for (int i = startIndex; i >= 0; i -= 1)
             {
-                Debug.WriteLine("Checking row {0}", i);
+                //Debug.WriteLine("Checking row {0}", i);
                 if (column[i] != null)
                 {
-                    Debug.WriteLine("Row {0}: {1}", i, column[i].ToString());
+                    //Debug.WriteLine("Row {0}: {1}", i, column[i].ToString());
                     if ((column[i].IsHyakuBlock || column[i].Value == 0))
                     {
                         return column[i];
@@ -454,7 +463,7 @@ namespace Hyaku.ViewModels
                 }
                 else
                 {
-                    Debug.WriteLine("Row {0}: null");
+                    //Debug.WriteLine("Row {0}: null");
                 }
             }
             return null;
@@ -577,8 +586,8 @@ namespace Hyaku.ViewModels
                     int.TryParse(row[rowIndex], out parsedValue);
                     SquareViewModel sq = new SquareViewModel(columnIndex, rowIndex);
                     gameBoard.CurrentSquare = sq;
-                    gameBoard.SendNumber(parsedValue);
                     gameBoard.GameGrid[columnIndex].Insert(rowIndex, sq);
+                    gameBoard.SendNumber(parsedValue);
                 }
             }
 
