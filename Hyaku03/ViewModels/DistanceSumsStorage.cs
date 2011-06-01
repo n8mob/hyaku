@@ -296,7 +296,7 @@ namespace Hyaku.ViewModels
                        where sqSum.SquareHashCode == sqHashCode
                        join sum in Sums.Values
                        on sqSum.SumHashCode equals sum.GetHashCode()
-                       where sum.MaxDistance < MaxDistanceCache
+                       where sum.MaxDistance <= MaxDistanceCache
                        select sum;
             return sums.ToList();
         }
