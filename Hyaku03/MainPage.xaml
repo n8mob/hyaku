@@ -7,7 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:hyaku="clr-namespace:Hyaku.Views"
-    mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="800"
+    mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="728"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
@@ -40,15 +40,15 @@
         </Grid>
     </Grid>
 
-    <!--<phone:PhoneApplicationPage.ApplicationBar>
+    <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar IsVisible="True">
-            <shell:ApplicationBarIconButton
+            <!--<shell:ApplicationBarIconButton
                 x:Name="SettingsButton" IconUri="/Images/appbar.feature.settings.rest.png"
-                Text="Settings" Click="SettingsButton_Click" />
+                Text="Settings" Click="SettingsButton_Click" />-->
             <shell:ApplicationBarIconButton
                 x:Name="ResetButton" IconUri="/Images/appbar.close.rest.png"
                 Text="Reset" Click="ResetButton_Click" />
         </shell:ApplicationBar>
-    </phone:PhoneApplicationPage.ApplicationBar>-->
+    </phone:PhoneApplicationPage.ApplicationBar>
 
 </phone:PhoneApplicationPage>

@@ -93,7 +93,12 @@ namespace Hyaku.Views
             // create new square at the correct grid location
             if (dropAnimation != null)
             {
+                // draw the number to its place on the grid
+
                 dropAnimation.Stop();
+
+                // send number to game engine
+                GameBoard.SendNumber(nextNumber);
 
                 // set NextNumberImage to new value
                 SetNextNumber();
