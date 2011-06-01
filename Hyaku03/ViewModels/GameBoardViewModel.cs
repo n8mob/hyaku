@@ -396,7 +396,8 @@ namespace Hyaku.ViewModels
                         ClearSquare(target);
                         CurrentSquare = target;
                         target.Value = source.Value;
-                        target.CurrentState = source.CurrentState;
+                        target.IsLocked = source.IsLocked;
+                        target.IsCurrent = false;
                         EmptyBlockCount -= 1;
                         SumsStorage.SaveSquare(target.Column, target.Row, source.Value);
                         movedSquares.Add(target);
