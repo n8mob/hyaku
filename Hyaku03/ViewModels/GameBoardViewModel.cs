@@ -142,7 +142,7 @@ namespace Hyaku.ViewModels
             }
             set
             {
-                //Debug.WriteLine("EmptyBlockCount changing from {0} to {1} - {2} HyakuBlocks", _emptyBlockCount, value, HyakuBlockCount);
+                Debug.WriteLine("EmptyBlockCount changing from {0} to {1} - {2} HyakuBlocks", _emptyBlockCount, value, HyakuBlockCount);
                 int adjustedValue = value + HyakuBlockCount;
                 if (adjustedValue <= _minAvailibleSquares)
                 {
@@ -169,7 +169,7 @@ namespace Hyaku.ViewModels
             }
             set
             {
-                //Debug.WriteLine("HyakuBlockCount changing from {0} to {1}", _hyakuBlockCount, value);
+                Debug.WriteLine("HyakuBlockCount changing from {0} to {1}", _hyakuBlockCount, value);
                 _hyakuBlockCount = value;
                 NotifyPropertyChanged("HyakuBlockCount");
             }
@@ -391,14 +391,13 @@ namespace Hyaku.ViewModels
                 while (target != null) {
                     source = NextSource(column, target);
 
-                    if (target.IsHyakuBlock) {
-                        CountScore(target);
-                    }
-
                     if (source != null) {
                         //Debug.WriteLine("Moving source {0} to target {1}", source.ToString(), target.ToString());
+                        ClearSquare(target);
+                        CurrentSquare = target;
                         target.Value = source.Value;
                         target.CurrentState = source.CurrentState;
+                        EmptyBlockCount -= 1;
                         SumsStorage.SaveSquare(target.Column, target.Row, source.Value);
                         movedSquares.Add(target);
                         ClearSquare(source);
@@ -412,7 +411,8 @@ namespace Hyaku.ViewModels
                 target = null;
                 source = null;
             }
-            foreach (SquareViewModel sq in movedSquares) {
+            foreach (SquareViewModel sq in movedSquares)
+            {
                 FindNewHyakus(sq);
             }
         }
@@ -421,6 +421,7 @@ namespace Hyaku.ViewModels
         {
             if (sq.IsHyakuBlock)
             {
+                CountScore(sq);
                 HyakuBlockCount -= 1;
             }
             if (sq.Value > 0)
@@ -529,9 +530,10 @@ namespace Hyaku.ViewModels
             for (int i = firstEmptyBlock.Row; i < insertIndex; i += 1) {
                 SquareViewModel target = column[i];
                 SquareViewModel source = column[i + 1];
+                ClearSquare(target);
                 target.Value = source.Value;
                 target.CurrentState = source.CurrentState;
-                source.Reset();
+                ClearSquare(source);
             }
             this.CurrentSquare = column[insertIndex];
             this.SendNumber(valueToInsert);
