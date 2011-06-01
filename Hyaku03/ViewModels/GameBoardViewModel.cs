@@ -142,7 +142,7 @@ namespace Hyaku.ViewModels
             }
             set
             {
-                Debug.WriteLine("EmptyBlockCount changing from {0} to {1} - {2} HyakuBlocks", _emptyBlockCount, value, HyakuBlockCount);
+                //Debug.WriteLine("EmptyBlockCount changing from {0} to {1} - {2} HyakuBlocks", _emptyBlockCount, value, HyakuBlockCount);
                 int adjustedValue = value + HyakuBlockCount;
                 if (adjustedValue <= _minAvailibleSquares)
                 {
@@ -169,7 +169,7 @@ namespace Hyaku.ViewModels
             }
             set
             {
-                Debug.WriteLine("HyakuBlockCount changing from {0} to {1}", _hyakuBlockCount, value);
+                //Debug.WriteLine("HyakuBlockCount changing from {0} to {1}", _hyakuBlockCount, value);
                 _hyakuBlockCount = value;
                 NotifyPropertyChanged("HyakuBlockCount");
             }
@@ -301,6 +301,9 @@ namespace Hyaku.ViewModels
             foreach (Square sq in hyaku)
             {
                 SquareViewModel sqV = GameGrid[sq.Column][sq.Row];
+#if DEBUG
+                squareStrings.Add(sqV.ToString());
+#endif
                 if (!sqV.IsHyakuBlock)
                 {
                     sqV.IsHyakuBlock = true;
@@ -308,7 +311,7 @@ namespace Hyaku.ViewModels
                 }
             }
 #if DEBUG
-            Debug.WriteLine("marking hyaku: " + string.Join(",", squareStrings.ToArray()));
+            //Debug.WriteLine("marking hyaku: " + string.Join(",", squareStrings.ToArray()));
 #endif
         }
 
@@ -533,7 +536,9 @@ namespace Hyaku.ViewModels
                 SquareViewModel source = column[i + 1];
                 ClearSquare(target);
                 target.Value = source.Value;
-                target.CurrentState = source.CurrentState;
+                target.IsLocked = source.IsLocked;
+                target.IsHyakuBlock = source.IsHyakuBlock;
+                target.IsCurrent = source.IsCurrent;
                 ClearSquare(source);
             }
             this.CurrentSquare = column[insertIndex];
