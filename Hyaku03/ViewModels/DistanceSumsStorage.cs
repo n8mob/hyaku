@@ -290,6 +290,14 @@ namespace Hyaku.ViewModels
             return squareSums.ToList();
         }
 
+        public List<SquareSum> GetSquareSumsBySum(int sumHashCode)
+        {
+            var squareSums = from kvp in SquareSums
+                             where kvp.Value.SumHashCode == sumHashCode
+                             select kvp.Value;
+            return squareSums.ToList();
+        }
+
         public List<Sum> GetSumsBySquare(int sqHashCode)
         {
             var sums = from sqSum in SquareSums.Values
@@ -315,7 +323,13 @@ namespace Hyaku.ViewModels
         {
             List<Square> squaresToMark = GetSquaresBySum(newHyakuSum.GetHashCode());
 
+            foreach (Square sq in squaresToMark)
+            {
+                DeleteNonHyakuSumsBySquare(sq);
+            }
+
             Sum sum = Sums[newHyakuSum.GetHashCode()];
+
             if (HyakuFound != null) {
                 HyakuFound(this, new HyakuFoundEventArgs(sum, squaresToMark));
             }
@@ -343,7 +357,7 @@ namespace Hyaku.ViewModels
             foreach (Sum sum in sumsForExistingSquare) {
                 if (sum.MaxDistance <= MaxDistanceCache) {
                     List<Square> squaresInExistingSum = GetSquaresBySum(sum.GetHashCode());
-                    if (!squaresInExistingSum.Contains(newSquare) && sum.Total <= 100) { // TODO make "100" a setting
+                    if (!squaresInExistingSum.Contains(newSquare)) {
                         CreateAndSaveNewSum(newSquare, squaresInExistingSum);
                         if (sum.Total == 100) {
                             OnHyakuFound(sum);
@@ -395,6 +409,26 @@ namespace Hyaku.ViewModels
 
             // delete square
             Squares.Remove(sq.GetHashCode());
+        }
+
+        internal void DeleteNonHyakuSumsBySquare(Square sq)
+        {
+            List<Sum> allSums = GetSumsBySquare(sq.GetHashCode());
+            List<Sum> nonHyakuSums = (from sum in allSums
+                                      where sum.Total < 100
+                                      select sum).ToList();
+            DeleteSumsAndCascade(nonHyakuSums);
+        }
+
+        internal void DeleteSumsAndCascade(List<Sum> sumsToDelete)
+        {
+            foreach (Sum sum in sumsToDelete)
+            {
+                foreach (SquareSum sqSum in GetSquareSumsBySum(sum.GetHashCode()))
+                {
+                    SquareSums.Remove(sqSum.GetHashCode());
+                }
+            }
         }
     }
 }
