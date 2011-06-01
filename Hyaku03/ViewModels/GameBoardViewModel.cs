@@ -143,7 +143,7 @@ namespace Hyaku.ViewModels
             set
             {
                 Debug.WriteLine("EmptyBlockCount changing from {0} to {1} - {2} HyakuBlocks", _emptyBlockCount, value, HyakuBlockCount);
-                int adjustedValue = value - HyakuBlockCount;
+                int adjustedValue = value + HyakuBlockCount;
                 if (adjustedValue <= _minAvailibleSquares)
                 {
                     OnGameOver(GameOverReason.LessThanZero);
@@ -297,8 +297,12 @@ namespace Hyaku.ViewModels
         {
             foreach (Square sq in hyaku)
             {
-                GameGrid[sq.Column][sq.Row].IsHyakuBlock = true;
-                HyakuBlockCount += 1;
+                SquareViewModel sqV = GameGrid[sq.Column][sq.Row];
+                if (!sqV.IsHyakuBlock)
+                {
+                    sqV.IsHyakuBlock = true;
+                    HyakuBlockCount += 1;
+                }
             }
         }
 
