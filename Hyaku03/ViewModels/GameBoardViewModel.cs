@@ -300,9 +300,6 @@ namespace Hyaku.ViewModels
 #endif
             foreach (Square sq in hyaku)
             {
-#if DEBUG
-                squareStrings.Add(sq.ToString());
-#endif
                 SquareViewModel sqV = GameGrid[sq.Column][sq.Row];
                 if (!sqV.IsHyakuBlock)
                 {
