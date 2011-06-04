@@ -29,10 +29,10 @@ namespace Hyaku
 
         // Default settings values
         const int GameSizeSettingDefault = 9;
-        const bool EnableTrashRowsDefault = false;
+        const bool EnableTrashRowsDefault = true;
         const int SweepTimerPeriodDefault = 100;
         const int TimerTickIntervalDefault = 300; // milliseconds
-        const string NumberListStringDefault = "5,10,15,20,25,30,35,40";
+        const string NumberListStringDefault = "5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95";
         const bool UseDebugNumbersDefault = false;
         const string DebugNumbersStringDefault = "";
         const int MaxDistanceDefault = 2;

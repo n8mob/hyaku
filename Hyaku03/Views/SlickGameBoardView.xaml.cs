@@ -26,6 +26,7 @@ namespace Hyaku.Views
         Point dragEnd;
         int nextNumber;
         List<Rectangle> rectangles = new List<Rectangle>(9);
+        Image currentImage;
         Image[,] squares;
 
         private GameBoardViewModel _gameBoard;
@@ -179,9 +180,9 @@ namespace Hyaku.Views
 
         public void MoveSquare(int oldColumn, int oldRow, int newColumn, int newRow)
         {
-            Image squareToMove = squares[oldColumn, oldRow];
+            currentImage = squares[oldColumn, oldRow];
             squares[oldColumn, oldRow] = null;
-            squares[newColumn, newRow] = squareToMove;
+            squares[newColumn, newRow] = currentImage;
 
             DoubleAnimation moveSquareAnimation = new DoubleAnimation();
             moveSquareAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(200));
@@ -190,7 +191,7 @@ namespace Hyaku.Views
 
             Storyboard moveSquareStoryBoard = new Storyboard();
             moveSquareStoryBoard.Children.Add(moveSquareAnimation);
-            Storyboard.SetTarget(moveSquareStoryBoard, squareToMove);
+            Storyboard.SetTarget(moveSquareStoryBoard, currentImage);
             Storyboard.SetTargetProperty(moveSquareAnimation, new PropertyPath("(Canvas.Top)"));
             //moveSquareStoryBoard.Completed += new EventHandler(moveSquareAnimation_Completed);
             moveSquareStoryBoard.Begin();
@@ -203,7 +204,7 @@ namespace Hyaku.Views
         //        return;
         //    }
 
-        //    // TODO fix position of image at end of animation
+
         //}
 
         void dropAnimation_Completed(object sender, EventArgs e)
