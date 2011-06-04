@@ -49,10 +49,16 @@ namespace Hyaku.Views
             this.DataContext = GameBoard;
             GameBoard.GameOver += new GameOverEventHandler(GameBoard_GameOver);
             GameBoard.HyakusFound += new HyakusFoundEventHandler(GameBoard_HyakusFound);
+            GameBoard.SquareDeleted += new SquareDeletedEventHandler(GameBoard_SquareDeleted);
             GameBoard.SquareMoved += new SquareMovedEventHandler(GameBoard_SquareMoved);
             if (!GameBoard.Timer.IsEnabled) {
                 GameBoard.Timer.Start();
             }
+        }
+
+        void GameBoard_SquareDeleted(object sender, SquareDeletedEventArgs e)
+        {
+            DeleteSquare(e.Column, e.Row);
         }
 
         void GameBoard_SquareMoved(object sender, SquareMovedEventArgs e)
@@ -153,27 +159,21 @@ namespace Hyaku.Views
                     return;
                 }
 
-                //// set end position of animation
-                //int row = currentSquare.Row;
-
-                //DoubleAnimation dropAnimation = new DoubleAnimation();
-                //dropAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(150));
-                //dropAnimation.From = (double)NextNumberImage.GetValue(Canvas.TopProperty);
-                //dropAnimation.To = (double)rowTops[row];
-
-                //Storyboard dropAnimationStoryboard = new Storyboard();
-                //dropAnimationStoryboard.Children.Add(dropAnimation);
-                //Storyboard.SetTarget(dropAnimation, NextNumberImage);
-                //Storyboard.SetTargetProperty(dropAnimation, new PropertyPath("(Canvas.Top)"));
-                //dropAnimationStoryboard.Completed += new EventHandler(dropAnimation_Completed);
-                //dropAnimationStoryboard.Begin();
-
                 // turn off "Manipulation" handlers until animation is complete
                 DisconnectManipulationHandlers();
 
                 // hook up the animation complete handler
                 dropAnimation.Completed += new EventHandler(dropAnimation_Completed);
                 dropAnimation.Begin();
+            }
+        }
+
+        public void DeleteSquare(int column, int row)
+        {
+            // insert hyaku remove animation here
+            Image squareToDelete = squares[column, row];
+            if (squareToDelete != null) {
+                Columns.Children.Remove(squareToDelete);
             }
         }
 
@@ -240,8 +240,12 @@ namespace Hyaku.Views
                                                            
                 // set NextNumberImage to new value        
                 SetNextNumber();
+                // set rectangle back to black
+                if (currentRectangle != null) {
+                    currentRectangle.Fill = new SolidColorBrush(Colors.Black);
+                }
                 // reconnect "Manipulation" handlers for next time.
-                ConnectManipulationHandlers();                       
+                ConnectManipulationHandlers();              
             }                                              
             // find new hyakus and run their animations
         }

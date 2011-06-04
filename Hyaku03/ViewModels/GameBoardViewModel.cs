@@ -25,6 +25,7 @@ namespace Hyaku.ViewModels
     public delegate void GameOverEventHandler(object sender, GameOverEventArgs e);
     public delegate void HyakusFoundEventHandler(object sender, HyakuFoundEventArgs e);
     public delegate void SquareMovedEventHandler(object sender, SquareMovedEventArgs e);
+    public delegate void SquareDeletedEventHandler(object sender, SquareDeletedEventArgs e);
 
     public class GameBoardViewModel : ViewModelBase
     {
@@ -33,6 +34,7 @@ namespace Hyaku.ViewModels
         public event GameOverEventHandler GameOver;
         public event HyakusFoundEventHandler HyakusFound;
         public event SquareMovedEventHandler SquareMoved;
+        public event SquareDeletedEventHandler SquareDeleted;
 
         #endregion Events
 
@@ -437,7 +439,7 @@ namespace Hyaku.ViewModels
                         movedSquares.Add(ReplaceSquare(target, source));
                     } else {
                         //Debug.WriteLine("No source, clearing target {0}", target.ToString());
-                        ClearSquare(target);
+                        DeleteSquare(target);
                     }
 
                     target = NextTarget(column, target);
@@ -451,9 +453,26 @@ namespace Hyaku.ViewModels
             }
         }
 
+        private void DeleteSquare(SquareViewModel target)
+        {
+            SquareDeletedEventArgs deleteArgs = new SquareDeletedEventArgs();
+            deleteArgs.Column = target.Column;
+            deleteArgs.Row = target.Row;
+            if (SquareDeleted != null) {
+                SquareDeleted(this, deleteArgs);
+            }
+            ClearSquare(target);
+        }
+
         private SquareViewModel ReplaceSquare(SquareViewModel target, SquareViewModel source)
         {
-            SquareMovedEventArgs e = new SquareMovedEventArgs() {
+            SquareDeletedEventArgs deleteArgs = new SquareDeletedEventArgs()
+            {
+                Column = target.Column,
+                Row = target.Row
+            };
+
+            SquareMovedEventArgs moveArgs = new SquareMovedEventArgs() {
                 OldColumn = source.Column,
                 OldRow = source.Row,
                 NewColumn = target.Column,
@@ -470,8 +489,12 @@ namespace Hyaku.ViewModels
             SumsStorage.SaveSquare(target.Column, target.Row, source.Value);
             ClearSquare(source);
 
+            if (SquareDeleted != null) {
+                SquareDeleted(this, deleteArgs);
+            }
+
             if (SquareMoved != null) {
-                SquareMoved(this, e);
+                SquareMoved(this, moveArgs);
             }
 
             return target;
