@@ -52,9 +52,24 @@ namespace Hyaku.Views
             GameBoard.HyakusFound += new HyakusFoundEventHandler(GameBoard_HyakusFound);
             GameBoard.SquareDeleted += new SquareDeletedEventHandler(GameBoard_SquareDeleted);
             GameBoard.SquareMoved += new SquareMovedEventHandler(GameBoard_SquareMoved);
+            GameBoard.NumberAdded += new NumberAddedEventHandler(GameBoard_NumberAdded);
             if (!GameBoard.Timer.IsEnabled) {
                 GameBoard.Timer.Start();
             }
+        }
+
+        void GameBoard_NumberAdded(object sender, NumberAddedEventArgs e)
+        {
+            double rowTop = (double)rowTops[e.Square.Row];
+            double columnLeft = (double)rectangles[e.Square.Column].GetValue(Canvas.LeftProperty);
+
+            Image numberImage = new Image();
+            numberImage.Source = new BitmapImage(GetImageUriFromNumber(e.Square.Value));
+            numberImage.SetValue(Canvas.TopProperty, rowTop);
+            numberImage.SetValue(Canvas.LeftProperty, columnLeft);
+            Columns.Children.Add(numberImage);
+            squares[e.Square.Column, e.Square.Row] = numberImage;
+            numberImage.SetValue(Canvas.ZIndexProperty, 10);
         }
 
         void GameBoard_SquareDeleted(object sender, SquareDeletedEventArgs e)
@@ -227,14 +242,6 @@ namespace Hyaku.Views
                 int column = GameBoard.CurrentSquare.Column;
                 int row = GameBoard.CurrentSquare.Row;
                 Rectangle r = rectangles[column];
-                
-                Image numberImage = new Image();
-                numberImage.Source = new BitmapImage(GetImageUriFromNumber(nextNumber));
-                numberImage.SetValue(Canvas.TopProperty, (double)rowTops[row]);
-                numberImage.SetValue(Canvas.LeftProperty, (double)r.GetValue(Canvas.LeftProperty));
-                Columns.Children.Add(numberImage);
-                squares[column, row] = numberImage;
-                numberImage.SetValue(Canvas.ZIndexProperty, 10);
 
                 // send number to game engine
                 GameBoard.SendNumber(nextNumber);

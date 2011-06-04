@@ -101,6 +101,7 @@
     <Compile Include="GameOverEventArgs.cs" />
     <Compile Include="SquareMovedEventArgs.cs" />
     <Compile Include="SquareDeletedEventArgs.cs" />
+    <Compile Include="NumberAddedEventArgs.cs" />
     <Compile Include="ViewModels\SquareViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\GameBoardView.xaml.cs">

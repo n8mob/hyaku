@@ -23,6 +23,7 @@ using Hyaku.Data;
 namespace Hyaku.ViewModels
 {
     public delegate void GameOverEventHandler(object sender, GameOverEventArgs e);
+    public delegate void NumberAddedEventHandler(object sender, NumberAddedEventArgs e);
     public delegate void HyakusFoundEventHandler(object sender, HyakuFoundEventArgs e);
     public delegate void SquareMovedEventHandler(object sender, SquareMovedEventArgs e);
     public delegate void SquareDeletedEventHandler(object sender, SquareDeletedEventArgs e);
@@ -35,6 +36,7 @@ namespace Hyaku.ViewModels
         public event HyakusFoundEventHandler HyakusFound;
         public event SquareMovedEventHandler SquareMoved;
         public event SquareDeletedEventHandler SquareDeleted;
+        public event NumberAddedEventHandler NumberAdded;
 
         #endregion Events
 
@@ -315,6 +317,12 @@ namespace Hyaku.ViewModels
                         SumsStorage.InitializeSumsForSquare(sq);
                         CurrentSquare.IsLocked = true;
                         EmptyBlockCount -= 1;
+                        if (NumberAdded != null) {
+                            NumberAdded(this, new NumberAddedEventArgs()
+                            {
+                                Square = sq
+                            });
+                        }
                         FindNewHyakus(CurrentSquare);
                     } else { // the number is <= 0
                         // ??
@@ -613,12 +621,23 @@ namespace Hyaku.ViewModels
             for (int i = firstEmptyBlock.Row; i < insertIndex; i += 1) {
                 SquareViewModel target = column[i];
                 SquareViewModel source = column[i + 1];
+
+                SquareMovedEventArgs movedArgs = new SquareMovedEventArgs();
+                movedArgs.OldColumn = source.Column;
+                movedArgs.OldRow = source.Row;
+                movedArgs.NewColumn = target.Column;
+                movedArgs.NewRow = target.Row;
+
                 ClearSquare(target);
                 target.Value = source.Value;
                 target.IsLocked = source.IsLocked;
                 target.IsHyakuBlock = source.IsHyakuBlock;
                 target.IsCurrent = source.IsCurrent;
                 ClearSquare(source);
+
+                if (SquareMoved != null) {
+                    SquareMoved(this, movedArgs);
+                }
             }
             this.CurrentSquare = column[insertIndex];
             this.SendNumber(valueToInsert);
