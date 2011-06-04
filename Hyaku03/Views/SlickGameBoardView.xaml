@@ -7,7 +7,7 @@
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}">
     <UserControl.Resources>
-        <Storyboard x:Name="DropAnimationStoryboard">
+        <Storyboard x:Name="DropKeyFrameAnimationStoryboard">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="NextNumberImage">
                 <SplineDoubleKeyFrame x:Name="StartFrame" KeyTime="0" Value="0"/>
                 <EasingDoubleKeyFrame x:Name="EndFrame" KeyTime="0:0:0.2" Value="374"></EasingDoubleKeyFrame>
@@ -62,8 +62,13 @@
                 <Path Data="M137.5,216L137.5,584" Height="369" Canvas.Left="81.5" StrokeStartLineCap="Flat" Stretch="Fill" StrokeEndLineCap="Flat" Stroke="#FF999999" StrokeThickness="1" StrokeMiterLimit="10" StrokeLineJoin="Miter" Canvas.Top="0" Width="1"/>
                 <Path Data="M96.5,216L96.5,584" Height="369" Canvas.Left="40.5" StrokeStartLineCap="Flat" Stretch="Fill" StrokeEndLineCap="Flat" Stroke="#FF999999" StrokeThickness="1" StrokeMiterLimit="10" StrokeLineJoin="Miter" Canvas.Top="0" Width="1"/>
             </Canvas>
-            <ProgressBar x:Name="progressBar" Height="10" Canvas.Left="56" Canvas.Top="589" Width="369" Background="Black" Foreground="#FF6E0000"/>
-            <Image Name="NextNumberImage" Height="40" Width="40" Canvas.Left="220" Canvas.Top="171.5" RenderTransformOrigin="0.5,0.5">
+            <ProgressBar x:Name="progressBar"
+                         Minimum="0" Maximum="{Binding SweepSteps}"
+                         Value="{Binding TickCount}"
+                         Height="10" Width="369"
+                         Canvas.Left="56" Canvas.Top="589"
+                         Background="Black" Foreground="#FF6E0000"/>
+            <Image Name="NextNumberImage" Height="40" Width="40" Canvas.Left="220" Canvas.Top="171.5" Canvas.ZIndex="1" RenderTransformOrigin="0.5,0.5">
                 <Image.RenderTransform>
                     <CompositeTransform />
                 </Image.RenderTransform>

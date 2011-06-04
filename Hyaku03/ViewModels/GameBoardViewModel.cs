@@ -23,12 +23,14 @@ using Hyaku.Data;
 namespace Hyaku.ViewModels
 {
     public delegate void GameOverEventHandler(object sender, GameOverEventArgs e);
+    public delegate void HyakusFoundEventHandler(object sender, HyakuFoundEventArgs e);
 
     public class GameBoardViewModel : ViewModelBase
     {
         #region Events
 
         public event GameOverEventHandler GameOver;
+        public event HyakusFoundEventHandler HyakusFound;
 
         #endregion Events
 
@@ -374,6 +376,14 @@ namespace Hyaku.ViewModels
         public virtual void HyakuFoundHandler(object sender, HyakuFoundEventArgs e)
         {
             MarkHyakuBlocks(e.SquaresToMark);
+            OnHyakusFound(e);
+        }
+
+        private void OnHyakusFound(HyakuFoundEventArgs e)
+        {
+            if (HyakusFound != null) {
+                HyakusFound(this, e);
+            }
         }
 
         public virtual List<SquareViewModel> CheckTwoSquares(SquareViewModel sq1, SquareViewModel sq2)

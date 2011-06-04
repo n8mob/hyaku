@@ -12,17 +12,21 @@ using System.Windows.Shapes;
 using Hyaku.ViewModels;
 using System.Windows.Media.Imaging;
 using System.IO;
+using Hyaku.Data;
+using System.Diagnostics;
 
 namespace Hyaku.Views
 {
     public partial class SlickGameBoardView : UserControl
     {
+        const string hyakuImagePath = @"../Images/NumberBlocks/hyaku.png";
+        int[] rowTops = new int[] { 0,41,82,123,164,205,246,287,328 };
         Rectangle currentRectangle = null;
         Point dragStart;
         Point dragEnd;
         int nextNumber;
         List<Rectangle> rectangles = new List<Rectangle>(9);
-        int[] rowTops = new int[] { 0,41,82,123,164,205,246,287,328 };
+        Image[,] squares;
 
         private GameBoardViewModel _gameBoard;
 
@@ -42,6 +46,32 @@ namespace Hyaku.Views
         private void BindBoard()
         {
             SetNextNumber();
+            this.DataContext = GameBoard;
+            GameBoard.GameOver += new GameOverEventHandler(GameBoard_GameOver);
+            GameBoard.HyakusFound += new HyakusFoundEventHandler(GameBoard_HyakusFound);
+            if (!GameBoard.Timer.IsEnabled) {
+                GameBoard.Timer.Start();
+            }
+        }
+
+        void GameBoard_HyakusFound(object sender, HyakuFoundEventArgs e)
+        {
+            foreach (Square sq in e.SquaresToMark) {
+                if (squares[sq.Column, sq.Row] == null) {
+                    squares[sq.Column, sq.Row] = new Image();
+                }
+
+                squares[sq.Column, sq.Row].Source = new BitmapImage(new Uri(hyakuImagePath, UriKind.Relative));
+            }
+        }
+
+        void GameBoard_GameOver(object sender, GameOverEventArgs e)
+        {
+            MessageBox.Show(e.Reason.ToString(), "Game Over", MessageBoxButton.OK);
+
+            GameBoard.GameOver -= new GameOverEventHandler(GameBoard_GameOver);
+
+            GameBoard = GameBoardViewModel.CreateNewGame();
         }
 
         private void SetNextNumber()
@@ -63,6 +93,8 @@ namespace Hyaku.Views
             rectangles.Insert(6, Column6);
             rectangles.Insert(7, Column7);
             rectangles.Insert(8, Column8);
+
+            squares = new Image[9, 9];
 
             ConnectManipulationHandlers();
             GameBoard = GameBoardViewModel.CreateNewGame();
@@ -110,43 +142,66 @@ namespace Hyaku.Views
 
             SquareViewModel currentSquare = GameBoard.SelectSquare(columnIndex);
             if (currentSquare != null) {
-                Storyboard dropAnimation = (Storyboard)this.Resources["DropAnimationStoryboard"];
-                
-                // TODO set end position of animation
+                Storyboard dropAnimation = (Storyboard)this.Resources["DropKeyFrameAnimationStoryboard"];
+                if (dropAnimation == null) {
+                    return;
+                }
+
+                //// set end position of animation
+                //int row = currentSquare.Row;
+
+                //DoubleAnimation dropAnimation = new DoubleAnimation();
+                //dropAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(150));
+                //dropAnimation.From = (double)NextNumberImage.GetValue(Canvas.TopProperty);
+                //dropAnimation.To = (double)rowTops[row];
+
+                //Storyboard dropAnimationStoryboard = new Storyboard();
+                //dropAnimationStoryboard.Children.Add(dropAnimation);
+                //Storyboard.SetTarget(dropAnimation, NextNumberImage);
+                //Storyboard.SetTargetProperty(dropAnimation, new PropertyPath("(Canvas.Top)"));
+                //dropAnimationStoryboard.Completed += new EventHandler(dropAnimation_Completed);
+                //dropAnimationStoryboard.Begin();
+
+                // turn off "Manipulation" handlers until animation is complete
+                DisconnectManipulationHandlers();
 
                 // hook up the animation complete handler
                 dropAnimation.Completed += new EventHandler(dropAnimation_Completed);
                 dropAnimation.Begin();
-
-                // turn off "Manipulation" handlers until animation is complete
-                DisconnectManipulationHandlers();
             }
         }
 
         void dropAnimation_Completed(object sender, EventArgs e)
         {
-            Storyboard dropAnimation = sender as Storyboard;
+            Storyboard dropAnimationStoryboard = sender as Storyboard;
             // create new square at the correct grid location
-            if (dropAnimation != null)
+            if (dropAnimationStoryboard != null)
             {
                 // draw the number to its place on the grid
 
-                dropAnimation.Stop();
+                dropAnimationStoryboard.Stop();
                 // annimation handler is added when the animation begins
-                dropAnimation.Completed -= new EventHandler(dropAnimation_Completed);
-                
+                dropAnimationStoryboard.Completed -= new EventHandler(dropAnimation_Completed);
+
+                if (GameBoard.CurrentSquare == null) {
+                    Debug.WriteLine("GameBoard.CurrentSquare is empty");
+                    return;
+                }
+
                 int column = GameBoard.CurrentSquare.Column;
                 int row = GameBoard.CurrentSquare.Row;
                 Rectangle r = rectangles[column];
-
-                // send number to game engine
-                GameBoard.SendNumber(nextNumber);
                 
-                Image numberImage = new Image();           
+                Image numberImage = new Image();
                 numberImage.Source = new BitmapImage(GetImageUriFromNumber(nextNumber));
                 numberImage.SetValue(Canvas.TopProperty, (double)rowTops[row]);
                 numberImage.SetValue(Canvas.LeftProperty, (double)r.GetValue(Canvas.LeftProperty));
                 Columns.Children.Add(numberImage);
+                squares[column, row] = numberImage;
+                numberImage.SetValue(Canvas.ZIndexProperty, 10);
+
+                // send number to game engine
+                GameBoard.SendNumber(nextNumber);
                                                            
                 // set NextNumberImage to new value        
                 SetNextNumber();
