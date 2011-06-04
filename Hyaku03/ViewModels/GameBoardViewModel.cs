@@ -24,6 +24,7 @@ namespace Hyaku.ViewModels
 {
     public delegate void GameOverEventHandler(object sender, GameOverEventArgs e);
     public delegate void HyakusFoundEventHandler(object sender, HyakuFoundEventArgs e);
+    public delegate void SquareMovedEventHandler(object sender, SquareMovedEventArgs e);
 
     public class GameBoardViewModel : ViewModelBase
     {
@@ -31,6 +32,7 @@ namespace Hyaku.ViewModels
 
         public event GameOverEventHandler GameOver;
         public event HyakusFoundEventHandler HyakusFound;
+        public event SquareMovedEventHandler SquareMoved;
 
         #endregion Events
 
@@ -432,16 +434,7 @@ namespace Hyaku.ViewModels
                     source = NextSource(column, target);
 
                     if (source != null) {
-                        //Debug.WriteLine("Moving source {0} to target {1}", source.ToString(), target.ToString());
-                        ClearSquare(target);
-                        CurrentSquare = target;
-                        target.Value = source.Value;
-                        target.IsLocked = source.IsLocked;
-                        target.IsCurrent = false;
-                        EmptyBlockCount -= 1;
-                        SumsStorage.SaveSquare(target.Column, target.Row, source.Value);
-                        movedSquares.Add(target);
-                        ClearSquare(source);
+                        movedSquares.Add(ReplaceSquare(target, source));
                     } else {
                         //Debug.WriteLine("No source, clearing target {0}", target.ToString());
                         ClearSquare(target);
@@ -456,6 +449,32 @@ namespace Hyaku.ViewModels
             {
                 FindNewHyakus(sq);
             }
+        }
+
+        private SquareViewModel ReplaceSquare(SquareViewModel target, SquareViewModel source)
+        {
+            SquareMovedEventArgs e = new SquareMovedEventArgs() {
+                OldColumn = source.Column,
+                OldRow = source.Row,
+                NewColumn = target.Column,
+                NewRow = target.Row
+            };
+
+            //Debug.WriteLine("Moving source {0} to target {1}", source.ToString(), target.ToString());
+            ClearSquare(target);
+            CurrentSquare = target;
+            target.Value = source.Value;
+            target.IsLocked = source.IsLocked;
+            target.IsCurrent = false;
+            EmptyBlockCount -= 1;
+            SumsStorage.SaveSquare(target.Column, target.Row, source.Value);
+            ClearSquare(source);
+
+            if (SquareMoved != null) {
+                SquareMoved(this, e);
+            }
+
+            return target;
         }
 
         private void ClearSquare(SquareViewModel sq)

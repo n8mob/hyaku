@@ -49,9 +49,15 @@ namespace Hyaku.Views
             this.DataContext = GameBoard;
             GameBoard.GameOver += new GameOverEventHandler(GameBoard_GameOver);
             GameBoard.HyakusFound += new HyakusFoundEventHandler(GameBoard_HyakusFound);
+            GameBoard.SquareMoved += new SquareMovedEventHandler(GameBoard_SquareMoved);
             if (!GameBoard.Timer.IsEnabled) {
                 GameBoard.Timer.Start();
             }
+        }
+
+        void GameBoard_SquareMoved(object sender, SquareMovedEventArgs e)
+        {
+            MoveSquare(e.OldColumn, e.OldRow, e.NewColumn, e.NewRow);
         }
 
         void GameBoard_HyakusFound(object sender, HyakuFoundEventArgs e)
@@ -170,6 +176,35 @@ namespace Hyaku.Views
                 dropAnimation.Begin();
             }
         }
+
+        public void MoveSquare(int oldColumn, int oldRow, int newColumn, int newRow)
+        {
+            Image squareToMove = squares[oldColumn, oldRow];
+            squares[oldColumn, oldRow] = null;
+            squares[newColumn, newRow] = squareToMove;
+
+            DoubleAnimation moveSquareAnimation = new DoubleAnimation();
+            moveSquareAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(200));
+            moveSquareAnimation.From = rowTops[oldRow];
+            moveSquareAnimation.To = rowTops[newRow];
+
+            Storyboard moveSquareStoryBoard = new Storyboard();
+            moveSquareStoryBoard.Children.Add(moveSquareAnimation);
+            Storyboard.SetTarget(moveSquareStoryBoard, squareToMove);
+            Storyboard.SetTargetProperty(moveSquareAnimation, new PropertyPath("(Canvas.Top)"));
+            //moveSquareStoryBoard.Completed += new EventHandler(moveSquareAnimation_Completed);
+            moveSquareStoryBoard.Begin();
+        }
+
+        //void moveSquareAnimation_Completed(object sender, EventArgs e)
+        //{
+        //    Storyboard moveSquareStoryBoard = sender as Storyboard;
+        //    if (moveSquareStoryBoard == null) {
+        //        return;
+        //    }
+
+        //    // TODO fix position of image at end of animation
+        //}
 
         void dropAnimation_Completed(object sender, EventArgs e)
         {

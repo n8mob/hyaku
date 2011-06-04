@@ -99,6 +99,7 @@
     <Compile Include="ViewModels\DistanceSumsStorage.cs" />
     <Compile Include="ViewModels\GameBoardViewModel.cs" />
     <Compile Include="GameOverEventArgs.cs" />
+    <Compile Include="SquareMovedEventArgs.cs" />
     <Compile Include="ViewModels\SquareViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\GameBoardView.xaml.cs">
