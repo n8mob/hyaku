@@ -266,11 +266,38 @@ namespace Hyaku.ViewModels
         #endregion Constructors
 
         #region Methods
+        
+        public virtual SquareViewModel SelectSquare(int columnIndex)
+        {
+            List<SquareViewModel> column = GameGrid[columnIndex];
+            SquareViewModel lowestEmptySquare = null;
+            for (int i = column.Count - 1; i >= 0; i -= 1) {
+                if (column[i] != null && column[i].Value == 0) {
+                    lowestEmptySquare = column[i];
+                    break;
+                }
+            }
+
+            if (lowestEmptySquare == null) {
+                return null;
+            }
+
+            if (CurrentSquare != null) {
+                CurrentSquare.IsCurrent = false;
+            }
+
+            if (CurrentSquare == lowestEmptySquare) {
+                CurrentSquare = null;
+            } else {
+                CurrentSquare = lowestEmptySquare;
+            }
+
+            return lowestEmptySquare;
+        }
 
         public virtual void SendNumber(int theNumber)
         {
-            if (CurrentSquare != null && CurrentSquare.Value == 0)
-            {
+            if (CurrentSquare != null && CurrentSquare.Value == 0) {
                 // square is not occupied, let's set it.
                 if (EmptyBlockCount < _minAvailibleSquares) {
                     OnGameOver(GameOverReason.RanOutOfSpace);

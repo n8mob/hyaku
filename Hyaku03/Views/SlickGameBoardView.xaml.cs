@@ -21,6 +21,8 @@ namespace Hyaku.Views
         Point dragStart;
         Point dragEnd;
         int nextNumber;
+        List<Rectangle> rectangles = new List<Rectangle>(9);
+        int[] rowTops = new int[] { 0,41,82,123,164,205,246,287,328 };
 
         private GameBoardViewModel _gameBoard;
 
@@ -51,11 +53,35 @@ namespace Hyaku.Views
         public SlickGameBoardView()
         {
             InitializeComponent();
+
+            rectangles.Insert(0, Column0);
+            rectangles.Insert(1, Column1);
+            rectangles.Insert(2, Column2);
+            rectangles.Insert(3, Column3);
+            rectangles.Insert(4, Column4);
+            rectangles.Insert(5, Column5);
+            rectangles.Insert(6, Column6);
+            rectangles.Insert(7, Column7);
+            rectangles.Insert(8, Column8);
+
+            ConnectManipulationHandlers();
+            GameBoard = GameBoardViewModel.CreateNewGame();
+        }
+
+        private void ConnectManipulationHandlers()
+        {
             Columns.ManipulationStarted += new EventHandler<ManipulationStartedEventArgs>(Columns_ManipulationStarted);
             Columns.ManipulationDelta += new EventHandler<ManipulationDeltaEventArgs>(Columns_ManipulationDelta);
             Columns.ManipulationCompleted += new EventHandler<ManipulationCompletedEventArgs>(Columns_ManipulationCompleted);
             Columns.MouseLeftButtonDown += new MouseButtonEventHandler(Columns_MouseLeftButtonDown);
-            GameBoard = new GameBoardViewModel();
+        }
+
+        private void DisconnectManipulationHandlers()
+        {
+            Columns.ManipulationStarted -= new EventHandler<ManipulationStartedEventArgs>(Columns_ManipulationStarted);
+            Columns.ManipulationDelta -= new EventHandler<ManipulationDeltaEventArgs>(Columns_ManipulationDelta);
+            Columns.ManipulationCompleted -= new EventHandler<ManipulationCompletedEventArgs>(Columns_ManipulationCompleted);
+            Columns.MouseLeftButtonDown -= new MouseButtonEventHandler(Columns_MouseLeftButtonDown);
         }
 
         void Columns_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -80,11 +106,21 @@ namespace Hyaku.Views
             dragEnd = new Point(dragStart.X + e.TotalManipulation.Translation.X, dragStart.Y + e.TotalManipulation.Translation.Y);
             ChooseCurrentRectangle(dragEnd);
             Rectangle r = GetRectangle(dragEnd);
+            int columnIndex = rectangles.IndexOf(r);
 
-            Storyboard dropAnimation = (Storyboard)this.Resources["DropAnimationStoryboard"];
+            SquareViewModel currentSquare = GameBoard.SelectSquare(columnIndex);
+            if (currentSquare != null) {
+                Storyboard dropAnimation = (Storyboard)this.Resources["DropAnimationStoryboard"];
+                
+                // TODO set end position of animation
 
-            dropAnimation.Completed += new EventHandler(dropAnimation_Completed);
-            dropAnimation.Begin();
+                // hook up the animation complete handler
+                dropAnimation.Completed += new EventHandler(dropAnimation_Completed);
+                dropAnimation.Begin();
+
+                // turn off "Manipulation" handlers until animation is complete
+                DisconnectManipulationHandlers();
+            }
         }
 
         void dropAnimation_Completed(object sender, EventArgs e)
@@ -96,13 +132,27 @@ namespace Hyaku.Views
                 // draw the number to its place on the grid
 
                 dropAnimation.Stop();
+                // annimation handler is added when the animation begins
+                dropAnimation.Completed -= new EventHandler(dropAnimation_Completed);
+                
+                int column = GameBoard.CurrentSquare.Column;
+                int row = GameBoard.CurrentSquare.Row;
+                Rectangle r = rectangles[column];
 
                 // send number to game engine
                 GameBoard.SendNumber(nextNumber);
-
-                // set NextNumberImage to new value
+                
+                Image numberImage = new Image();           
+                numberImage.Source = new BitmapImage(GetImageUriFromNumber(nextNumber));
+                numberImage.SetValue(Canvas.TopProperty, (double)rowTops[row]);
+                numberImage.SetValue(Canvas.LeftProperty, (double)r.GetValue(Canvas.LeftProperty));
+                Columns.Children.Add(numberImage);
+                                                           
+                // set NextNumberImage to new value        
                 SetNextNumber();
-            }
+                // reconnect "Manipulation" handlers for next time.
+                ConnectManipulationHandlers();                       
+            }                                              
             // find new hyakus and run their animations
         }
 
