@@ -192,31 +192,6 @@ namespace Hyaku.ViewModels
             SaveSquareSum(newSquare.GetHashCode(), sum.GetHashCode());
         }
 
-        ///// <summary>
-        ///// Creates 1 new Sum and a new SquareSum for each square.
-        ///// </summary>
-        ///// <param name="sq1"></param>
-        ///// <param name="sq2"></param>
-        ///// <returns>The list of new SquareSum IDs</returns>
-        //public List<int> CreateAndSaveNewSum(Square sq1, Square sq2)
-        //{
-        //    if (sq1 == null) { throw new ArgumentNullException("sq1"); }
-
-        //    //int distance = Sum.GetDistance(sq1, sq2);
-        //    //int total = Sum.AddSquareValues(sq1, sq2);
-        //    Sum newSum = SaveSum(sq1, sq2);
-        //    List<int> newSquareSumHashCodes = new List<int>();
-        //    try {
-        //        newSquareSumHashCodes.Add(SaveSquareSum(sq1.GetHashCode(), newSum.GetHashCode()).GetHashCode());
-        //        if (sq2 != null) {
-        //            newSquareSumHashCodes.Add(SaveSquareSum(sq2.GetHashCode(), newSum.GetHashCode()).GetHashCode());
-        //        }
-        //    } catch {
-        //        // do nothing
-        //    }
-        //    return newSquareSumHashCodes;
-        //}
-
         public List<int> CreateAndSaveNewSum(Square newSquare, List<Square> squaresInSum)
         {
             if (newSquare == null) {
