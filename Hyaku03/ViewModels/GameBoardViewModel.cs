@@ -150,7 +150,7 @@ namespace Hyaku.ViewModels
             }
             set
             {
-                //Debug.WriteLine("EmptyBlockCount changing from {0} to {1} - {2} HyakuBlocks", _emptyBlockCount, value, HyakuBlockCount);
+                Debug.WriteLine("EmptyBlockCount changing from {0} to {1} - {2} HyakuBlocks", _emptyBlockCount, value, HyakuBlockCount);
                 int adjustedValue = value + HyakuBlockCount;
                 if (adjustedValue <= _minAvailibleSquares)
                 {
@@ -177,7 +177,7 @@ namespace Hyaku.ViewModels
             }
             set
             {
-                //Debug.WriteLine("HyakuBlockCount changing from {0} to {1}", _hyakuBlockCount, value);
+                Debug.WriteLine("HyakuBlockCount changing from {0} to {1}", _hyakuBlockCount, value);
                 _hyakuBlockCount = value;
                 NotifyPropertyChanged("HyakuBlockCount");
             }
@@ -629,10 +629,16 @@ namespace Hyaku.ViewModels
                 movedArgs.NewRow = target.Row;
 
                 ClearSquare(target);
+                CurrentSquare = target;
                 target.Value = source.Value;
                 target.IsLocked = source.IsLocked;
                 target.IsHyakuBlock = source.IsHyakuBlock;
+                if (target.IsHyakuBlock) {
+                    HyakuBlockCount += 1;
+                }
                 target.IsCurrent = source.IsCurrent;
+                EmptyBlockCount -= 1;
+                SumsStorage.SaveSquare(target.Column, target.Row, source.Value);
                 ClearSquare(source);
 
                 if (SquareMoved != null) {

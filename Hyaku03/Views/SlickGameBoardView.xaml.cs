@@ -319,6 +319,13 @@ namespace Hyaku.Views
             }
         }
 
+        public void LeavingPage()
+        {
+            if (GameBoard != null) {
+                GameBoard.Stop();
+            }
+        }
+
         private Uri GetImageUriFromNumber(int nextNumber)
         {
             Uri imageUri = null;

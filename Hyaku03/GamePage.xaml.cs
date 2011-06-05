@@ -19,5 +19,12 @@ namespace Hyaku
         {
             InitializeComponent();
         }
+
+        protected override void OnNavigatedFrom(System.Windows.Navigation.NavigationEventArgs e)
+        {
+            // turn off the timer
+            this.SlickGameBoardView.LeavingPage();
+            base.OnNavigatedFrom(e);
+        }
     }
 }
