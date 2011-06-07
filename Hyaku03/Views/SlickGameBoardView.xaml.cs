@@ -329,7 +329,7 @@ namespace Hyaku.Views
         private Uri GetImageUriFromNumber(int nextNumber)
         {
             Uri imageUri = null;
-            string imagePathFormatString = @"../Images/NumberBlocks/{0}.png";
+            string imagePathFormatString = @"../Images/NumberBlocks/blossomTheme/{0}.png";
             string imagePath = string.Format(imagePathFormatString, nextNumber.ToString("D2"));
             //imagePath = string.Format(imagePathFormatString, "hyaku");
             imageUri = new Uri(imagePath, UriKind.Relative);
