@@ -419,8 +419,8 @@ namespace Hyaku.ViewModels
             if (TickCount == hyakuSettings.SweepTimerPeriodSetting) {
                 TickCount = 0;
                 DoSweep();
-                if (hyakuSettings.EnableTrashRowsSetting == true) {
-                    AddTrashBlocksToAllColumns();
+                if (hyakuSettings.EnableJunkRowsSetting == true) {
+                    AddJunkBlocksToAllColumns();
                 }
             }
 //#if DEBUG
@@ -581,20 +581,20 @@ namespace Hyaku.ViewModels
             return null;
         }
 
-        protected virtual void AddTrashBlocksToAllColumns()
+        protected virtual void AddJunkBlocksToAllColumns()
         {
             // remember all the new squares, so we can check them for Hyaku later
-            List<SquareViewModel> trashSquares = new List<SquareViewModel>();
+            List<SquareViewModel> junkSquares = new List<SquareViewModel>();
             foreach (List<SquareViewModel> column in GameGrid) {
-                SquareViewModel newSquare = AddTrashBlockToOneColumn(column);
+                SquareViewModel newSquare = AddJunkBlockToOneColumn(column);
                 if (newSquare != null) {
-                    trashSquares.Add(newSquare);
+                    junkSquares.Add(newSquare);
                 } else {
                     OnGameOver(GameOverReason.PushedPastTop);
                     return;
                 }
             }
-            foreach (SquareViewModel sq in trashSquares) {
+            foreach (SquareViewModel sq in junkSquares) {
                 FindNewHyakus(sq);
             }
         }
@@ -606,7 +606,7 @@ namespace Hyaku.ViewModels
             }
         }
 
-        protected virtual SquareViewModel AddTrashBlockToOneColumn(List<SquareViewModel> column)
+        protected virtual SquareViewModel AddJunkBlockToOneColumn(List<SquareViewModel> column)
         {
             SquareViewModel firstEmptyBlock = FirstEmpty(column);
             if (firstEmptyBlock == null) {

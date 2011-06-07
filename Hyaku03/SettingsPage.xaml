@@ -71,9 +71,9 @@
                     <!-- Number List setting -->
                     <TextBlock x:Name="NumberListLabel" Text="Number List:" Margin="20" FontSize="{StaticResource PhoneFontSizeMedium}" FontFamily="Segoe WP Light" />
                     <TextBox x:Name="NumberListTextBox" Text="{Binding Source={StaticResource hyakuSettings}, Path=NumberListStringSetting, Mode=TwoWay}" />
-                    <!-- EnableTrashRows -->
-                    <CheckBox Content="Enable Trash Rows" Name="EnableTrashRowsSetting" VerticalAlignment="Top" FontFamily="Segoe WP Light"
-                      IsChecked="{Binding Source={StaticResource hyakuSettings}, Path=EnableTrashRowsSetting, Mode=TwoWay}" />
+                    <!-- EnableJunkRows -->
+                    <CheckBox Content="Enable Junk Rows" Name="EnableJunkRowsSetting" VerticalAlignment="Top" FontFamily="Segoe WP Light"
+                      IsChecked="{Binding Source={StaticResource hyakuSettings}, Path=EnableJunkRowsSetting, Mode=TwoWay}" />
                 </StackPanel>
             </ScrollViewer>
         </Grid>
