@@ -14,12 +14,13 @@ using System.Windows.Media.Imaging;
 using System.IO;
 using Hyaku.Data;
 using System.Diagnostics;
+using Hyaku;
 
 namespace Hyaku.Views
 {
     public partial class SlickGameBoardView : UserControl
     {
-        const string hyakuImagePath = @"../Images/NumberBlocks/hyaku.png";
+        string defaultTheme = "blossomTheme";
         int[] rowTops = new int[] { 0,41,82,123,164,205,246,287,328 };
         Rectangle currentRectangle = null;
         Point dragStart;
@@ -64,7 +65,7 @@ namespace Hyaku.Views
             double columnLeft = (double)rectangles[e.Square.Column].GetValue(Canvas.LeftProperty);
 
             Image numberImage = new Image();
-            numberImage.Source = new BitmapImage(GetImageUriFromNumber(e.Square.Value));
+            numberImage.Source = GetNormalImageUriFromNumber(e.Square.Value);
             numberImage.SetValue(Canvas.TopProperty, rowTop);
             numberImage.SetValue(Canvas.LeftProperty, columnLeft);
             Columns.Children.Add(numberImage);
@@ -89,7 +90,7 @@ namespace Hyaku.Views
                     squares[sq.Column, sq.Row] = new Image();
                 }
 
-                squares[sq.Column, sq.Row].Source = new BitmapImage(new Uri(hyakuImagePath, UriKind.Relative));
+                squares[sq.Column, sq.Row].Source = GetHyakuImageUriFromNumber(sq.Value);
             }
         }
 
@@ -105,7 +106,7 @@ namespace Hyaku.Views
         private void SetNextNumber()
         {
             nextNumber = GameBoard.NextNumber;
-            NextNumberImage.Source = new BitmapImage(GetImageUriFromNumber(nextNumber));
+            NextNumberImage.Source = GetNormalImageUriFromNumber(nextNumber);
         }
 
         public SlickGameBoardView()
@@ -326,14 +327,38 @@ namespace Hyaku.Views
             }
         }
 
-        private Uri GetImageUriFromNumber(int nextNumber)
+        private BitmapImage GetHyakuImageUriFromNumber(int number)
+        {
+            ImageType imageType = ImageType.Hyaku;
+            return GetThemedImageUriFromNumber(number, imageType);
+        }
+
+        private BitmapImage GetNormalImageUriFromNumber(int number)
+        {
+            ImageType imageType = ImageType.Normal;
+            return GetThemedImageUriFromNumber(number, imageType);
+        }
+
+        private BitmapImage GetThemedImageUriFromNumber(int number, ImageType imageType)
+        {
+            return GetThemedImageUriFromNumber(number, defaultTheme, imageType);
+        }
+
+        private BitmapImage GetThemedImageUriFromNumber(int nextNumber, string theme, ImageType imageType)
         {
             Uri imageUri = null;
-            string imagePathFormatString = @"../Images/NumberBlocks/blossomTheme/{0}.png";
-            string imagePath = string.Format(imagePathFormatString, nextNumber.ToString("D2"));
-            //imagePath = string.Format(imagePathFormatString, "hyaku");
+
+            string imagePathFormatString = @"../Images/Themes/{0}/{1}/{2}.png";
+            string imagePath = string.Format(imagePathFormatString, theme, imageType.ToString(), nextNumber.ToString("D2"));
+            
             imageUri = new Uri(imagePath, UriKind.Relative);
-            return imageUri;
+            return new BitmapImage(imageUri);
         }
+    }
+
+    enum ImageType
+    {
+        Hyaku,
+        Normal
     }
 }
