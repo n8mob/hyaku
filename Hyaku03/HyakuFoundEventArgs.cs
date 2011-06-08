@@ -13,8 +13,14 @@ using Hyaku.Data;
 
 namespace Hyaku
 {
-    public class HyakuFoundEventArgs
+    public class HyakuFoundEventArgs : EventArgs
     {
+        public int HyakuScoreCount
+        {
+            get;
+            set;
+        }
+
         public virtual Sum Sum
         {
             get;

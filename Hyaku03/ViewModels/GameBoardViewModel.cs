@@ -24,6 +24,7 @@ namespace Hyaku.ViewModels
 {
     public delegate void GameOverEventHandler(object sender, GameOverEventArgs e);
     public delegate void NumberAddedEventHandler(object sender, NumberAddedEventArgs e);
+    public delegate void NumberDropEventHandler(object sender, NumberAddedEventArgs e);
     public delegate void HyakusFoundEventHandler(object sender, HyakuFoundEventArgs e);
     public delegate void SquareMovedEventHandler(object sender, SquareMovedEventArgs e);
     public delegate void SquareDeletedEventHandler(object sender, SquareDeletedEventArgs e);
@@ -37,6 +38,7 @@ namespace Hyaku.ViewModels
         public event SquareMovedEventHandler SquareMoved;
         public event SquareDeletedEventHandler SquareDeleted;
         public event NumberAddedEventHandler NumberAdded;
+        public event NumberDropEventHandler NumberDrop;
 
         #endregion Events
 
@@ -48,11 +50,16 @@ namespace Hyaku.ViewModels
         private int _randomListSize = 100;
         private RandomListGenerator _randomListGenerator = null;
         private DistanceSumsStorage _distanceSumsStorage = null;
+        private int _currentColumn = 4;
         private SquareViewModel _currentSquare = null;
         private int _score;
-        private int _tickCount;
+        private int _autoDropTickLimit;
+        private int _autoDropTickCount;
+        private int _sweepTickLimit;
+        private int _sweepTickCount;
         private int _emptyBlockCount;
         private int _hyakuBlockCount;
+        private int _hyakuScoreCount = 0;
         private int _minAvailibleSquares;
         private int _maxAvailibleSquares;
 
@@ -128,17 +135,42 @@ namespace Hyaku.ViewModels
                 NotifyPropertyChanged("Score");
             }
         }
-
-        public int TickCount
+        
+        public int AutoDropSteps
         {
             get
             {
-                return _tickCount;
+                return _autoDropTickLimit;
             }
             set
             {
-                _tickCount = value;
-                NotifyPropertyChanged("TickCount");
+                _autoDropTickLimit = value;
+            }
+        }
+
+        public int AutoDropTickCount
+        {
+            get
+            {
+                return _autoDropTickCount;
+            }
+            set
+            {
+                _autoDropTickCount = value;
+                NotifyPropertyChanged("AutoDropTickCount");
+            }
+        }
+
+        public int SweepTickCount
+        {
+            get
+            {
+                return _sweepTickCount;
+            }
+            set
+            {
+                _sweepTickCount = value;
+                NotifyPropertyChanged("SweepTickCount");
             }
         }
 
@@ -187,7 +219,20 @@ namespace Hyaku.ViewModels
         {
             get
             {
-                return hyakuSettings.SweepTimerPeriodSetting;
+                return _sweepTickLimit;
+            }
+        }
+
+        public int CurrentColumn
+        {
+            get
+            {
+                return _currentColumn;
+            }
+            set
+            {
+                _currentColumn = value;
+                NotifyPropertyChanged("CurrentColumn");
             }
         }
 
@@ -203,6 +248,7 @@ namespace Hyaku.ViewModels
                 if (_currentSquare != null) {
                     _currentSquare.IsCurrent = true;
                 }
+                NotifyPropertyChanged("CurrentSquare");
             }
         }
         /// <summary>
@@ -210,28 +256,6 @@ namespace Hyaku.ViewModels
         /// </summary>
         /// <remarks>"Column-major" meaning that for coordinates [i,j], i is the colum and j is the row.</remarks>
         public List<List<SquareViewModel>> GameGrid { get; set; }
-
-        public int NextNumber
-        {
-            get
-            {
-                if (numberSelections == null || numberSelections.Count < 1)
-                {
-                    if (hyakuSettings.UseDebugNumbersSetting && hyakuSettings.DebugNumbersSetting != null && hyakuSettings.DebugNumbersSetting.Count > 0) {
-                        numberSelections = hyakuSettings.DebugNumbersSetting;
-                        hyakuSettings.UseDebugNumbersSetting = false;
-                    } else {
-                        numberSelections = RandomListGenerator.SelectRandomItems(RandomListSize, hyakuSettings.NumberListSetting);
-                        //numberSelections = RandomListGenerator.SelectRandomItems(RandomListSize, new List<int>(new int[] { 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50 }));
-                    }
-                }
-
-                int nextNumber = numberSelections[0];
-                numberSelections.RemoveAt(0);
-                return nextNumber;
-            }
-        }
-
 
 //        public virtual int CurrentHyakuCount
 //        {
@@ -261,6 +285,8 @@ namespace Hyaku.ViewModels
         public GameBoardViewModel()
         {
             hyakuSettings = new HyakuSettings();
+            _sweepTickLimit = hyakuSettings.SweepTimerPeriodSetting;
+            _autoDropTickLimit = hyakuSettings.AutoDropPeriodSetting;
             Timer = new DispatcherTimer();
             Timer.Interval = TimeSpan.FromMilliseconds(hyakuSettings.TimerTickIntervalSetting);
             Timer.Tick += new EventHandler(Tick);
@@ -275,7 +301,7 @@ namespace Hyaku.ViewModels
 
         #region Methods
         
-        public virtual SquareViewModel SelectSquare(int columnIndex)
+        public virtual void SelectSquare(int columnIndex, out SquareViewModel selectedSquare)
         {
             List<SquareViewModel> column = GameGrid[columnIndex];
             SquareViewModel lowestEmptySquare = null;
@@ -286,21 +312,32 @@ namespace Hyaku.ViewModels
                 }
             }
 
-            if (lowestEmptySquare == null) {
-                return null;
+            selectedSquare = lowestEmptySquare;
+            CurrentColumn = selectedSquare.Column;
+
+            if (selectedSquare == null) {
+                return;
             }
 
             if (CurrentSquare != null) {
                 CurrentSquare.IsCurrent = false;
             }
 
-            if (CurrentSquare == lowestEmptySquare) {
+            if (CurrentSquare == selectedSquare) {
                 CurrentSquare = null;
             } else {
-                CurrentSquare = lowestEmptySquare;
+                CurrentSquare = selectedSquare;
             }
 
-            return lowestEmptySquare;
+            AutoDropTickCount = 0;
+            OnNumberDrop(this, new NumberAddedEventArgs(selectedSquare));
+        }
+
+        private void OnNumberDrop(object sender, NumberAddedEventArgs e)
+        {
+            if (NumberDrop != null) {
+                NumberDrop(sender, e);
+            }
         }
 
         public virtual void SendNumber(int theNumber)
@@ -318,10 +355,7 @@ namespace Hyaku.ViewModels
                         CurrentSquare.IsLocked = true;
                         EmptyBlockCount -= 1;
                         if (NumberAdded != null) {
-                            NumberAdded(this, new NumberAddedEventArgs()
-                            {
-                                Square = sq
-                            });
+                            NumberAdded(this, new NumberAddedEventArgs(CurrentSquare));
                         }
                         FindNewHyakus(CurrentSquare);
                     } else { // the number is <= 0
@@ -393,6 +427,7 @@ namespace Hyaku.ViewModels
 
         private void OnHyakusFound(HyakuFoundEventArgs e)
         {
+            e.HyakuScoreCount = ++_hyakuScoreCount; // ++foo increments and THEN passes to the left.
             if (HyakusFound != null) {
                 HyakusFound(this, e);
             }
@@ -415,9 +450,14 @@ namespace Hyaku.ViewModels
 //            // turn off the timer so tick events don't pile up
 //            Timer.Stop();
 //#endif
-            TickCount += 1;
-            if (TickCount == hyakuSettings.SweepTimerPeriodSetting) {
-                TickCount = 0;
+            AutoDropTickCount += 1;
+            SweepTickCount += 1;
+            if (AutoDropTickCount == AutoDropSteps) {
+                AutoDropTickCount = 0;
+                DoAutoDrop();
+            }
+            if (SweepTickCount == SweepSteps) {
+                SweepTickCount = 0;
                 DoSweep();
                 if (hyakuSettings.EnableJunkRowsSetting == true) {
                     AddJunkBlocksToAllColumns();
@@ -427,6 +467,15 @@ namespace Hyaku.ViewModels
 //            // turn on the timer again
 //            Timer.Start();
 //#endif
+        }
+
+        private void DoAutoDrop()
+        {
+            SquareViewModel selectedSquare;
+            SelectSquare(_currentColumn, out selectedSquare);
+            if (selectedSquare == null) {
+                // TODO choose another column
+            }
         }
 
         protected virtual void DoSweep()
@@ -455,6 +504,7 @@ namespace Hyaku.ViewModels
                 target = null;
                 source = null;
             }
+            _hyakuScoreCount = 0;
             foreach (SquareViewModel sq in movedSquares)
             {
                 FindNewHyakus(sq);
@@ -512,7 +562,10 @@ namespace Hyaku.ViewModels
         {
             if (sq.IsHyakuBlock)
             {
-                CountScore(sq);
+                List<Sum> sumsToScore = SumsStorage.GetSumsBySquare(sq.GetHashCode()).Where(sum => sum.Total == 100).ToList();
+                if (sumsToScore != null && sumsToScore.Count > 0) {
+                    CountScore(sumsToScore);
+                }
                 HyakuBlockCount -= 1;
             }
             if (sq.Value > 0)
@@ -521,6 +574,35 @@ namespace Hyaku.ViewModels
             }
             sq.Reset();
             SumsStorage.DeleteSquareAndCascade(sq.Column, sq.Row);
+        }
+
+        public virtual List<int> Peak(int numberToPeak)
+        {
+            List<int> numbers = new List<int>(numberToPeak);
+            if (numberToPeak == 1) {
+                if (numberSelections == null || numberSelections.Count < 1) {
+                    if (hyakuSettings.UseDebugNumbersSetting && hyakuSettings.DebugNumbersSetting != null && hyakuSettings.DebugNumbersSetting.Count > 0) {
+                        numberSelections = hyakuSettings.DebugNumbersSetting;
+                        hyakuSettings.UseDebugNumbersSetting = false;
+                    } else {
+                        numberSelections = RandomListGenerator.SelectRandomItems(RandomListSize, hyakuSettings.NumberListSetting);
+                        //numberSelections = RandomListGenerator.SelectRandomItems(RandomListSize, new List<int>(new int[] { 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50 }));
+                    }
+                }
+
+                int nextNumber = numberSelections[0];
+                numbers.Add(nextNumber);
+            } else {
+                throw new NotImplementedException();
+            }
+            return numbers;
+        }
+
+        public virtual int GetNextNumber()
+        {
+            int nextNumber = Peak(1).First();
+            numberSelections.RemoveAt(0);
+            return nextNumber;
         }
 
         protected virtual SquareViewModel FirstHyaku(List<SquareViewModel> column)
@@ -612,7 +694,7 @@ namespace Hyaku.ViewModels
             if (firstEmptyBlock == null) {
                 return null;
             } else {
-                return InsertNumber(column, column.Count - 1, firstEmptyBlock, NextNumber);
+                return InsertNumber(column, column.Count - 1, firstEmptyBlock, GetNextNumber());
             }
         }
 
@@ -649,10 +731,14 @@ namespace Hyaku.ViewModels
             this.SendNumber(valueToInsert);
             return column[insertIndex];
         }
-
-        protected virtual void CountScore(SquareViewModel target)
+        
+        protected virtual void CountScore(List<Sum> sumsToScore)
         {
-            Score += 100;
+            foreach (Sum sum in sumsToScore) {
+                if (!sum.HasScoreBeenCounted) {
+                    Score += sum.ScoreMultiplier + sum.Total;
+                }
+            }
         }
 
         public override string ToString()

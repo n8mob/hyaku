@@ -20,6 +20,7 @@ namespace Hyaku
         // The isolated storage key names of our settings
         const string GameSizeSettingKeyName = "GameSizeSetting";
         const string EnableJunkRowsKeyName = "EnableJunkRowsSetting";
+        const string AutoDropPeriodKeyName = "AutoDropPeriodSetting";
         const string SweepTimerPeriodKeyName = "SweepTimerPeriodSetting";
         const string TimerTickIntervalKeyName = "TimerTickIntervalSetting";
         const string NumberListStringKeyName = "NumberListStringSetting";
@@ -30,6 +31,7 @@ namespace Hyaku
         // Default settings values
         const int GameSizeSettingDefault = 9;
         const bool EnableJunkRowsDefault = false;
+        const int AutoDropPeriodDefault = 10;
         const int SweepTimerPeriodDefault = 100;
         const int TimerTickIntervalDefault = 300; // milliseconds
         const string NumberListStringDefault = "5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95";
@@ -176,6 +178,19 @@ namespace Hyaku
             set
             {
                 AddOrUpdateValue(MaxDistanceKeyName, value);
+            }
+        }
+
+        public int AutoDropPeriodSetting
+        {
+            get
+            {
+                return GetValueOrDefault<int>(AutoDropPeriodKeyName, AutoDropPeriodDefault);
+            }
+
+            set
+            {
+                AddOrUpdateValue(AutoDropPeriodKeyName, value);
             }
         }
     }

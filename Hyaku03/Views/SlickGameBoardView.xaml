@@ -65,7 +65,7 @@
             </Canvas>
             <ProgressBar x:Name="progressBar"
                          Minimum="0" Maximum="{Binding SweepSteps}"
-                         Value="{Binding TickCount}"
+                         Value="{Binding SweepTickCount}"
                          Height="10" Width="369"
                          Canvas.Left="56" Canvas.Top="589"
                          Background="Black" Foreground="#FF6E0000"/>

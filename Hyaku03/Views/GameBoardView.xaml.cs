@@ -97,7 +97,7 @@ namespace Hyaku.Views
                 if (_gameOverEventHasFired) {
                     return;
                 }
-                NextNumberTextBlock.Tag = GameBoard.NextNumber;
+                NextNumberTextBlock.Tag = GameBoard.GetNextNumber();
                 NextNumberTextBlock.Text = NextNumberTextBlock.Tag.ToString();
             }
 
@@ -109,7 +109,7 @@ namespace Hyaku.Views
 
         private void BindBoard()
         {
-            NextNumberTextBlock.Tag = GameBoard.NextNumber;
+            NextNumberTextBlock.Tag = GameBoard.GetNextNumber();
             NextNumberTextBlock.Text = NextNumberTextBlock.Tag.ToString();
             this.InputGrid.ColumnDefinitions.Clear();
             this.InputGrid.RowDefinitions.Clear();

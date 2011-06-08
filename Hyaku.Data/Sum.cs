@@ -37,6 +37,20 @@ namespace Hyaku.Data
             set;
         }
 
+        [DataMember]
+        public int ScoreMultiplier
+        {
+            get;
+            set;
+        }
+
+        [DataMember]
+        public bool HasScoreBeenCounted
+        {
+            get;
+            set;
+        }
+
         public override string ToString()
         {
             return string.Format("0x{0}: {1} [{2}]", GetHashCode().ToString("x"), Total, _squareString);
@@ -68,6 +82,8 @@ namespace Hyaku.Data
 
         public Sum(params Square[] squares)
         {
+            HasScoreBeenCounted = false;
+
             if (squares == null || squares.Length == 0) {
                 throw new ArgumentException("Sum must contain squares");
             }

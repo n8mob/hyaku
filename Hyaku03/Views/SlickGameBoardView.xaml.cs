@@ -53,6 +53,7 @@ namespace Hyaku.Views
             GameBoard.HyakusFound += new HyakusFoundEventHandler(GameBoard_HyakusFound);
             GameBoard.SquareDeleted += new SquareDeletedEventHandler(GameBoard_SquareDeleted);
             GameBoard.SquareMoved += new SquareMovedEventHandler(GameBoard_SquareMoved);
+            GameBoard.NumberDrop += new NumberDropEventHandler(GameBoard_NumberDrop);
             GameBoard.NumberAdded += new NumberAddedEventHandler(GameBoard_NumberAdded);
             if (!GameBoard.Timer.IsEnabled) {
                 GameBoard.Timer.Start();
@@ -105,7 +106,7 @@ namespace Hyaku.Views
 
         private void SetNextNumber()
         {
-            nextNumber = GameBoard.NextNumber;
+            nextNumber = GameBoard.GetNextNumber();
             NextNumberImage.Source = GetNormalImageUriFromNumber(nextNumber);
         }
 
@@ -152,8 +153,13 @@ namespace Hyaku.Views
 
         void Columns_ManipulationStarted(object sender, ManipulationStartedEventArgs e)
         {
+            // I noticed that someimes the number doesn't drop with just a tap
+            // maybe this line will help that.
+            ChooseCurrentRectangle(e.ManipulationOrigin);
             GeneralTransform canvasFactor = e.ManipulationContainer.TransformToVisual(Columns);
             dragStart = canvasFactor.Transform(e.ManipulationOrigin);
+            // if the ChooseCurrentRectangle line above doesn't fix the problem, try the line below
+            // dragEnd = canvasFactor.Transform(e.ManipulationOrigin);
         }
 
         void Columns_ManipulationDelta(object sender, ManipulationDeltaEventArgs e)
@@ -169,7 +175,18 @@ namespace Hyaku.Views
             Rectangle r = GetRectangle(dragEnd);
             int columnIndex = rectangles.IndexOf(r);
 
-            SquareViewModel currentSquare = GameBoard.SelectSquare(columnIndex);
+            GameBoard.NumberDrop += new NumberDropEventHandler(GameBoard_NumberDrop);
+            SquareViewModel currentSquare;
+            GameBoard.SelectSquare(columnIndex, out currentSquare);
+        }
+
+        void GameBoard_NumberDrop(object sender, NumberAddedEventArgs e)
+        {
+            DropNumberToCurrentSquare(e.SelectedSquare);
+        }
+
+        private void DropNumberToCurrentSquare(SquareViewModel currentSquare)
+        {
             if (currentSquare != null) {
                 Storyboard dropAnimation = (Storyboard)this.Resources["DropKeyFrameAnimationStoryboard"];
                 if (dropAnimation == null) {
