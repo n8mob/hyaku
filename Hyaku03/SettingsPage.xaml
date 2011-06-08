@@ -49,17 +49,22 @@
                             <RowDefinition />
                             <RowDefinition />
                             <RowDefinition />
+                            <RowDefinition />
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Column="0" Grid.Row="0" Name="GameSizeLabel" Text="Game Size" Margin="20" FontSize="{StaticResource PhoneFontSizeMedium}" FontFamily="Segoe WP Light" />
                         <TextBox Grid.Column="1" Grid.Row="0" Name="CurrentGameSizeTextBox" HorizontalAlignment="Right" Width="125" Margin="0,0,20,0"
                              InputScope="TelephoneNumber" Text="{Binding Source={StaticResource hyakuSettings}, Path=GameSizeSetting, Mode=TwoWay}" />
+                        <!-- Auto Drop Period -->
+                        <TextBlock Grid.Column="0" Grid.Row="1" Name="AutoDropTimerLabel" Text="Auto-Drop Time (In Seconds)" Margin="20" FontSize="{StaticResource PhoneFontSizeMedium}" FontFamily="Segoe WP Light" />
+                        <TextBox Grid.Column="1" Grid.Row="1" Name="AutoDropTimerTextBox" HorizontalAlignment="Right" Width="125" Margin="0,0,20,0"
+                                 InputScope="TelephoneNumber" Text="{Binding Source={StaticResource hyakuSettings}, Path=AutoDropPeriodSetting, Mode=TwoWay}"/>
                         <!-- SweepTimerPeriod -->
-                        <TextBlock Grid.Column="0" Grid.Row="1" Name="SweepTimerLabel2" Text="Sweep Time (In Seconds)" Margin="20" FontSize="{StaticResource PhoneFontSizeMedium}" FontFamily="Segoe WP Light" />
-                        <TextBox Grid.Column="1" Grid.Row="1" Name="CurrentSweepTimeTextBox" HorizontalAlignment="Right" Width="125" Margin="0,0,20,0"
+                        <TextBlock Grid.Column="0" Grid.Row="2" Name="SweepTimerLabel2" Text="Sweep Time (In Seconds)" Margin="20" FontSize="{StaticResource PhoneFontSizeMedium}" FontFamily="Segoe WP Light" />
+                        <TextBox Grid.Column="1" Grid.Row="2" Name="CurrentSweepTimeTextBox" HorizontalAlignment="Right" Width="125" Margin="0,0,20,0"
                              InputScope="TelephoneNumber" Text="{Binding Source={StaticResource hyakuSettings}, Path=SweepTimerPeriodSetting, Mode=TwoWay}"/>
                         <!-- Max Distance -->
-                        <TextBlock Grid.Column="0" Grid.Row="2" Name="MaxDistanceLabel" Text="Max Distance for Hyakus" Margin="20" FontSize="{StaticResource PhoneFontSizeMedium}" FontFamily="Segoe WP Light" />
-                        <TextBox Grid.Column="1" Grid.Row="2" Name="MaxDistanceTextBox" HorizontalAlignment="Right" Width="125" Margin="0,0,20,0"
+                        <TextBlock Grid.Column="0" Grid.Row="3" Name="MaxDistanceLabel" Text="Max Distance for Hyakus" Margin="20" FontSize="{StaticResource PhoneFontSizeMedium}" FontFamily="Segoe WP Light" />
+                        <TextBox Grid.Column="1" Grid.Row="3" Name="MaxDistanceTextBox" HorizontalAlignment="Right" Width="125" Margin="0,0,20,0"
                                  InputScope="TelephoneNumber" Text="{Binding Source={StaticResource hyakuSettings}, Path=MaxDistanceSetting, Mode=TwoWay}" />
                     </Grid>
                     <!-- Debug numbers -->
@@ -70,7 +75,7 @@
                              Text="{Binding Source={StaticResource hyakuSettings}, Path=DebugNumbersStringSetting, Mode=TwoWay}" />
                     <!-- Number List setting -->
                     <TextBlock x:Name="NumberListLabel" Text="Number List:" Margin="20" FontSize="{StaticResource PhoneFontSizeMedium}" FontFamily="Segoe WP Light" />
-                    <TextBox x:Name="NumberListTextBox" Text="{Binding Source={StaticResource hyakuSettings}, Path=NumberListStringSetting, Mode=TwoWay}" />
+                    <TextBox x:Name="NumberListTextBox" InputScope="Digits" Text="{Binding Source={StaticResource hyakuSettings}, Path=NumberListStringSetting, Mode=TwoWay}" />
                     <!-- EnableJunkRows -->
                     <CheckBox Content="Enable Junk Rows" Name="EnableJunkRowsSetting" VerticalAlignment="Top" FontFamily="Segoe WP Light"
                       IsChecked="{Binding Source={StaticResource hyakuSettings}, Path=EnableJunkRowsSetting, Mode=TwoWay}" />

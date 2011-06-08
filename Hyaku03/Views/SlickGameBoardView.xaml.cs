@@ -97,11 +97,16 @@ namespace Hyaku.Views
 
         void GameBoard_GameOver(object sender, GameOverEventArgs e)
         {
-            MessageBox.Show(e.Reason.ToString(), "Game Over", MessageBoxButton.OK);
+            App app = Application.Current as App;
+            if (app != null) {
+                app.LastGameOver = e.Reason;
+            } else {
+                MessageBox.Show(e.Reason.ToString(), "Game Over", MessageBoxButton.OK);
 
-            GameBoard.GameOver -= new GameOverEventHandler(GameBoard_GameOver);
+                GameBoard.GameOver -= new GameOverEventHandler(GameBoard_GameOver);
 
-            GameBoard = GameBoardViewModel.CreateNewGame();
+                GameBoard = GameBoardViewModel.CreateNewGame();
+            }
         }
 
         private void SetNextNumber()

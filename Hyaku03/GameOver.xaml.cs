@@ -24,7 +24,6 @@ namespace Hyaku
         private void PhoneApplicationPage_Loaded(object sender, RoutedEventArgs e)
         {
             App app = Application.Current as App;
-            HyakuSettings settings = new HyakuSettings();
             string gameOverMessage = Messages.UnknownGameOverMessage;
             if (app != null) {
                 switch (app.LastGameOver) {
