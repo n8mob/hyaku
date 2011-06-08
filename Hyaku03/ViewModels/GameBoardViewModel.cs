@@ -313,7 +313,9 @@ namespace Hyaku.ViewModels
             }
 
             selectedSquare = lowestEmptySquare;
-            CurrentColumn = selectedSquare.Column;
+            if (selectedSquare != null) {
+                CurrentColumn = selectedSquare.Column;
+            }
 
             if (selectedSquare == null) {
                 return;
@@ -474,7 +476,14 @@ namespace Hyaku.ViewModels
             SquareViewModel selectedSquare;
             SelectSquare(_currentColumn, out selectedSquare);
             if (selectedSquare == null) {
-                // TODO choose another column
+                for (int i = 0; i < hyakuSettings.GameSizeSetting; i++) {
+                    if (i != _currentColumn) {
+                        SelectSquare(i, out selectedSquare);
+                        if (selectedSquare != null) {
+                            break;
+                        }
+                    }
+                }
             }
         }
 
