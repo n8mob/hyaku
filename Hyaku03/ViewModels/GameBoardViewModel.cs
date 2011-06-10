@@ -19,6 +19,7 @@ using NateGrigg.Mobile.Utility;
 using System.Windows.Threading;
 using System.Diagnostics;
 using Hyaku.Data;
+using Microsoft.Xna.Framework;
 
 namespace Hyaku.ViewModels
 {
@@ -295,6 +296,7 @@ namespace Hyaku.ViewModels
             _maxAvailibleSquares = hyakuSettings.GameSizeSetting * hyakuSettings.GameSizeSetting;
             EmptyBlockCount = _maxAvailibleSquares;
             HyakuBlockCount = _minAvailibleSquares;
+            FrameworkDispatcher.Update();
         }
 
         #endregion Constructors
@@ -465,6 +467,7 @@ namespace Hyaku.ViewModels
                     AddJunkBlocksToAllColumns();
                 }
             }
+            FrameworkDispatcher.Update();
 //#if DEBUG
 //            // turn on the timer again
 //            Timer.Start();
