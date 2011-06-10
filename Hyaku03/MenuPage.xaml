@@ -19,19 +19,13 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
-        <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock x:Name="ApplicationTitle" Text="HYAKU!" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <TextBlock x:Name="PageTitle" Text="main menu" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
-        </StackPanel>
-
+        
         <!--ContentPanel - place additional content here-->
-        <StackPanel x:Name="MenuPanel" Grid.Row="1">
-            <Button Content="Old User Interface" Height="100" Name="oldUiButton" Width="350" Click="oldUiButton_Click" />
+        
+            <!--<Button Content="Old User Interface" Height="100" Name="oldUiButton" Width="350" Click="oldUiButton_Click" />-->
             <Button Content="New User Interface" Height="100" Name="newUiButton" Width="350" Click="newUiButton_Click" />
-            <Button Content="Settings" Height="100" Name="settingsButton" Width="350" Click="settingsButton_Click" />
-        </StackPanel>
+            <!--<Button Content="Settings" Height="100" Name="settingsButton" Width="350" Click="settingsButton_Click" />-->
+        
         </Grid>
  
     <!--Sample code showing usage of ApplicationBar-->

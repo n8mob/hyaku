@@ -55,11 +55,11 @@
                         <TextBox Grid.Column="1" Grid.Row="0" Name="CurrentGameSizeTextBox" HorizontalAlignment="Right" Width="125" Margin="0,0,20,0"
                              InputScope="TelephoneNumber" Text="{Binding Source={StaticResource hyakuSettings}, Path=GameSizeSetting, Mode=TwoWay}" />
                         <!-- Auto Drop Period -->
-                        <TextBlock Grid.Column="0" Grid.Row="1" Name="AutoDropTimerLabel" Text="Auto-Drop Time (In Seconds)" Margin="20" FontSize="{StaticResource PhoneFontSizeMedium}" FontFamily="Segoe WP Light" />
+                        <TextBlock Grid.Column="0" Grid.Row="1" Name="AutoDropTimerLabel" Text="Auto-Drop Time" Margin="20" FontSize="{StaticResource PhoneFontSizeMedium}" FontFamily="Segoe WP Light" />
                         <TextBox Grid.Column="1" Grid.Row="1" Name="AutoDropTimerTextBox" HorizontalAlignment="Right" Width="125" Margin="0,0,20,0"
                                  InputScope="TelephoneNumber" Text="{Binding Source={StaticResource hyakuSettings}, Path=AutoDropPeriodSetting, Mode=TwoWay}"/>
                         <!-- SweepTimerPeriod -->
-                        <TextBlock Grid.Column="0" Grid.Row="2" Name="SweepTimerLabel2" Text="Sweep Time (In Seconds)" Margin="20" FontSize="{StaticResource PhoneFontSizeMedium}" FontFamily="Segoe WP Light" />
+                        <TextBlock Grid.Column="0" Grid.Row="2" Name="SweepTimerLabel2" Text="Sweep Time" Margin="20" FontSize="{StaticResource PhoneFontSizeMedium}" FontFamily="Segoe WP Light" />
                         <TextBox Grid.Column="1" Grid.Row="2" Name="CurrentSweepTimeTextBox" HorizontalAlignment="Right" Width="125" Margin="0,0,20,0"
                              InputScope="TelephoneNumber" Text="{Binding Source={StaticResource hyakuSettings}, Path=SweepTimerPeriodSetting, Mode=TwoWay}"/>
                         <!-- Max Distance -->

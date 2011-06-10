@@ -33,8 +33,8 @@ namespace Hyaku
         const bool EnableJunkRowsDefault = false;
         const int AutoDropPeriodDefault = 30;
         const int SweepTimerPeriodDefault = 100;
-        const int TimerTickIntervalDefault = 100; // milliseconds
-        const string NumberListStringDefault = "5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95";
+        const int TimerTickIntervalDefault = 300; // milliseconds
+        const string NumberListStringDefault = "5,5,5,10,10,10,15,15,15,20,20,20,25,25,25,30,30,30,35,35,40,40,45,45,50,50,55,55,60,60,65,65,70,75,80,85,90,95";
         const bool UseDebugNumbersDefault = false;
         const string DebugNumbersStringDefault = "";
         const int MaxDistanceDefault = 2;
