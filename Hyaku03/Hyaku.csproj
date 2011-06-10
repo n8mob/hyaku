@@ -50,6 +50,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Expression.Interactions" />
     <Reference Include="Microsoft.Phone" />
     <Reference Include="Microsoft.Phone.Interop" />
     <Reference Include="Microsoft.Xna.Framework" />
@@ -64,6 +65,7 @@
     <Reference Include="system" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
+    <Reference Include="System.Windows.Interactivity" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -179,6 +181,7 @@
     <Content Include="Images\appbar.feature.settings.rest.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Images\MenuButtons\black.png" />
     <Resource Include="Images\NumberBlocks\05.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
@@ -278,12 +281,14 @@
     <Resource Include="Images\Themes\blossomTheme\Normal\85.png" />
     <Resource Include="Images\Themes\blossomTheme\Normal\90.png" />
     <Resource Include="Images\Themes\blossomTheme\Normal\95.png" />
+    <Resource Include="Images\MenuButtons\NewGame.png" />
     <Resource Include="sounds\Themes\blossomTheme\BlockDrop.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="sounds\Themes\blossomTheme\BlockMove.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Content Include="sounds\Themes\blossomTheme\Music.wav" />
     <Resource Include="sounds\Themes\blossomTheme\BreakDown.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -296,9 +301,6 @@
     <Resource Include="sounds\Themes\blossomTheme\sweep.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Content Include="sounds\Themes\blossomTheme\Music.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="SplashScreenImage.jpg" />
   </ItemGroup>
   <ItemGroup>
