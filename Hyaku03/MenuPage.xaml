@@ -30,7 +30,7 @@
            <Canvas Margin="46,100,220,0" Height="66" VerticalAlignment="Top">
             	<Custom:Interaction.Triggers>
             		<Custom:EventTrigger EventName="MouseLeftButtonDown">
-            			<ic:NavigateToPageAction TargetPage="/Views/SlickGameBoardView.xaml"/>
+            			<ic:NavigateToPageAction TargetPage="/GamePage.xaml"/>
             		</Custom:EventTrigger>
             	</Custom:Interaction.Triggers>
             	<TextBlock Height="22" Text="新しいゲーム" VerticalAlignment="Top" Foreground="Black" FontSize="16" Canvas.Left="111" Canvas.Top="4"/>
@@ -39,7 +39,7 @@
            <Canvas Margin="46,188,127,0" Height="66" VerticalAlignment="Top">
            	<Custom:Interaction.Triggers>
            		<Custom:EventTrigger EventName="MouseLeftButtonDown">
-           			<ic:NavigateToPageAction TargetPage="/Views/SlickGameBoardView.xaml"/>
+           			<ic:NavigateToPageAction TargetPage=""/>
            		</Custom:EventTrigger>
            	</Custom:Interaction.Triggers>
            	<TextBlock Height="22" Text="ゲームを続ける" VerticalAlignment="Top" Foreground="Black" FontSize="16" Canvas.Left="189"/>
@@ -48,7 +48,7 @@
            <Canvas Margin="46,278,199,0" Height="66" VerticalAlignment="Top">
            	<Custom:Interaction.Triggers>
            		<Custom:EventTrigger EventName="MouseLeftButtonDown">
-           			<ic:NavigateToPageAction TargetPage="/Views/SlickGameBoardView.xaml"/>
+           			<ic:NavigateToPageAction TargetPage=""/>
            		</Custom:EventTrigger>
            	</Custom:Interaction.Triggers>
            	<TextBlock Height="22" Text="指示" VerticalAlignment="Top" Foreground="Black" FontSize="16" Canvas.Left="192"/>
@@ -57,7 +57,7 @@
            <Canvas Margin="46,361,96,365">
            	<Custom:Interaction.Triggers>
            		<Custom:EventTrigger EventName="MouseLeftButtonDown">
-           			<ic:NavigateToPageAction TargetPage="/Views/SlickGameBoardView.xaml"/>
+           			<ic:NavigateToPageAction TargetPage=""/>
            		</Custom:EventTrigger>
            	</Custom:Interaction.Triggers>
            	<TextBlock Height="22" TextWrapping="Wrap" Text="我々にフィードバックを送る" VerticalAlignment="Top" Foreground="Black" FontSize="16" Canvas.Left="128"/>
