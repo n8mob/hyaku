@@ -137,6 +137,12 @@ namespace Hyaku.Views
 
             ConnectManipulationHandlers();
             GameBoard = GameBoardViewModel.CreateNewGame();
+
+            if (IsInTrialMode()) {
+                adControl1.Visibility = System.Windows.Visibility.Visible;
+            } else {
+                adControl1.Visibility = System.Windows.Visibility.Collapsed;
+            }
         }
 
         private void ConnectManipulationHandlers()
@@ -352,6 +358,15 @@ namespace Hyaku.Views
             if (GameBoard != null) {
                 GameBoard.Stop();
             }
+        }
+
+        private bool IsInTrialMode()
+        {
+#if DEBUG
+            return true;
+#endif
+            Microsoft.Phone.Marketplace.LicenseInformation license = new Microsoft.Phone.Marketplace.LicenseInformation();
+            return license.IsTrial();
         }
 
         private BitmapImage GetHyakuImageUriFromNumber(int number)
