@@ -298,8 +298,9 @@ namespace Hyaku.Views
                 currentRectangle.Fill = new SolidColorBrush(Colors.Black);
             }
 
+            int currentColumn = rectangles.IndexOf(r);
+            GameBoard.CurrentColumn = currentColumn;
             currentRectangle = r;
-
         }
 
         private Rectangle GetRectangle(Point p)
