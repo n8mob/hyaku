@@ -89,6 +89,7 @@
             		<CompositeTransform />
             	</Image.RenderTransform>
             </Image>
+            <!--<MediaElement x:Name="Music_mp3" Height="0" Canvas.Left="234" Source="/sounds/Themes/blossomTheme/Music.mp3" Stretch="Fill" Canvas.Top="692" Width="0"/>-->
             <!--<Rectangle x:Name="NextBlock" Fill="#FF6E0000" Height="40" Canvas.Left="220" Canvas.Top="171.5" Width="40" RenderTransformOrigin="0.5,0.5">
                 <Rectangle.RenderTransform>
                     <CompositeTransform />
