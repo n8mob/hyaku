@@ -159,7 +159,7 @@ namespace Hyaku.Views
             GeneralTransform canvasFactor = e.ManipulationContainer.TransformToVisual(Columns);
             dragStart = canvasFactor.Transform(e.ManipulationOrigin);
             // if the ChooseCurrentRectangle line above doesn't fix the problem, try the line below
-            // dragEnd = canvasFactor.Transform(e.ManipulationOrigin);
+            dragEnd = canvasFactor.Transform(e.ManipulationOrigin);
         }
 
         void Columns_ManipulationDelta(object sender, ManipulationDeltaEventArgs e)
