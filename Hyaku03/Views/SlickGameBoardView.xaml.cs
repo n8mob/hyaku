@@ -20,6 +20,8 @@ namespace Hyaku.Views
 {
     public partial class SlickGameBoardView : UserControl
     {
+        public event GameOverEventHandler GameEnded;
+
         string defaultTheme = "blossomTheme";
         int[] rowTops = new int[] { 0,41,82,123,164,205,246,287,328 };
         Rectangle currentRectangle = null;
@@ -100,12 +102,14 @@ namespace Hyaku.Views
             App app = Application.Current as App;
             if (app != null) {
                 app.LastGameOver = e.Reason;
-            } else {
-                MessageBox.Show(e.Reason.ToString(), "Game Over", MessageBoxButton.OK);
+            }
 
-                GameBoard.GameOver -= new GameOverEventHandler(GameBoard_GameOver);
+            MessageBox.Show(e.Reason.ToString(), "Game Over", MessageBoxButton.OK);
 
-                GameBoard = GameBoardViewModel.CreateNewGame();
+            GameBoard.GameOver -= new GameOverEventHandler(GameBoard_GameOver);
+
+            if (GameEnded != null) {
+                GameEnded(this, e);
             }
         }
 

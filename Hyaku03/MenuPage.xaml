@@ -21,12 +21,12 @@
         </Grid.RowDefinitions>
         
         <!--ContentPanel - place additional content here-->
-        
+        <StackPanel>
             <!--<Button Content="Old User Interface" Height="100" Name="oldUiButton" Width="350" Click="oldUiButton_Click" />-->
             <Button Content="New User Interface" Height="100" Name="newUiButton" Width="350" Click="newUiButton_Click" />
-            <!--<Button Content="Settings" Height="100" Name="settingsButton" Width="350" Click="settingsButton_Click" />-->
-        
-        </Grid>
+            <Button Content="Settings" Height="100" Name="settingsButton" Width="350" Click="settingsButton_Click" />
+        </StackPanel>
+    </Grid>
  
     <!--Sample code showing usage of ApplicationBar-->
     <!--<phone:PhoneApplicationPage.ApplicationBar>

@@ -70,6 +70,15 @@ namespace Hyaku {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Game over....
+        /// </summary>
+        internal static string GameOverMessage {
+            get {
+                return ResourceManager.GetString("GameOverMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The availible-space counter went below zero..
         /// </summary>
         internal static string LessThanZeroMessage {
@@ -97,7 +106,7 @@ namespace Hyaku {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ab&apos;dee, ab&apos;dee, That&apos;s all, folks!.
+        ///   Looks up a localized string similar to That&apos;s the end of the game..
         /// </summary>
         internal static string RanOutOfSpaceMessage {
             get {

@@ -16,17 +16,24 @@ using System.IO;
 using Microsoft.Xna.Framework.Audio;
 using System.Windows.Resources;
 using Microsoft.Xna.Framework.Content;
+using Hyaku.ViewModels;
 
 namespace Hyaku
 {
     public partial class GamePage : PhoneApplicationPage
     {
+        SoundEffectInstance bgMusic;
+
         public GamePage()
         {
             InitializeComponent();
+            GameControl.GameEnded += new GameOverEventHandler(GameOverHandler);
         }
 
-        SoundEffectInstance bgMusic;
+        private void GameOverHandler(object sender, GameOverEventArgs e)
+        {
+            NavigationService.GoBack();
+        }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
@@ -46,7 +53,7 @@ namespace Hyaku
         protected override void OnNavigatedFrom(System.Windows.Navigation.NavigationEventArgs e)
         {
             // turn off the timer
-            this.SlickGameBoardView.LeavingPage();
+            this.GameControl.LeavingPage();
             // stop the music
             if (bgMusic != null) {
                 bgMusic.Stop();

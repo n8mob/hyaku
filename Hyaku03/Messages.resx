@@ -120,6 +120,9 @@
   <data name="GameOverCaption" xml:space="preserve">
     <value>GAME OVER!</value>
   </data>
+  <data name="GameOverMessage" xml:space="preserve">
+    <value>Game over...</value>
+  </data>
   <data name="LessThanZeroMessage" xml:space="preserve">
     <value>The availible-space counter went below zero.</value>
   </data>
@@ -130,7 +133,7 @@
     <value>Ohhh! Over the top!</value>
   </data>
   <data name="RanOutOfSpaceMessage" xml:space="preserve">
-    <value>Ab'dee, ab'dee, That's all, folks!</value>
+    <value>That's the end of the game.</value>
   </data>
   <data name="ResetGameCaption" xml:space="preserve">
     <value>Reset Game?</value>
