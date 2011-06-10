@@ -19,6 +19,19 @@ namespace Hyaku
         public MenuPage()
         {
             InitializeComponent();
+            
+            if (IsInTrialMode()) {
+                MessageBox.Show("Trial Mode");
+            }
+        }
+
+        private bool IsInTrialMode()
+        {
+#if DEBUG
+            return true;
+#endif
+            Microsoft.Phone.Marketplace.LicenseInformation license = new Microsoft.Phone.Marketplace.LicenseInformation();
+            return license.IsTrial();
         }
 
         private void oldUiButton_Click(object sender, RoutedEventArgs e)
