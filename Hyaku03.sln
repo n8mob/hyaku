@@ -12,8 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hyaku.Data", "Hyaku.Data\Hyaku.Data.csproj", "{6F0EF188-B1AB-49E3-A6B7-8F4568C4AF7E}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "Hyaku.Content", "Hyaku.Content\Hyaku.Content.contentproj", "{9F53EE95-2A47-45DE-8E67-BA43FD5D1D78}"
-EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Hyaku03.vsmdi
@@ -33,8 +31,6 @@ Global
 		{6F0EF188-B1AB-49E3-A6B7-8F4568C4AF7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F0EF188-B1AB-49E3-A6B7-8F4568C4AF7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F0EF188-B1AB-49E3-A6B7-8F4568C4AF7E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9F53EE95-2A47-45DE-8E67-BA43FD5D1D78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9F53EE95-2A47-45DE-8E67-BA43FD5D1D78}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
