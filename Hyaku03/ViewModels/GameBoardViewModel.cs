@@ -67,7 +67,7 @@ namespace Hyaku.ViewModels
         private int _hyakuScoreCount = 0;
         private int _minAvailibleSquares;
         private int _maxAvailibleSquares;
-        private int _scoreMultiplier;
+        private int _scoreMultiplier = 1;
 
         #endregion Declarations
 
@@ -528,6 +528,7 @@ namespace Hyaku.ViewModels
                 source = null;
             }
             _hyakuScoreCount = 0;
+            _scoreMultiplier = 1;
             foreach (SquareViewModel sq in movedSquares)
             {
                 FindNewHyakus(sq);
@@ -764,7 +765,8 @@ namespace Hyaku.ViewModels
         {
             foreach (Sum sum in sumsToScore) {
                 if (!sum.HasScoreBeenCounted) {
-                    Score += sum.ScoreMultiplier + sum.Total;
+                    int thisScore = sum.Total * sum.SquareCount * _scoreMultiplier++;
+                    Score += thisScore;
                 }
             }
         }
