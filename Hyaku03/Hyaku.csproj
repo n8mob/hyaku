@@ -289,16 +289,12 @@
     <Resource Include="sounds\Themes\blossomTheme\BlockMove.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Content Include="sounds\Themes\blossomTheme\Music.wav" />
     <Resource Include="sounds\Themes\blossomTheme\BreakDown.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="sounds\Themes\blossomTheme\BreakUp.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Content Include="sounds\Themes\blossomTheme\Music.mp3">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Resource Include="sounds\Themes\blossomTheme\sweep.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>

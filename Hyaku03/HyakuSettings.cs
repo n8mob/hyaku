@@ -27,6 +27,7 @@ namespace Hyaku
         const string UseDebugNumbersKeyName = "UseDebugNumbers";
         const string DebugNumbersStringKeyName = "DebugNumbers";
         const string MaxDistanceKeyName = "MaxDistance";
+        const string PlayBackgroundMusicKeyName = "PlayBackgroundMusic";
 
         // Default settings values
         const int GameSizeSettingDefault = 9;
@@ -38,6 +39,7 @@ namespace Hyaku
         const bool UseDebugNumbersDefault = false;
         const string DebugNumbersStringDefault = "";
         const int MaxDistanceDefault = 2;
+        const bool PlayBackgroundMusicDefault = false;
 
         public int GameSizeSetting
         {
@@ -191,6 +193,18 @@ namespace Hyaku
             set
             {
                 AddOrUpdateValue(AutoDropPeriodKeyName, value);
+            }
+        }
+
+        public bool PlayBackgroudnMusicSetting
+        {
+            get
+            {
+                return GetValueOrDefault<bool>(PlayBackgroundMusicKeyName, PlayBackgroundMusicDefault);
+            }
+            set
+            {
+                AddOrUpdateValue(PlayBackgroundMusicKeyName, value);
             }
         }
     }

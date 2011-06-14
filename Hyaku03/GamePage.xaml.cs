@@ -40,13 +40,17 @@ namespace Hyaku
             base.OnNavigatedTo(e);
             // check if game has control of the media player
             if (MediaPlayer.GameHasControl) {
-                // play background music (if enabled in settings menu)
-
-                StreamResourceInfo soundResourceInfo = App.GetResourceStream(new Uri(@"sounds/Themes/blossomTheme/Music.wav", UriKind.Relative));
-                SoundEffect bgMusicEffect = SoundEffect.FromStream(soundResourceInfo.Stream);
-                bgMusic = bgMusicEffect.CreateInstance();
-                bgMusic.IsLooped = true;
-                bgMusic.Play();
+                if (!MediaPlayer.IsMuted) {
+                    // play background music (if enabled in settings menu)
+                    HyakuSettings hyakuSettings = new HyakuSettings();
+                    if (hyakuSettings.PlayBackgroudnMusicSetting) {
+                        StreamResourceInfo soundResourceInfo = App.GetResourceStream(new Uri(@"sounds/Themes/blossomTheme/Music.wav", UriKind.Relative));
+                        SoundEffect bgMusicEffect = SoundEffect.FromStream(soundResourceInfo.Stream);
+                        bgMusic = bgMusicEffect.CreateInstance();
+                        bgMusic.IsLooped = true;
+                        bgMusic.Play();
+                    }
+                }
             }
         }
 
