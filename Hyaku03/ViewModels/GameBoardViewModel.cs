@@ -31,6 +31,7 @@ namespace Hyaku.ViewModels
     public delegate void SquareDeletedEventHandler(object sender, SquareDeletedEventArgs e);
     public delegate void SweepStartEventHandler(object sender, EventArgs e);
     public delegate void SweepEndEventHandler(object sender, EventArgs e);
+    public delegate void ScoreCountedEventHandler(object sender, SquareCountedEventArgs e);
 
     public class GameBoardViewModel : ViewModelBase
     {
@@ -44,6 +45,7 @@ namespace Hyaku.ViewModels
         public event NumberDropEventHandler NumberDrop;
         public event SweepStartEventHandler SweepStart;
         public event SweepEndEventHandler SweepEnd;
+        public event ScoreCountedEventHandler ScoreCounted;
 
         #endregion Events
 
