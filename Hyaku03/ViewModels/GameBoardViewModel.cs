@@ -29,6 +29,8 @@ namespace Hyaku.ViewModels
     public delegate void HyakusFoundEventHandler(object sender, HyakuFoundEventArgs e);
     public delegate void SquareMovedEventHandler(object sender, SquareMovedEventArgs e);
     public delegate void SquareDeletedEventHandler(object sender, SquareDeletedEventArgs e);
+    public delegate void SweepStartEventHandler(object sender, EventArgs e);
+    public delegate void SweepEndEventHandler(object sender, EventArgs e);
 
     public class GameBoardViewModel : ViewModelBase
     {
@@ -40,6 +42,8 @@ namespace Hyaku.ViewModels
         public event SquareDeletedEventHandler SquareDeleted;
         public event NumberAddedEventHandler NumberAdded;
         public event NumberDropEventHandler NumberDrop;
+        public event SweepStartEventHandler SweepStart;
+        public event SweepEndEventHandler SweepEnd;
 
         #endregion Events
 
@@ -63,6 +67,7 @@ namespace Hyaku.ViewModels
         private int _hyakuScoreCount = 0;
         private int _minAvailibleSquares;
         private int _maxAvailibleSquares;
+        private int _scoreMultiplier;
 
         #endregion Declarations
 
@@ -496,6 +501,12 @@ namespace Hyaku.ViewModels
             SquareViewModel source = null;
             List<SquareViewModel> movedSquares = new List<SquareViewModel>();
             List<SquareViewModel> newHyakus = new List<SquareViewModel>();
+
+            // Fire SweepStart event
+            if (SweepStart != null) {
+                SweepStart(this, new EventArgs());
+            }
+
             foreach (List<SquareViewModel> column in GameGrid)
             {
                 //Debug.WriteLine("Sweeping column {0}", GameGrid.IndexOf(column));
@@ -520,6 +531,11 @@ namespace Hyaku.ViewModels
             foreach (SquareViewModel sq in movedSquares)
             {
                 FindNewHyakus(sq);
+            }
+
+            // fire SweepEnd
+            if (SweepEnd != null) {
+                SweepEnd(this, new EventArgs());
             }
         }
 
