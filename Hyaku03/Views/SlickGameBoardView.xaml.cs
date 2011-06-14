@@ -164,6 +164,19 @@ namespace Hyaku.Views
         void Columns_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             ChooseCurrentRectangle(e.GetPosition(Columns));
+            dragStart = e.GetPosition(Columns);
+        }
+
+        void Columns_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            // rectangle should already be chosen, since button-up is only called after button-down
+            dragEnd = e.GetPosition(Columns);
+            Rectangle r = GetRectangle(dragEnd);
+            int columnIndex = rectangles.IndexOf(r);
+
+            GameBoard.NumberDrop += new NumberDropEventHandler(GameBoard_NumberDrop);
+            SquareViewModel currentSquare;
+            GameBoard.SelectSquare(columnIndex, out currentSquare);
         }
 
         void Columns_ManipulationStarted(object sender, ManipulationStartedEventArgs e)
