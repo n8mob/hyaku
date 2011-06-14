@@ -35,5 +35,13 @@ namespace Hyaku
         {
             NavigationService.Navigate(new Uri("/SettingsPage.xaml", UriKind.Relative));
         }
+
+        private void FeedbackButton_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            Microsoft.Phone.Tasks.EmailComposeTask feedbackMail = new Microsoft.Phone.Tasks.EmailComposeTask();
+            feedbackMail.To = "hyaku@nategrigg.com";
+            feedbackMail.Subject = "Game Feedback";
+            feedbackMail.Show();
+        }
     }
 }

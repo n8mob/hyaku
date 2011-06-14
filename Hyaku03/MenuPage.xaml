@@ -54,16 +54,11 @@
            	<TextBlock Height="22" Text="指示" VerticalAlignment="Top" Foreground="Black" FontSize="16" Canvas.Left="192"/>
            	<TextBlock HorizontalAlignment="Left" Height="64" Text="instructions" Width="227" Foreground="Black" FontFamily="Segoe WP Light" FontSize="48" FontWeight="Light"/>
            </Canvas>
-           <Canvas Margin="46,361,96,365">
-           	<Custom:Interaction.Triggers>
-           		<Custom:EventTrigger EventName="MouseLeftButtonDown">
-           			<ic:NavigateToPageAction TargetPage=""/>
-           		</Custom:EventTrigger>
-           	</Custom:Interaction.Triggers>
-           	<TextBlock Height="22" TextWrapping="Wrap" Text="我々にフィードバックを送る" VerticalAlignment="Top" Foreground="Black" FontSize="16" Canvas.Left="128"/>
-           	<TextBlock HorizontalAlignment="Left" Height="64" Text="give us feedback" Width="338" Foreground="Black" FontFamily="Segoe WP Light" FontSize="48" FontWeight="Light" Canvas.Top="8"/>
-           </Canvas>
-           <Canvas Margin="46,0,220,270" Height="66" VerticalAlignment="Bottom">
+        <Canvas Name="FeedbackButton" Margin="46,361,96,365" MouseLeftButtonUp="FeedbackButton_MouseLeftButtonUp">
+            <TextBlock Height="22" TextWrapping="Wrap" Text="我々にフィードバックを送る" VerticalAlignment="Top" Foreground="Black" FontSize="16" Canvas.Left="128"/>
+            <TextBlock HorizontalAlignment="Left" Height="64" Text="give us feedback" Width="338" Foreground="Black" FontFamily="Segoe WP Light" FontSize="48" FontWeight="Light" Canvas.Top="8"/>
+        </Canvas>
+        <Canvas Margin="46,0,220,270" Height="66" VerticalAlignment="Bottom">
            	<Custom:Interaction.Triggers>
            		<Custom:EventTrigger EventName="MouseLeftButtonDown">
            			<ic:NavigateToPageAction TargetPage="/SettingsPage.xaml"/>
