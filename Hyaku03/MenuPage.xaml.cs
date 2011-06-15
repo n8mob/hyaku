@@ -23,6 +23,11 @@ namespace Hyaku
             if (app != null) {
                 menuPageAdControl.Visibility = app.AdVisibility;
             }
+#if DEBUG
+            SettingsLink.Visibility = System.Windows.Visibility.Visible;
+#else
+            SettingsLink.Visibility = System.Windows.Visibility.Collapsed;
+#endif
         }
 
         private void oldUiButton_Click(object sender, RoutedEventArgs e)

@@ -67,7 +67,7 @@
            		</Custom:EventTrigger>
            	</Custom:Interaction.Triggers>
            	<!--<TextBlock Height="22" Text="新しいゲーム" VerticalAlignment="Top" Foreground="Black" FontSize="16" Canvas.Left="111" Canvas.Top="4"/>-->
-           	<TextBlock HorizontalAlignment="Left" Height="64" Text="settings" Width="211" Foreground="Black" FontFamily="Segoe WP Light" FontSize="48" FontWeight="Light"/>
+           	<TextBlock Name="SettingsLink" HorizontalAlignment="Left" Height="64" Text="settings" Width="211" Foreground="Black" FontFamily="Segoe WP Light" FontSize="48" FontWeight="Light"/>
            </Canvas>
         <ad:AdControl
             Height="80" Width="480"
