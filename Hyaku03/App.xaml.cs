@@ -25,6 +25,12 @@ namespace Hyaku
             get;
             set;
         }
+
+        public bool ContinueFromSaved
+        {
+            get;
+            set;
+        }
         
         //private static ISterlingDatabaseInstance _squareSumDatabase = null;
         //private static SterlingEngine _engine = null;
@@ -107,6 +113,24 @@ namespace Hyaku
                 // An unhandled exception has occurred; break into the debugger
                 System.Diagnostics.Debugger.Break();
             }
+        }
+
+        public Visibility AdVisibility
+        {
+            get
+            {
+                return IsInTrialMode() ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
+
+        public bool IsInTrialMode()
+        {
+#if DEBUG
+            return true;
+#else
+            Microsoft.Phone.Marketplace.LicenseInformation license = new Microsoft.Phone.Marketplace.LicenseInformation();
+            return license.IsTrial();
+#endif
         }
 
         #region Phone application initialization

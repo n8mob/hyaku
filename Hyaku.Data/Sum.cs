@@ -38,10 +38,15 @@ namespace Hyaku.Data
         }
 
         [DataMember]
-        public int ScoreMultiplier
+        public int SquareCount
         {
-            get;
-            set;
+            get
+            {
+                if (_squares != null) {
+                    return _squares.Length;
+                }
+                return 0;
+            }
         }
 
         [DataMember]

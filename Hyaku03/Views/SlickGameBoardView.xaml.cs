@@ -29,7 +29,7 @@ namespace Hyaku.Views
         Point dragEnd;
         int nextNumber;
         List<Rectangle> rectangles = new List<Rectangle>(9);
-        Image currentImage;
+        //Image currentImage;
         Image[,] squares;
 
         private GameBoardViewModel _gameBoard;
@@ -60,6 +60,11 @@ namespace Hyaku.Views
             if (!GameBoard.Timer.IsEnabled) {
                 GameBoard.Timer.Start();
             }
+        }
+
+        void GameBoard_NumberDrop(object sender, NumberAddedEventArgs e)
+        {
+            DropNumberToCurrentSquare(e.SelectedSquare);
         }
 
         void GameBoard_NumberAdded(object sender, NumberAddedEventArgs e)
@@ -117,6 +122,15 @@ namespace Hyaku.Views
         {
             nextNumber = GameBoard.GetNextNumber();
             NextNumberImage.Source = GetNormalImageUriFromNumber(nextNumber);
+            // TODO make a setting for number of numbers to show in queue
+            List<int> numbersInQueue = GameBoard.Peak(3);
+            if (numbersInQueue != null) {
+                if (numbersInQueue.Count == 3) {
+                    this.queue03.Source = GetNormalImageUriFromNumber(numbersInQueue[0]);
+                    this.queue02.Source = GetNormalImageUriFromNumber(numbersInQueue[1]);
+                    this.queue01.Source = GetNormalImageUriFromNumber(numbersInQueue[2]);
+                }
+            }
         }
 
         public SlickGameBoardView()
@@ -136,12 +150,10 @@ namespace Hyaku.Views
             squares = new Image[9, 9];
 
             ConnectManipulationHandlers();
-            GameBoard = GameBoardViewModel.CreateNewGame();
 
-            if (IsInTrialMode()) {
-                adControl1.Visibility = System.Windows.Visibility.Visible;
-            } else {
-                adControl1.Visibility = System.Windows.Visibility.Collapsed;
+            App app = Application.Current as App;
+            if (app != null) {
+                gamePageAdControl.Visibility = app.AdVisibility;
             }
         }
 
@@ -151,6 +163,7 @@ namespace Hyaku.Views
             Columns.ManipulationDelta += new EventHandler<ManipulationDeltaEventArgs>(Columns_ManipulationDelta);
             Columns.ManipulationCompleted += new EventHandler<ManipulationCompletedEventArgs>(Columns_ManipulationCompleted);
             Columns.MouseLeftButtonDown += new MouseButtonEventHandler(Columns_MouseLeftButtonDown);
+            Columns.MouseLeftButtonUp += new MouseButtonEventHandler(Columns_MouseLeftButtonUp);
         }
 
         private void DisconnectManipulationHandlers()
@@ -159,6 +172,7 @@ namespace Hyaku.Views
             Columns.ManipulationDelta -= new EventHandler<ManipulationDeltaEventArgs>(Columns_ManipulationDelta);
             Columns.ManipulationCompleted -= new EventHandler<ManipulationCompletedEventArgs>(Columns_ManipulationCompleted);
             Columns.MouseLeftButtonDown -= new MouseButtonEventHandler(Columns_MouseLeftButtonDown);
+            Columns.MouseLeftButtonUp -= new MouseButtonEventHandler(Columns_MouseLeftButtonUp);
         }
 
         void Columns_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -174,7 +188,6 @@ namespace Hyaku.Views
             Rectangle r = GetRectangle(dragEnd);
             int columnIndex = rectangles.IndexOf(r);
 
-            GameBoard.NumberDrop += new NumberDropEventHandler(GameBoard_NumberDrop);
             SquareViewModel currentSquare;
             GameBoard.SelectSquare(columnIndex, out currentSquare);
         }
@@ -184,10 +197,11 @@ namespace Hyaku.Views
             // I noticed that someimes the number doesn't drop with just a tap
             // maybe this line will help that.
             ChooseCurrentRectangle(e.ManipulationOrigin);
-            GeneralTransform canvasFactor = e.ManipulationContainer.TransformToVisual(Columns);
-            dragStart = canvasFactor.Transform(e.ManipulationOrigin);
-            // if the ChooseCurrentRectangle line above doesn't fix the problem, try the line below
-            dragEnd = canvasFactor.Transform(e.ManipulationOrigin);
+            //GeneralTransform canvasFactor = e.ManipulationContainer.TransformToVisual(Columns);
+            //dragStart = canvasFactor.Transform(e.ManipulationOrigin);
+            //dragEnd = canvasFactor.Transform(e.ManipulationOrigin);
+            dragStart = e.ManipulationOrigin;
+            dragEnd = e.ManipulationOrigin;
         }
 
         void Columns_ManipulationDelta(object sender, ManipulationDeltaEventArgs e)
@@ -203,30 +217,36 @@ namespace Hyaku.Views
             Rectangle r = GetRectangle(dragEnd);
             int columnIndex = rectangles.IndexOf(r);
 
-            GameBoard.NumberDrop += new NumberDropEventHandler(GameBoard_NumberDrop);
             SquareViewModel currentSquare;
             GameBoard.SelectSquare(columnIndex, out currentSquare);
-        }
-
-        void GameBoard_NumberDrop(object sender, NumberAddedEventArgs e)
-        {
-            DropNumberToCurrentSquare(e.SelectedSquare);
         }
 
         private void DropNumberToCurrentSquare(SquareViewModel currentSquare)
         {
             if (currentSquare != null) {
-                Storyboard dropAnimation = (Storyboard)this.Resources["DropKeyFrameAnimationStoryboard"];
-                if (dropAnimation == null) {
-                    return;
-                }
-
                 // turn off "Manipulation" handlers until animation is complete
                 DisconnectManipulationHandlers();
+                bool useNewAnimation = true;
+                if (useNewAnimation) {
+                    double rowTop = (double)rowTops[currentSquare.Row];
+                    double columnLeft = (double)rectangles[currentSquare.Column].GetValue(Canvas.LeftProperty);
 
-                // hook up the animation complete handler
-                dropAnimation.Completed += new EventHandler(dropAnimation_Completed);
-                dropAnimation.Begin();
+                    AnimateMovedSquare(0, currentSquare.Row, NextNumberImage, dropAnimation_Completed);
+
+                } else {
+                    // get the pre-configured animation
+                    Storyboard dropAnimation = (Storyboard)this.Resources["DropKeyFrameAnimationStoryboard"];
+
+                    // check
+                    if (dropAnimation == null) {
+                        return;
+                    }
+
+                    // hook up the animation complete handler
+                    dropAnimation.Completed += new EventHandler(dropAnimation_Completed);
+                    // start the animation
+                    dropAnimation.Begin();
+                }
             }
         }
 
@@ -241,20 +261,32 @@ namespace Hyaku.Views
 
         public void MoveSquare(int oldColumn, int oldRow, int newColumn, int newRow)
         {
-            currentImage = squares[oldColumn, oldRow];
+            Image animatedImage = squares[oldColumn, oldRow];
             squares[oldColumn, oldRow] = null;
-            squares[newColumn, newRow] = currentImage;
+            squares[newColumn, newRow] = animatedImage;
+            AnimateMovedSquare(oldRow, newRow, animatedImage, null);
+        }
 
+        private void AnimateMovedSquare(int oldRow, int newRow, Image animatedImage, EventHandler animationComplete)
+        {
             DoubleAnimation moveSquareAnimation = new DoubleAnimation();
-            moveSquareAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(200));
+            moveSquareAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(20 * Math.Abs(oldRow - newRow)));
             moveSquareAnimation.From = rowTops[oldRow];
             moveSquareAnimation.To = rowTops[newRow];
+            IEasingFunction easingFunction = new CubicEase()
+            {
+                EasingMode = System.Windows.Media.Animation.EasingMode.EaseIn
+            };
+            moveSquareAnimation.EasingFunction = easingFunction;
 
             Storyboard moveSquareStoryBoard = new Storyboard();
             moveSquareStoryBoard.Children.Add(moveSquareAnimation);
-            Storyboard.SetTarget(moveSquareStoryBoard, currentImage);
+            Storyboard.SetTarget(moveSquareStoryBoard, animatedImage);
             Storyboard.SetTargetProperty(moveSquareAnimation, new PropertyPath("(Canvas.Top)"));
             //moveSquareStoryBoard.Completed += new EventHandler(moveSquareAnimation_Completed);
+            if (animationComplete != null) {
+                moveSquareStoryBoard.Completed += animationComplete;
+            }
             moveSquareStoryBoard.Begin();
         }
 
@@ -314,7 +346,8 @@ namespace Hyaku.Views
             }
 
             r.Fill = new SolidColorBrush(Colors.Gray);
-            NextNumberImage.SetValue(Canvas.LeftProperty, (double)r.GetValue(Canvas.LeftProperty) + (double)gridBorders.GetValue(Canvas.LeftProperty));
+            //NextNumberImage.SetValue(Canvas.LeftProperty, (double)r.GetValue(Canvas.LeftProperty) + (double)gridBorders.GetValue(Canvas.LeftProperty));
+            NextNumberImage.SetValue(Canvas.LeftProperty, (double)r.GetValue(Canvas.LeftProperty));
 
             if (currentRectangle != null && currentRectangle != r)
             {
@@ -370,16 +403,9 @@ namespace Hyaku.Views
         {
             if (GameBoard != null) {
                 GameBoard.Stop();
+                GameBoard.DoSweep();
+                GameBoard.Save();
             }
-        }
-
-        private bool IsInTrialMode()
-        {
-#if DEBUG
-            return true;
-#endif
-            Microsoft.Phone.Marketplace.LicenseInformation license = new Microsoft.Phone.Marketplace.LicenseInformation();
-            return license.IsTrial();
         }
 
         private BitmapImage GetHyakuImageUriFromNumber(int number)

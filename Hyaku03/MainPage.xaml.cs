@@ -50,9 +50,11 @@ namespace Hyaku
             }
             
             if (!string.IsNullOrEmpty(savedGame)) {
-                board = GameBoardViewModel.LoadGameFromString(savedGame);
+                board = new GameBoardViewModel(); //GameBoardViewModel.LoadGameFromString(savedGame);
+                board.LoadGameFromString(savedGame);
             } else {
-                board = GameBoardViewModel.CreateNewGame();
+                board = new GameBoardViewModel(); //GameBoardViewModel.CreateNewGame();
+                board.CreateNewGame();
             }
             board.GameOver += new GameOverEventHandler(GameOverHandler);
             MainBoard.GameBoard = board;
@@ -96,7 +98,8 @@ namespace Hyaku
             MessageBoxResult resetGame = MessageBox.Show(Messages.ResetGameQuestion, Messages.ResetGameCaption, MessageBoxButton.OKCancel);
             if (resetGame == MessageBoxResult.OK) {
                 MainBoard.GameBoard = null;
-                MainBoard.GameBoard = GameBoardViewModel.CreateNewGame();
+                MainBoard.GameBoard = new GameBoardViewModel(); //GameBoardViewModel.CreateNewGame();
+                MainBoard.GameBoard.CreateNewGame();
             }
         }
     }

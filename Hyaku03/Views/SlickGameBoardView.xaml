@@ -32,24 +32,20 @@
             <Image Source="../Images/Themes/blossomTheme/cherryBlossoms.jpg"/>
             <TextBlock x:Name="ScoreTextBlock" Height="80" Canvas.Left="35" Text="{Binding Score}" Canvas.Top="10" Width="410" FontFamily="Segoe WP Light" FontSize="72" TextAlignment="Right"/>
             <Canvas x:Name="Columns" Height="368" Canvas.Left="56" Canvas.Top="216" Width="368">
+                <Image x:Name="NextNumberImage" Height="40" Width="40" Canvas.Left="220" Canvas.Top="-41" Canvas.ZIndex="1" RenderTransformOrigin="0.5,0.5">
+                    <Image.RenderTransform>
+                        <CompositeTransform />
+                    </Image.RenderTransform>
+                </Image>
                 <Rectangle x:Name="Column0" Fill="Black" Height="368" Canvas.Left="0" Opacity="0.60" Stretch="Fill" Canvas.Top="0" Width="40"/>
-                <!-- MouseLeftButtonDown="Column_MouseLeftButtonDown" MouseEnter="Column_MouseEnter" MouseLeave="Column_MouseLeave" MouseLeftButtonUp="Column_MouseLeftButtonUp"/>-->
                 <Rectangle x:Name="Column1" Fill="Black" Height="368" Canvas.Left="41" Opacity="0.60" Stretch="Fill" Canvas.Top="0" Width="40"/>
-                <!-- MouseLeftButtonDown="Column_MouseLeftButtonDown" MouseEnter="Column_MouseEnter" MouseLeave="Column_MouseLeave" MouseLeftButtonUp="Column_MouseLeftButtonUp"/>-->
                 <Rectangle x:Name="Column2" Fill="Black" Height="368" Canvas.Left="82" Opacity="0.60" Stretch="Fill" Canvas.Top="0" Width="40"/>
-                <!-- MouseLeftButtonDown="Column_MouseLeftButtonDown" MouseEnter="Column_MouseEnter" MouseLeave="Column_MouseLeave" MouseLeftButtonUp="Column_MouseLeftButtonUp"/>-->
                 <Rectangle x:Name="Column3" Fill="Black" Height="368" Canvas.Left="123" Opacity="0.60" Stretch="Fill" Canvas.Top="0" Width="40"/>
-                <!-- MouseLeftButtonDown="Column_MouseLeftButtonDown" MouseEnter="Column_MouseEnter" MouseLeave="Column_MouseLeave" MouseLeftButtonUp="Column_MouseLeftButtonUp"/>-->
                 <Rectangle x:Name="Column4" Fill="Black" Height="368" Canvas.Left="164" Opacity="0.60" Stretch="Fill" Canvas.Top="0" Width="40"/>
-                <!-- MouseLeftButtonDown="Column_MouseLeftButtonDown" MouseEnter="Column_MouseEnter" MouseLeave="Column_MouseLeave" MouseLeftButtonUp="Column_MouseLeftButtonUp"/>-->
                 <Rectangle x:Name="Column5" Fill="Black" Height="368" Canvas.Left="205" Opacity="0.60" Stretch="Fill" Canvas.Top="0" Width="40"/>
-                <!-- MouseLeftButtonDown="Column_MouseLeftButtonDown" MouseEnter="Column_MouseEnter" MouseLeave="Column_MouseLeave" MouseLeftButtonUp="Column_MouseLeftButtonUp"/>-->
                 <Rectangle x:Name="Column6" Fill="Black" Height="368" Canvas.Left="246" Opacity="0.60" Stretch="Fill" Canvas.Top="0" Width="40"/>
-                <!-- MouseLeftButtonDown="Column_MouseLeftButtonDown" MouseEnter="Column_MouseEnter" MouseLeave="Column_MouseLeave" MouseLeftButtonUp="Column_MouseLeftButtonUp"/>-->
                 <Rectangle x:Name="Column7" Fill="Black" Height="368" Canvas.Left="287" Opacity="0.60" Stretch="Fill" Canvas.Top="0" Width="40"/>
-                <!-- MouseLeftButtonDown="Column_MouseLeftButtonDown" MouseEnter="Column_MouseEnter" MouseLeave="Column_MouseLeave" MouseLeftButtonUp="Column_MouseLeftButtonUp"/>-->
                 <Rectangle x:Name="Column8" Fill="Black" Height="368" Canvas.Left="328" Opacity="0.60" Stretch="Fill" Canvas.Top="0" Width="40"/>
-                <!-- MouseLeftButtonDown="Column_MouseLeftButtonDown" MouseEnter="Column_MouseEnter" MouseLeave="Column_MouseLeave" MouseLeftButtonUp="Column_MouseLeftButtonUp"/>-->
             </Canvas>
             <Canvas x:Name="gridBorders" Height="369" Canvas.Left="55.5" Canvas.Top="215.5" Width="369">
                 <Path Data="M424.5,584.5L55.5,584.5L55.5,215.5L424.5,215.5z" Height="370" Canvas.Left="-0.5" StrokeStartLineCap="Flat" Stretch="Fill" StrokeEndLineCap="Flat" Stroke="#FF999999" StrokeThickness="1" StrokeMiterLimit="10" StrokeLineJoin="Miter" Canvas.Top="-0.5" Width="370"/>
@@ -76,11 +72,6 @@
                          Height="10" Width="369"
                          Canvas.Left="56" Canvas.Top="589"
                          Background="Black" Foreground="#FF6E0000"/>
-            <Image x:Name="NextNumberImage" Height="40" Width="40" Canvas.Left="220" Canvas.Top="171.5" Canvas.ZIndex="1" RenderTransformOrigin="0.5,0.5">
-                <Image.RenderTransform>
-                    <CompositeTransform />
-                </Image.RenderTransform>
-            </Image>
             <Image x:Name="queue01" Height="40" Width="40" Canvas.Left="56" Canvas.Top="109" Canvas.ZIndex="1">
                 <Image.RenderTransform>
                     <CompositeTransform />
@@ -113,7 +104,7 @@
         </Canvas>
         <ad:AdControl
             Height="80" Width="480"
-            Name="adControl1"
+            Name="gamePageAdControl"
             Canvas.Left="0" Canvas.Top="80"
             ApplicationId="test_client" AdUnitId="Image480_80" Margin="0,720,0,0" />
     </Grid>

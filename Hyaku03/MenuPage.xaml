@@ -6,6 +6,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Custom="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" xmlns:ic="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions" 
+    xmlns:ad="clr-namespace:Microsoft.Advertising.Mobile.UI;assembly=Microsoft.Advertising.Mobile.UI"
+    
     x:Class="Hyaku.MenuPage"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
@@ -27,7 +29,7 @@
             <!--<Button Height="60" x:Name="newUiButton" Width="210" Click="newUiButton_Click" />-->
             <!--<Button Content="Settings" Height="100" Name="settingsButton" Width="350" Click="settingsButton_Click" />-->
         
-           <Canvas Margin="46,100,220,0" Height="66" VerticalAlignment="Top">
+           <Canvas Name="NewGameMenuItem" Margin="46,100,220,0" Height="66" VerticalAlignment="Top">
             	<Custom:Interaction.Triggers>
             		<Custom:EventTrigger EventName="MouseLeftButtonDown">
             			<ic:NavigateToPageAction TargetPage="/GamePage.xaml"/>
@@ -36,10 +38,10 @@
             	<TextBlock Height="22" Text="新しいゲーム" VerticalAlignment="Top" Foreground="Black" FontSize="16" Canvas.Left="111" Canvas.Top="4"/>
 				<TextBlock HorizontalAlignment="Left" Height="64" Text="new game" Width="211" Foreground="Black" FontFamily="Segoe WP Light" FontSize="48" FontWeight="Light"/>
             </Canvas>
-           <Canvas Margin="46,228,127,0" Height="66" VerticalAlignment="Top">
+           <Canvas Name="ContinueGameMenuItem" Margin="46,228,127,0" Height="66" VerticalAlignment="Top">
            	<Custom:Interaction.Triggers>
            		<Custom:EventTrigger EventName="MouseLeftButtonDown">
-           			<ic:NavigateToPageAction TargetPage=""/>
+           			<ic:NavigateToPageAction TargetPage="/GamePage.xaml?continue=true"/>
            		</Custom:EventTrigger>
            	</Custom:Interaction.Triggers>
            	<TextBlock Height="22" Text="ゲームを続ける" VerticalAlignment="Top" Foreground="Black" FontSize="16" Canvas.Left="189"/>
@@ -67,9 +69,13 @@
            	<!--<TextBlock Height="22" Text="新しいゲーム" VerticalAlignment="Top" Foreground="Black" FontSize="16" Canvas.Left="111" Canvas.Top="4"/>-->
            	<TextBlock HorizontalAlignment="Left" Height="64" Text="settings" Width="211" Foreground="Black" FontFamily="Segoe WP Light" FontSize="48" FontWeight="Light"/>
            </Canvas>
-           
-   
-		</Grid>
+        <ad:AdControl
+            Height="80" Width="480"
+            Name="menuPageAdControl"
+            Canvas.Left="0" Canvas.Top="80"
+            ApplicationId="test_client" AdUnitId="Image480_80" Margin="0,720,0,0" />
+
+    </Grid>
  
     <!--Sample code showing usage of ApplicationBar-->
     <!--<phone:PhoneApplicationPage.ApplicationBar>

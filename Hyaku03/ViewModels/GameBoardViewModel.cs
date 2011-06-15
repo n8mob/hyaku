@@ -29,6 +29,9 @@ namespace Hyaku.ViewModels
     public delegate void HyakusFoundEventHandler(object sender, HyakuFoundEventArgs e);
     public delegate void SquareMovedEventHandler(object sender, SquareMovedEventArgs e);
     public delegate void SquareDeletedEventHandler(object sender, SquareDeletedEventArgs e);
+    public delegate void SweepStartEventHandler(object sender, EventArgs e);
+    public delegate void SweepEndEventHandler(object sender, EventArgs e);
+    public delegate void ScoreCountedEventHandler(object sender, SquareCountedEventArgs e);
 
     public class GameBoardViewModel : ViewModelBase
     {
@@ -40,6 +43,9 @@ namespace Hyaku.ViewModels
         public event SquareDeletedEventHandler SquareDeleted;
         public event NumberAddedEventHandler NumberAdded;
         public event NumberDropEventHandler NumberDrop;
+        public event SweepStartEventHandler SweepStart;
+        public event SweepEndEventHandler SweepEnd;
+        public event ScoreCountedEventHandler ScoreCounted;
 
         #endregion Events
 
@@ -63,6 +69,7 @@ namespace Hyaku.ViewModels
         private int _hyakuScoreCount = 0;
         private int _minAvailibleSquares;
         private int _maxAvailibleSquares;
+        private int _scoreMultiplier = 1;
 
         #endregion Declarations
 
@@ -490,12 +497,18 @@ namespace Hyaku.ViewModels
             }
         }
 
-        protected virtual void DoSweep()
+        public virtual void DoSweep()
         {
             SquareViewModel target = null;
             SquareViewModel source = null;
             List<SquareViewModel> movedSquares = new List<SquareViewModel>();
             List<SquareViewModel> newHyakus = new List<SquareViewModel>();
+
+            // Fire SweepStart event
+            if (SweepStart != null) {
+                SweepStart(this, new EventArgs());
+            }
+
             foreach (List<SquareViewModel> column in GameGrid)
             {
                 //Debug.WriteLine("Sweeping column {0}", GameGrid.IndexOf(column));
@@ -517,9 +530,15 @@ namespace Hyaku.ViewModels
                 source = null;
             }
             _hyakuScoreCount = 0;
+            _scoreMultiplier = 1;
             foreach (SquareViewModel sq in movedSquares)
             {
                 FindNewHyakus(sq);
+            }
+
+            // fire SweepEnd
+            if (SweepEnd != null) {
+                SweepEnd(this, new EventArgs());
             }
         }
 
@@ -591,22 +610,33 @@ namespace Hyaku.ViewModels
         public virtual List<int> Peak(int numberToPeak)
         {
             List<int> numbers = new List<int>(numberToPeak);
-            if (numberToPeak == 1) {
-                if (numberSelections == null || numberSelections.Count < 1) {
-                    if (hyakuSettings.UseDebugNumbersSetting && hyakuSettings.DebugNumbersSetting != null && hyakuSettings.DebugNumbersSetting.Count > 0) {
-                        numberSelections = hyakuSettings.DebugNumbersSetting;
-                        hyakuSettings.UseDebugNumbersSetting = false;
-                    } else {
-                        numberSelections = RandomListGenerator.SelectRandomItems(RandomListSize, hyakuSettings.NumberListSetting);
-                        //numberSelections = RandomListGenerator.SelectRandomItems(RandomListSize, new List<int>(new int[] { 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50 }));
-                    }
-                }
+            //if (numberToPeak == 1) {
+            //    if (numberSelections == null || numberSelections.Count < 1) {
+            //        if (hyakuSettings.UseDebugNumbersSetting && hyakuSettings.DebugNumbersSetting != null && hyakuSettings.DebugNumbersSetting.Count > 0) {
+            //            numberSelections = hyakuSettings.DebugNumbersSetting;
+            //            hyakuSettings.UseDebugNumbersSetting = false;
+            //        } else {
+            //            numberSelections = RandomListGenerator.SelectRandomItems(RandomListSize, hyakuSettings.NumberListSetting);
+            //            //numberSelections = RandomListGenerator.SelectRandomItems(RandomListSize, new List<int>(new int[] { 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50 }));
+            //        }
+            //    }
 
-                int nextNumber = numberSelections[0];
-                numbers.Add(nextNumber);
-            } else {
-                throw new NotImplementedException();
+            //    int nextNumber = numberSelections[0];
+            //    numbers.Add(nextNumber);
+            //} else {
+            if (numberSelections == null) {
+                numberSelections = new List<int>();
             }
+            while (numberSelections == null || numberSelections.Count < numberToPeak) {
+                if (hyakuSettings.UseDebugNumbersSetting && hyakuSettings.DebugNumbersSetting != null && hyakuSettings.DebugNumbersSetting.Count > 0) {
+                    numberSelections.AddRange(hyakuSettings.DebugNumbersSetting);
+                    hyakuSettings.UseDebugNumbersSetting = false;
+                } else {
+                    numberSelections.AddRange(RandomListGenerator.SelectRandomItems(RandomListSize, hyakuSettings.NumberListSetting));
+                }
+            }
+            numbers.AddRange(numberSelections.GetRange(0, numberToPeak));
+            //}
             return numbers;
         }
 
@@ -748,7 +778,8 @@ namespace Hyaku.ViewModels
         {
             foreach (Sum sum in sumsToScore) {
                 if (!sum.HasScoreBeenCounted) {
-                    Score += sum.ScoreMultiplier + sum.Total;
+                    int thisScore = sum.Total * sum.SquareCount * _scoreMultiplier++;
+                    Score += thisScore;
                 }
             }
         }
@@ -774,53 +805,54 @@ namespace Hyaku.ViewModels
 
         #endregion Methods
 
-        public static GameBoardViewModel LoadGameFromString(string savedGame)
+        public void LoadGameFromString(string savedGame)
         {
-            GameBoardViewModel gameBoard = new GameBoardViewModel();
             string[] columnArray = savedGame.Split(';');
             List<string> columns = new List<string> (columnArray);
             string scoreString = columns[columns.Count - 1];
             int score = 0;
             if (int.TryParse(scoreString, out score)) {
-                gameBoard.Score = score;
+                Score = score;
             }
             columns.Remove(scoreString);
             for (ushort columnIndex = 0; columnIndex < columns.Count; columnIndex++) {
                 string[] row = columns[columnIndex].Split('.');
-                gameBoard.GameGrid.Insert(columnIndex, new List<SquareViewModel>());
+                GameGrid.Insert(columnIndex, new List<SquareViewModel>());
                 for (ushort rowIndex = 0; rowIndex < row.Length; rowIndex++) {
                     int parsedValue;
                     int.TryParse(row[rowIndex], out parsedValue);
                     SquareViewModel sq = new SquareViewModel(columnIndex, rowIndex);
-                    gameBoard.CurrentSquare = sq;
-                    gameBoard.GameGrid[columnIndex].Insert(rowIndex, sq);
-                    gameBoard.SendNumber(parsedValue);
+                    CurrentSquare = sq;
+                    GameGrid[columnIndex].Insert(rowIndex, sq);
+                    SendNumber(parsedValue);
                 }
             }
-
-            return gameBoard;
         }
 
-        public static GameBoardViewModel CreateNewGame()
+        public void CreateNewGame()
         {
             HyakuSettings settings = new HyakuSettings();
-            GameBoardViewModel gameBoard = new GameBoardViewModel();
             for (ushort columnIndex = 0; columnIndex < settings.GameSizeSetting; columnIndex++) {
-                gameBoard.GameGrid.Insert(columnIndex, new List<SquareViewModel>());
+                GameGrid.Insert(columnIndex, new List<SquareViewModel>());
                 for (ushort rowIndex = 0; rowIndex < settings.GameSizeSetting; rowIndex++) {
                     SquareViewModel square = new SquareViewModel(columnIndex, rowIndex);
-                    gameBoard.CurrentSquare = square;
-                    gameBoard.SendNumber(0);
-                    gameBoard.GameGrid[columnIndex].Insert(rowIndex, square);
+                    CurrentSquare = square;
+                    SendNumber(0);
+                    GameGrid[columnIndex].Insert(rowIndex, square);
                 }
             }
-
-            return gameBoard;
         }
 
         internal void Stop()
         {
             this.Timer.Tick -= new EventHandler(Tick);
+        }
+
+        internal void Save()
+        {
+            if (this.EmptyBlockCount < _maxAvailibleSquares || this.Score > 0) {
+                hyakuSettings.SavedGame = this.ToString();
+            }
         }
     }
 }

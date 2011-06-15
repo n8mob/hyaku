@@ -149,7 +149,7 @@ namespace Hyaku.ViewModels
         public virtual Sum SaveSum(params Square[] squares)
         {
             Sum sum1 = new Sum(squares);
-            if (sum1.Total <= 100) { // TODO make 100 a setting
+            if (sum1.Total <= 100 && sum1.MaxDistance <= MaxDistanceCache) { // TODO make 100 a setting
                 Sum sum2;
                 if (!Sums.TryGetValue(sum1.GetHashCode(), out sum2)) {
                     Sums.Add(sum1.GetHashCode(), sum1);

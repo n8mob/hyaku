@@ -28,6 +28,7 @@ namespace Hyaku
         const string DebugNumbersStringKeyName = "DebugNumbers";
         const string MaxDistanceKeyName = "MaxDistance";
         const string PlayBackgroundMusicKeyName = "PlayBackgroundMusic";
+        const string SavedGameKeyName = "SavedGame";
 
         // Default settings values
         const int GameSizeSettingDefault = 9;
@@ -40,6 +41,7 @@ namespace Hyaku
         const string DebugNumbersStringDefault = "";
         const int MaxDistanceDefault = 2;
         const bool PlayBackgroundMusicDefault = false;
+        const string SavedGameDefault = "";
 
         public int GameSizeSetting
         {
@@ -205,6 +207,18 @@ namespace Hyaku
             set
             {
                 AddOrUpdateValue(PlayBackgroundMusicKeyName, value);
+            }
+        }
+
+        public string SavedGame
+        {
+            get
+            {
+                return GetValueOrDefault(SavedGameKeyName, SavedGameDefault);
+            }
+            set
+            {
+                AddOrUpdateValue(SavedGameKeyName, value);
             }
         }
     }

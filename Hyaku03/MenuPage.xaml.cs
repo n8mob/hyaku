@@ -19,6 +19,10 @@ namespace Hyaku
         public MenuPage()
         {
             InitializeComponent();
+            App app = Application.Current as App;
+            if (app != null) {
+                menuPageAdControl.Visibility = app.AdVisibility;
+            }
         }
 
         private void oldUiButton_Click(object sender, RoutedEventArgs e)
