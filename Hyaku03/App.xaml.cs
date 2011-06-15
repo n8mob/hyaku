@@ -25,6 +25,12 @@ namespace Hyaku
             get;
             set;
         }
+
+        public bool ContinueFromSaved
+        {
+            get;
+            set;
+        }
         
         //private static ISterlingDatabaseInstance _squareSumDatabase = null;
         //private static SterlingEngine _engine = null;

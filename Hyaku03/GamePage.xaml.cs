@@ -27,22 +27,38 @@ namespace Hyaku
         public GamePage()
         {
             InitializeComponent();
-            GameControl.GameEnded += new GameOverEventHandler(GameOverHandler);
+            SlickGameControl.GameEnded += new GameOverEventHandler(GameOverHandler);
         }
 
         private void GameOverHandler(object sender, GameOverEventArgs e)
         {
+            // TODO handle game-over
             NavigationService.GoBack();
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
-            base.OnNavigatedTo(e);
+            HyakuSettings hyakuSettings = new HyakuSettings();
+            string savedGame = hyakuSettings.SavedGame;
+            App app = Application.Current as App;
+            if (app != null) {
+                if (app.ContinueFromSaved && !string.IsNullOrEmpty(savedGame)) {
+                    // load saved game (if any)
+                    SlickGameControl.GameBoard = GameBoardViewModel.LoadGameFromString(savedGame);
+                } else {
+                    // no saved game, or use asked for new game
+                    SlickGameControl.GameBoard = GameBoardViewModel.CreateNewGame();
+                }
+            }
+            if (string.IsNullOrEmpty(hyakuSettings.SavedGame)) {
+                // start new game
+            } else {
+                // restore saved game
+            }
             // check if game has control of the media player
             if (MediaPlayer.GameHasControl) {
                 if (!MediaPlayer.IsMuted) {
                     // play background music (if enabled in settings menu)
-                    HyakuSettings hyakuSettings = new HyakuSettings();
                     if (hyakuSettings.PlayBackgroudnMusicSetting) {
                         StreamResourceInfo soundResourceInfo = App.GetResourceStream(new Uri(@"sounds/Themes/blossomTheme/Music.wav", UriKind.Relative));
                         SoundEffect bgMusicEffect = SoundEffect.FromStream(soundResourceInfo.Stream);
@@ -52,12 +68,13 @@ namespace Hyaku
                     }
                 }
             }
+            base.OnNavigatedTo(e);
         }
 
         protected override void OnNavigatedFrom(System.Windows.Navigation.NavigationEventArgs e)
         {
             // turn off the timer
-            this.GameControl.LeavingPage();
+            this.SlickGameControl.LeavingPage();
             // stop the music
             if (bgMusic != null) {
                 bgMusic.Stop();

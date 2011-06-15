@@ -21,7 +21,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <hyaku:SlickGameBoardView x:Name="GameControl" />
+        <hyaku:SlickGameBoardView x:Name="SlickGameControl" />
     </Grid>
  
     <!--Sample code showing usage of ApplicationBar-->

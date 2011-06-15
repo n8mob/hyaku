@@ -122,6 +122,15 @@ namespace Hyaku.Views
         {
             nextNumber = GameBoard.GetNextNumber();
             NextNumberImage.Source = GetNormalImageUriFromNumber(nextNumber);
+            // TODO make a setting for number of numbers to show in queue
+            List<int> numbersInQueue = GameBoard.Peak(3);
+            if (numbersInQueue != null) {
+                if (numbersInQueue.Count == 3) {
+                    this.queue03.Source = GetNormalImageUriFromNumber(numbersInQueue[0]);
+                    this.queue02.Source = GetNormalImageUriFromNumber(numbersInQueue[1]);
+                    this.queue01.Source = GetNormalImageUriFromNumber(numbersInQueue[2]);
+                }
+            }
         }
 
         public SlickGameBoardView()
@@ -141,7 +150,6 @@ namespace Hyaku.Views
             squares = new Image[9, 9];
 
             ConnectManipulationHandlers();
-            GameBoard = GameBoardViewModel.CreateNewGame();
 
             if (IsInTrialMode()) {
                 adControl1.Visibility = System.Windows.Visibility.Visible;
