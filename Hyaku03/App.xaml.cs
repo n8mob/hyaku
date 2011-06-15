@@ -115,6 +115,24 @@ namespace Hyaku
             }
         }
 
+        public Visibility AdVisibility
+        {
+            get
+            {
+                return IsInTrialMode() ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
+
+        public bool IsInTrialMode()
+        {
+#if DEBUG
+            return true;
+#else
+            Microsoft.Phone.Marketplace.LicenseInformation license = new Microsoft.Phone.Marketplace.LicenseInformation();
+            return license.IsTrial();
+#endif
+        }
+
         #region Phone application initialization
 
         // Avoid double-initialization

@@ -151,10 +151,9 @@ namespace Hyaku.Views
 
             ConnectManipulationHandlers();
 
-            if (IsInTrialMode()) {
-                adControl1.Visibility = System.Windows.Visibility.Visible;
-            } else {
-                adControl1.Visibility = System.Windows.Visibility.Collapsed;
+            App app = Application.Current as App;
+            if (app != null) {
+                gamePageAdControl.Visibility = app.AdVisibility;
             }
         }
 
@@ -407,16 +406,6 @@ namespace Hyaku.Views
                 GameBoard.DoSweep();
                 GameBoard.Save();
             }
-        }
-
-        private bool IsInTrialMode()
-        {
-#if DEBUG
-            return true;
-#else
-            Microsoft.Phone.Marketplace.LicenseInformation license = new Microsoft.Phone.Marketplace.LicenseInformation();
-            return license.IsTrial();
-#endif
         }
 
         private BitmapImage GetHyakuImageUriFromNumber(int number)

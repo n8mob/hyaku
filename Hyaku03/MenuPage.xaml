@@ -6,6 +6,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Custom="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" xmlns:ic="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions" 
+    xmlns:ad="clr-namespace:Microsoft.Advertising.Mobile.UI;assembly=Microsoft.Advertising.Mobile.UI"
+    
     x:Class="Hyaku.MenuPage"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
@@ -67,9 +69,13 @@
            	<!--<TextBlock Height="22" Text="新しいゲーム" VerticalAlignment="Top" Foreground="Black" FontSize="16" Canvas.Left="111" Canvas.Top="4"/>-->
            	<TextBlock HorizontalAlignment="Left" Height="64" Text="settings" Width="211" Foreground="Black" FontFamily="Segoe WP Light" FontSize="48" FontWeight="Light"/>
            </Canvas>
-           
-   
-		</Grid>
+        <ad:AdControl
+            Height="80" Width="480"
+            Name="menuPageAdControl"
+            Canvas.Left="0" Canvas.Top="80"
+            ApplicationId="test_client" AdUnitId="Image480_80" Margin="0,720,0,0" />
+
+    </Grid>
  
     <!--Sample code showing usage of ApplicationBar-->
     <!--<phone:PhoneApplicationPage.ApplicationBar>
