@@ -32,7 +32,7 @@
             <Image Source="../Images/Themes/blossomTheme/cherryBlossoms.jpg"/>
             <TextBlock x:Name="ScoreTextBlock" Height="80" Canvas.Left="35" Text="{Binding Score}" Canvas.Top="10" Width="410" FontFamily="Segoe WP Light" FontSize="72" TextAlignment="Right"/>
             <Canvas x:Name="Columns" Height="368" Canvas.Left="56" Canvas.Top="216" Width="368">
-                <Image x:Name="NextNumberImage" Height="40" Width="40" Canvas.Left="220" Canvas.Top="-41" Canvas.ZIndex="1" RenderTransformOrigin="0.5,0.5">
+                <Image x:Name="NextNumberImage" Height="40" Width="40" Canvas.Left="164" Canvas.Top="-41" Canvas.ZIndex="1" RenderTransformOrigin="0.5,0.5">
                     <Image.RenderTransform>
                         <CompositeTransform />
                     </Image.RenderTransform>
