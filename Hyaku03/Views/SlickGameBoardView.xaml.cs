@@ -404,6 +404,8 @@ namespace Hyaku.Views
         {
             if (GameBoard != null) {
                 GameBoard.Stop();
+                GameBoard.DoSweep();
+                GameBoard.Save();
             }
         }
 
@@ -411,9 +413,10 @@ namespace Hyaku.Views
         {
 #if DEBUG
             return true;
-#endif
+#else
             Microsoft.Phone.Marketplace.LicenseInformation license = new Microsoft.Phone.Marketplace.LicenseInformation();
             return license.IsTrial();
+#endif
         }
 
         private BitmapImage GetHyakuImageUriFromNumber(int number)

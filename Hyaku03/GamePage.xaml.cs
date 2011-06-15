@@ -39,22 +39,23 @@ namespace Hyaku
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
             HyakuSettings hyakuSettings = new HyakuSettings();
+            string continueParameter;
+            bool continueSavedGame = false;
+            if (this.NavigationContext.QueryString.ContainsKey("continue")) {
+                continueParameter = this.NavigationContext.QueryString["continue"];
+                bool.TryParse(continueParameter, out continueSavedGame);
+            }
             string savedGame = hyakuSettings.SavedGame;
-            App app = Application.Current as App;
-            if (app != null) {
-                if (app.ContinueFromSaved && !string.IsNullOrEmpty(savedGame)) {
-                    // load saved game (if any)
-                    SlickGameControl.GameBoard = GameBoardViewModel.LoadGameFromString(savedGame);
-                } else {
-                    // no saved game, or use asked for new game
-                    SlickGameControl.GameBoard = GameBoardViewModel.CreateNewGame();
-                }
-            }
-            if (string.IsNullOrEmpty(hyakuSettings.SavedGame)) {
-                // start new game
+            if (continueSavedGame && !string.IsNullOrEmpty(savedGame)) {
+                // load saved game (if any)
+                SlickGameControl.GameBoard = new GameBoardViewModel(); //GameBoardViewModel.LoadGameFromString(savedGame);
+                SlickGameControl.GameBoard.LoadGameFromString(savedGame);
             } else {
-                // restore saved game
+                // no saved game, or use asked for new game
+                SlickGameControl.GameBoard = new GameBoardViewModel(); //GameBoardViewModel.CreateNewGame();
+                SlickGameControl.GameBoard.CreateNewGame();
             }
+
             // check if game has control of the media player
             if (MediaPlayer.GameHasControl) {
                 if (!MediaPlayer.IsMuted) {

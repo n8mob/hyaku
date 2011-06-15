@@ -497,7 +497,7 @@ namespace Hyaku.ViewModels
             }
         }
 
-        protected virtual void DoSweep()
+        public virtual void DoSweep()
         {
             SquareViewModel target = null;
             SquareViewModel source = null;
@@ -805,53 +805,54 @@ namespace Hyaku.ViewModels
 
         #endregion Methods
 
-        public static GameBoardViewModel LoadGameFromString(string savedGame)
+        public void LoadGameFromString(string savedGame)
         {
-            GameBoardViewModel gameBoard = new GameBoardViewModel();
             string[] columnArray = savedGame.Split(';');
             List<string> columns = new List<string> (columnArray);
             string scoreString = columns[columns.Count - 1];
             int score = 0;
             if (int.TryParse(scoreString, out score)) {
-                gameBoard.Score = score;
+                Score = score;
             }
             columns.Remove(scoreString);
             for (ushort columnIndex = 0; columnIndex < columns.Count; columnIndex++) {
                 string[] row = columns[columnIndex].Split('.');
-                gameBoard.GameGrid.Insert(columnIndex, new List<SquareViewModel>());
+                GameGrid.Insert(columnIndex, new List<SquareViewModel>());
                 for (ushort rowIndex = 0; rowIndex < row.Length; rowIndex++) {
                     int parsedValue;
                     int.TryParse(row[rowIndex], out parsedValue);
                     SquareViewModel sq = new SquareViewModel(columnIndex, rowIndex);
-                    gameBoard.CurrentSquare = sq;
-                    gameBoard.GameGrid[columnIndex].Insert(rowIndex, sq);
-                    gameBoard.SendNumber(parsedValue);
+                    CurrentSquare = sq;
+                    GameGrid[columnIndex].Insert(rowIndex, sq);
+                    SendNumber(parsedValue);
                 }
             }
-
-            return gameBoard;
         }
 
-        public static GameBoardViewModel CreateNewGame()
+        public void CreateNewGame()
         {
             HyakuSettings settings = new HyakuSettings();
-            GameBoardViewModel gameBoard = new GameBoardViewModel();
             for (ushort columnIndex = 0; columnIndex < settings.GameSizeSetting; columnIndex++) {
-                gameBoard.GameGrid.Insert(columnIndex, new List<SquareViewModel>());
+                GameGrid.Insert(columnIndex, new List<SquareViewModel>());
                 for (ushort rowIndex = 0; rowIndex < settings.GameSizeSetting; rowIndex++) {
                     SquareViewModel square = new SquareViewModel(columnIndex, rowIndex);
-                    gameBoard.CurrentSquare = square;
-                    gameBoard.SendNumber(0);
-                    gameBoard.GameGrid[columnIndex].Insert(rowIndex, square);
+                    CurrentSquare = square;
+                    SendNumber(0);
+                    GameGrid[columnIndex].Insert(rowIndex, square);
                 }
             }
-
-            return gameBoard;
         }
 
         internal void Stop()
         {
             this.Timer.Tick -= new EventHandler(Tick);
+        }
+
+        internal void Save()
+        {
+            if (this.EmptyBlockCount < _maxAvailibleSquares || this.Score > 0) {
+                hyakuSettings.SavedGame = this.ToString();
+            }
         }
     }
 }
