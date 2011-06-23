@@ -101,6 +101,6 @@
             Height="80" Width="480"
             Name="gamePageAdControl"
             Canvas.Left="0" Canvas.Top="80"
-            ApplicationId="test_client" AdUnitId="Image480_80" Margin="0,720,0,0" />
+            ApplicationId="d88cd44b-75a0-487d-892f-e988e7ea4f92" AdUnitId="10019167" Margin="0,720,0,0" />
     </Grid>
 </UserControl>
