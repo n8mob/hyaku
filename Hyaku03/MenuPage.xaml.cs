@@ -11,22 +11,35 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 using Microsoft.Xna.Framework.Media;
+using Microsoft.Phone.Tasks;
+using Microsoft.Advertising.Mobile.UI;
 
 namespace Hyaku
 {
     public partial class MenuPage : PhoneApplicationPage
     {
+        App OurApp
+        {
+            get
+            {
+                return Application.Current as App;
+            }
+        }
+
         public MenuPage()
         {
             InitializeComponent();
-            App app = Application.Current as App;
-            if (app != null) {
-                menuPageAdControl.Visibility = app.AdVisibility;
+            if (OurApp != null) {
+                menuPageAdControl.Visibility = OurApp.TrialItemVisibility;
+                ContinueGameMenuItem.Visibility = OurApp.FullVersionVisibility;
+                FullVersionMenuItem.Visibility = OurApp.TrialItemVisibility;
             }
 #if DEBUG
-            SettingsLink.Visibility = System.Windows.Visibility.Visible;
+            SettingsMenuItem.Visibility = System.Windows.Visibility.Visible;
+            AdControl.TestMode = true;
 #else
-            SettingsLink.Visibility = System.Windows.Visibility.Collapsed;
+            SettingsMenuItem.Visibility = System.Windows.Visibility.Collapsed;
+            AdControl.TestMode = false;
 #endif
         }
 
@@ -43,6 +56,7 @@ namespace Hyaku
         private void settingsButton_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Uri("/SettingsPage.xaml", UriKind.Relative));
+            
         }
 
         private void FeedbackButton_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -51,6 +65,16 @@ namespace Hyaku
             feedbackMail.To = "hyaku@nategrigg.com";
             feedbackMail.Subject = "Game Feedback";
             feedbackMail.Show();
+        }
+
+        private void FullVersionMenuItem_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            MessageBoxResult result;
+            result = MessageBox.Show(Messages.FullVersionMessage, Messages.FullVersionCaption, MessageBoxButton.OKCancel);
+            if (result == MessageBoxResult.OK) {
+                MarketplaceDetailTask marketplace = new MarketplaceDetailTask();
+                marketplace.Show();
+            }
         }
     }
 }

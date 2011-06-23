@@ -16,6 +16,8 @@
     mc:Ignorable="d" d:DesignHeight="800" d:DesignWidth="480"
     shell:SystemTray.IsVisible="False">
 
+    
+
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
         <Grid.RowDefinitions>
@@ -38,6 +40,10 @@
             	<TextBlock Height="22" Text="新しいゲーム" VerticalAlignment="Top" Foreground="Black" FontSize="16" Canvas.Left="111" Canvas.Top="4"/>
 				<TextBlock HorizontalAlignment="Left" Height="64" Text="new game" Width="211" Foreground="Black" FontFamily="Segoe WP Light" FontSize="48" FontWeight="Light"/>
             </Canvas>
+           <Canvas Name="FullVersionMenuItem" Margin="46,228,127,0" Height="66" VerticalAlignment="Top" MouseLeftButtonUp="FullVersionMenuItem_MouseLeftButtonUp" >
+           	<TextBlock Height="22" Text="フルバージョン" VerticalAlignment="Top" Foreground="Black" FontSize="16" Canvas.Left="189"/>
+            <TextBlock HorizontalAlignment="Left" Height="64" Text="get full version" Width="303" Foreground="Black" FontFamily="Segoe WP Light" FontSize="48" FontWeight="Light"/>
+           </Canvas>
            <Canvas Name="ContinueGameMenuItem" Margin="46,228,127,0" Height="66" VerticalAlignment="Top">
            	<Custom:Interaction.Triggers>
            		<Custom:EventTrigger EventName="MouseLeftButtonDown">
@@ -47,10 +53,9 @@
            	<TextBlock Height="22" Text="ゲームを続ける" VerticalAlignment="Top" Foreground="Black" FontSize="16" Canvas.Left="189"/>
             <TextBlock HorizontalAlignment="Left" Height="64" Text="continue game" Width="303" Foreground="Black" FontFamily="Segoe WP Light" FontSize="48" FontWeight="Light"/>
            </Canvas>
-           <Canvas Margin="46,348,199,386">
+           <Canvas Name="InstructionsMenuItem" Margin="46,348,199,386">
            	<Custom:Interaction.Triggers>
            		<Custom:EventTrigger EventName="MouseLeftButtonDown">
-           			<ic:NavigateToPageAction TargetPage="/Instructions.xaml"/>
            		</Custom:EventTrigger>
            	</Custom:Interaction.Triggers>
            	<TextBlock Height="22" Text="指示" VerticalAlignment="Top" Foreground="Black" FontSize="16" Canvas.Left="192"/>
@@ -60,13 +65,13 @@
             <TextBlock Height="22" TextWrapping="Wrap" Text="我々にフィードバックを送る" VerticalAlignment="Top" Foreground="Black" FontSize="16" Canvas.Left="128"/>
             <TextBlock HorizontalAlignment="Left" Height="64" Text="give us feedback" Width="338" Foreground="Black" FontFamily="Segoe WP Light" FontSize="48" FontWeight="Light" Canvas.Top="8"/>
         </Canvas>
-        <Canvas Margin="46,0,220,154" Height="66" VerticalAlignment="Bottom">
+        <Canvas Name="SettingsMenuItem" Margin="46,0,220,154" Height="66" VerticalAlignment="Bottom">
            	<Custom:Interaction.Triggers>
            		<Custom:EventTrigger EventName="MouseLeftButtonDown">
            			<ic:NavigateToPageAction TargetPage="/SettingsPage.xaml"/>
            		</Custom:EventTrigger>
            	</Custom:Interaction.Triggers>
-           	<!--<TextBlock Height="22" Text="新しいゲーム" VerticalAlignment="Top" Foreground="Black" FontSize="16" Canvas.Left="111" Canvas.Top="4"/>-->
+           	<TextBlock Height="22" Text="新しいゲーム" VerticalAlignment="Top" Foreground="Black" FontSize="16" Canvas.Left="111" Canvas.Top="4"/>
            	<TextBlock Name="SettingsLink" HorizontalAlignment="Left" Height="64" Text="settings" Width="211" Foreground="Black" FontFamily="Segoe WP Light" FontSize="48" FontWeight="Light"/>
            </Canvas>
         <ad:AdControl

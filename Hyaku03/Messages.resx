@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="FullVersionCaption" xml:space="preserve">
+    <value>PURCHASE FULL VERSION?</value>
+  </data>
+  <data name="FullVersionMessage" xml:space="preserve">
+    <value>The full version will save your current game and get rid of the ads. Future updates to the full version will include multiple themes for the game board.</value>
+  </data>
   <data name="GameOverCaption" xml:space="preserve">
     <value>GAME OVER!</value>
   </data>

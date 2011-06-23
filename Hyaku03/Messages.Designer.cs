@@ -61,6 +61,24 @@ namespace Hyaku {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to PURCHASE FULL VERSION?.
+        /// </summary>
+        internal static string FullVersionCaption {
+            get {
+                return ResourceManager.GetString("FullVersionCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The full version will save your current game and get rid of the ads. Future updates to the full version will include multiple themes for the game board..
+        /// </summary>
+        internal static string FullVersionMessage {
+            get {
+                return ResourceManager.GetString("FullVersionMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to GAME OVER!.
         /// </summary>
         internal static string GameOverCaption {

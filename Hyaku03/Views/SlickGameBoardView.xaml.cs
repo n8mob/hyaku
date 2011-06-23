@@ -15,6 +15,7 @@ using System.IO;
 using Hyaku.Data;
 using System.Diagnostics;
 using Hyaku;
+using Microsoft.Advertising.Mobile.UI;
 
 namespace Hyaku.Views
 {
@@ -153,7 +154,12 @@ namespace Hyaku.Views
 
             App app = Application.Current as App;
             if (app != null) {
-                gamePageAdControl.Visibility = app.AdVisibility;
+                gamePageAdControl.Visibility = app.TrialItemVisibility;
+#if DEBUG
+                AdControl.TestMode = true;
+#else
+                AdControl.TestMode = false;
+#endif
             }
         }
 

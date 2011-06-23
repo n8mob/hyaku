@@ -115,11 +115,19 @@ namespace Hyaku
             }
         }
 
-        public Visibility AdVisibility
+        public Visibility TrialItemVisibility
         {
             get
             {
                 return IsInTrialMode() ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
+
+        public Visibility FullVersionVisibility
+        {
+            get
+            {
+                return IsInTrialMode() ? Visibility.Collapsed : Visibility.Visible;
             }
         }
 
