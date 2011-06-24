@@ -252,7 +252,7 @@
     <Resource Include="Images\NumberBlocks\hyaku.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Images\Themes\blossomTheme\cherryBlossoms.jpg" />
+    <Resource Include="Images\Themes\blossomTheme\background.jpg" />
     <Resource Include="Images\Themes\blossomTheme\Hyaku\05.png" />
     <Resource Include="Images\Themes\blossomTheme\Hyaku\10.png" />
     <Resource Include="Images\Themes\blossomTheme\Hyaku\15.png" />
@@ -306,26 +306,45 @@
     <Resource Include="sounds\Themes\blossomTheme\sweep.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Images\Themes\DefiantTheme\defiantBackground.jpg" />
-    <Resource Include="Images\Themes\DefiantTheme\05.png" />
-    <Resource Include="Images\Themes\DefiantTheme\10.png" />
-    <Resource Include="Images\Themes\DefiantTheme\15.png" />
-    <Resource Include="Images\Themes\DefiantTheme\20.png" />
-    <Resource Include="Images\Themes\DefiantTheme\25.png" />
-    <Resource Include="Images\Themes\DefiantTheme\30.png" />
-    <Resource Include="Images\Themes\DefiantTheme\35.png" />
-    <Resource Include="Images\Themes\DefiantTheme\40.png" />
-    <Resource Include="Images\Themes\DefiantTheme\45.png" />
-    <Resource Include="Images\Themes\DefiantTheme\50.png" />
-    <Resource Include="Images\Themes\DefiantTheme\55.png" />
-    <Resource Include="Images\Themes\DefiantTheme\60.png" />
-    <Resource Include="Images\Themes\DefiantTheme\65.png" />
-    <Resource Include="Images\Themes\DefiantTheme\70.png" />
-    <Resource Include="Images\Themes\DefiantTheme\75.png" />
-    <Resource Include="Images\Themes\DefiantTheme\80.png" />
-    <Resource Include="Images\Themes\DefiantTheme\85.png" />
-    <Resource Include="Images\Themes\DefiantTheme\90.png" />
-    <Resource Include="Images\Themes\DefiantTheme\95.png" />
+    <Resource Include="Images\Themes\DefiantTheme\background.jpg" />
+    <Resource Include="Images\Themes\DefiantTheme\Normal\05.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Normal\10.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Normal\15.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Normal\20.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Normal\25.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Normal\30.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Normal\35.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Normal\40.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Normal\45.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Normal\50.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Normal\55.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Normal\60.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Normal\65.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Normal\70.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Normal\75.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Normal\80.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Normal\85.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Normal\90.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Normal\95.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Hyaku\05.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Hyaku\10.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Hyaku\15.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Hyaku\20.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Hyaku\25.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Hyaku\30.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Hyaku\35.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Hyaku\40.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Hyaku\45.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Hyaku\50.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Hyaku\55.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Hyaku\60.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Hyaku\65.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Hyaku\70.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Hyaku\75.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Hyaku\80.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Hyaku\85.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Hyaku\90.png" />
+    <Resource Include="Images\Themes\DefiantTheme\Hyaku\95.png" />
     <Content Include="SplashScreenImage.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -23,6 +23,7 @@ namespace Hyaku
     public partial class GamePage : PhoneApplicationPage
     {
         SoundEffectInstance bgMusic;
+        string currentTheme;
 
         public GamePage()
         {
@@ -39,6 +40,15 @@ namespace Hyaku
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
             HyakuSettings hyakuSettings = new HyakuSettings();
+
+            // set the theme
+            if (this.NavigationContext.QueryString.ContainsKey("theme")) {
+                currentTheme = this.NavigationContext.QueryString["theme"];
+                SlickGameControl.CurrentTheme = currentTheme;
+            } else {
+                SlickGameControl.CurrentTheme = "blossomTheme"; // TODO make a setting?
+            }
+
             string continueParameter;
             bool continueSavedGame = false;
             if (this.NavigationContext.QueryString.ContainsKey("continue")) {
@@ -46,6 +56,7 @@ namespace Hyaku
                 bool.TryParse(continueParameter, out continueSavedGame);
             }
             string savedGame = hyakuSettings.SavedGame;
+
             if (continueSavedGame && !string.IsNullOrEmpty(savedGame)) {
                 // load saved game (if any)
                 SlickGameControl.GameBoard = new GameBoardViewModel(); //GameBoardViewModel.LoadGameFromString(savedGame);
@@ -61,7 +72,8 @@ namespace Hyaku
                 if (!MediaPlayer.IsMuted) {
                     // play background music (if enabled in settings menu)
                     if (hyakuSettings.PlayBackgroudnMusicSetting) {
-                        StreamResourceInfo soundResourceInfo = App.GetResourceStream(new Uri(@"sounds/Themes/blossomTheme/Music.wav", UriKind.Relative));
+                        string uriString = @"sounds/Themes/" + currentTheme + @"/Music.wav";
+                        StreamResourceInfo soundResourceInfo = App.GetResourceStream(new Uri(uriString, UriKind.Relative));
                         SoundEffect bgMusicEffect = SoundEffect.FromStream(soundResourceInfo.Stream);
                         bgMusic = bgMusicEffect.CreateInstance();
                         bgMusic.IsLooped = true;
@@ -80,6 +92,7 @@ namespace Hyaku
             if (bgMusic != null) {
                 bgMusic.Stop();
             }
+
             base.OnNavigatedFrom(e);
         }
     }

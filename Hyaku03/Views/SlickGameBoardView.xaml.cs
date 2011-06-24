@@ -23,7 +23,6 @@ namespace Hyaku.Views
     {
         public event GameOverEventHandler GameEnded;
 
-        string defaultTheme = "blossomTheme";
         int[] rowTops = new int[] { 0,41,82,123,164,205,246,287,328 };
         Rectangle currentRectangle = null;
         Point dragStart;
@@ -32,6 +31,22 @@ namespace Hyaku.Views
         List<Rectangle> rectangles = new List<Rectangle>(9);
         //Image currentImage;
         Image[,] squares;
+
+        private string _currentTheme;
+        public virtual string CurrentTheme
+        {
+            get { return _currentTheme; }
+            set
+            {
+                _currentTheme = value;
+                if (!string.IsNullOrEmpty(_currentTheme)) {
+                    string backgroundImagePathFormatString = @"../Images/Themes/{0}/background.jpg";
+                    string backgroundImagePath = string.Format(backgroundImagePathFormatString, _currentTheme);
+                    BackgroundImage.Source = new BitmapImage(new Uri(backgroundImagePath, UriKind.Relative));
+                }
+
+            }
+        }
 
         private GameBoardViewModel _gameBoard;
 
@@ -428,7 +443,7 @@ namespace Hyaku.Views
 
         private BitmapImage GetThemedImageUriFromNumber(int number, ImageType imageType)
         {
-            return GetThemedImageUriFromNumber(number, defaultTheme, imageType);
+            return GetThemedImageUriFromNumber(number, CurrentTheme, imageType);
         }
 
         private BitmapImage GetThemedImageUriFromNumber(int nextNumber, string theme, ImageType imageType)

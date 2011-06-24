@@ -34,7 +34,7 @@
            <Canvas Name="NewGameMenuItem" Margin="46,100,220,0" Height="66" VerticalAlignment="Top">
             	<Custom:Interaction.Triggers>
             		<Custom:EventTrigger EventName="MouseLeftButtonDown">
-            			<ic:NavigateToPageAction TargetPage="/GamePage.xaml"/>
+            			<ic:NavigateToPageAction TargetPage="/GamePage.xaml?theme=DefiantTheme"/>
             		</Custom:EventTrigger>
             	</Custom:Interaction.Triggers>
             	<TextBlock Height="22" Text="新しいゲーム" VerticalAlignment="Top" Foreground="Black" FontSize="16" Canvas.Left="111" Canvas.Top="4"/>
