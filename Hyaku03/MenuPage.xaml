@@ -5,7 +5,8 @@
     xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:Custom="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" xmlns:ic="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions" 
+    xmlns:Custom="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+    xmlns:ic="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions" 
     xmlns:ad="clr-namespace:Microsoft.Advertising.Mobile.UI;assembly=Microsoft.Advertising.Mobile.UI"
     
     x:Class="Hyaku.MenuPage"
@@ -34,7 +35,7 @@
            <Canvas Name="NewGameMenuItem" Margin="46,100,220,0" Height="66" VerticalAlignment="Top">
             	<Custom:Interaction.Triggers>
             		<Custom:EventTrigger EventName="MouseLeftButtonDown">
-            			<ic:NavigateToPageAction TargetPage="/GamePage.xaml?theme=DefiantTheme"/>
+            			<ic:NavigateToPageAction TargetPage="/GamePage.xaml?theme=blossomTheme"/>
             		</Custom:EventTrigger>
             	</Custom:Interaction.Triggers>
             	<TextBlock Height="22" Text="新しいゲーム" VerticalAlignment="Top" Foreground="Black" FontSize="16" Canvas.Left="111" Canvas.Top="4"/>
@@ -56,6 +57,8 @@
            <Canvas Name="InstructionsMenuItem" Margin="46,348,199,386">
            	<Custom:Interaction.Triggers>
            		<Custom:EventTrigger EventName="MouseLeftButtonDown">
+                    <ic:NavigateToPageAction TargetPage="/Instructions.xaml">
+                    </ic:NavigateToPageAction>
            		</Custom:EventTrigger>
            	</Custom:Interaction.Triggers>
            	<TextBlock Height="22" Text="指示" VerticalAlignment="Top" Foreground="Black" FontSize="16" Canvas.Left="192"/>
