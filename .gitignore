@@ -1,1 +1,9 @@
 .DS_Store
+*.suo
+*.user
+bin/*
+obj/*
+Debug/*
+Release/*
+*.bak
+thumbs.db
